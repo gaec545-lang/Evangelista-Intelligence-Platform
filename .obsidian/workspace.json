@@ -1,0 +1,250 @@
+{
+  "main": {
+    "id": "8b5b765631ae5b95",
+    "type": "split",
+    "children": [
+      {
+        "id": "d2bb1140ee551ba6",
+        "type": "tabs",
+        "dimension": 38.25448613376835,
+        "children": [
+          {
+            "id": "47fcf9d8bbc8fe29",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Evangelista-Obsidian/evangelista-vault/frameworks/business-modeling/unit-economics-protocol.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "unit-economics-protocol"
+            }
+          }
+        ]
+      },
+      {
+        "id": "4e913b9ef2c512a7",
+        "type": "tabs",
+        "dimension": 61.74551386623165,
+        "children": [
+          {
+            "id": "d8808f8c287ef994",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Vista gráfica"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "701b58b0a6b3e4fb",
+    "type": "split",
+    "children": [
+      {
+        "id": "da9f1deddd399083",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9b5a24d1d41dc3ae",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de archivos"
+            }
+          },
+          {
+            "id": "d69fd7aa75e38a17",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Buscar"
+            }
+          },
+          {
+            "id": "cbe7f1ca72b8dd5b",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "6c317c9ca118b773",
+    "type": "split",
+    "children": [
+      {
+        "id": "555f768908bd728d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "92aea3c59c470a6d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Evangelista-Obsidian/evangelista-vault/frameworks/business-modeling/unit-economics-protocol.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Enlaces entrantes de unit-economics-protocol"
+            }
+          },
+          {
+            "id": "a00636bbf5107902",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Evangelista-Obsidian/evangelista-vault/frameworks/business-modeling/unit-economics-protocol.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Enlaces salientes de unit-economics-protocol"
+            }
+          },
+          {
+            "id": "e492411b6f8a9afd",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "39fa0f0a5157caa8",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas las propiedades"
+            }
+          },
+          {
+            "id": "2b41ffeb844948aa",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Evangelista-Obsidian/evangelista-vault/frameworks/business-modeling/unit-economics-protocol.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Esquema de unit-economics-protocol"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir selector rápido": false,
+      "graph:Abrir vista gráfica": false,
+      "canvas:Crear nuevo lienzo": false,
+      "daily-notes:Abrir la nota de hoy": false,
+      "templates:Insertar plantilla": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Crear nueva base": false
+    }
+  },
+  "active": "47fcf9d8bbc8fe29",
+  "lastOpenFiles": [
+    "Evangelista-Obsidian/evangelista-vault/formulas/statistical/benford-law.md",
+    "Evangelista-Obsidian/evangelista-vault/frameworks/business-modeling/unit-economics-protocol.md",
+    "Evangelista-Obsidian/evangelista-vault/frameworks/data-architecture/data-management-zone.md",
+    "Evangelista-Obsidian/evangelista-vault/playbooks/supply-chain/resilience-risk-framework.md",
+    "Evangelista-Obsidian/evangelista-vault/frameworks/business-modeling",
+    "Evangelista-Obsidian/evangelista-vault/playbooks/supply-chain",
+    "Evangelista-Obsidian/evangelista-vault/frameworks/coso-erm/coso-risk-framework.md",
+    "Evangelista-Obsidian/evangelista-vault/frameworks/six-sigma-dmaic/dmaic-measure.md",
+    "Evangelista-Obsidian/evangelista-vault/frameworks/data-architecture",
+    "Evangelista-Obsidian/evangelista-vault/frameworks/Sin título.md",
+    "Evangelista-Obsidian/evangelista-vault/formulas/financial/roi-npv-irr.md",
+    "Evangelista-Obsidian/evangelista-vault/formulas/financial/cost-of-inaction.md",
+    "Evangelista-Obsidian/evangelista-vault/cases/evangelista/caso-textiles-atoyac.md",
+    "Evangelista-Obsidian/evangelista-vault/_templates/tpl-framework.md",
+    "Evangelista-Obsidian/evangelista-vault/glossary/glosario-evangelista.md",
+    "Evangelista-Obsidian/evangelista-vault/frameworks/data-mesh/data-mesh-over-erp.md",
+    "evangelista-rag/src/agents/prompts/data_engineer.yaml",
+    "evangelista-rag/src/agents/prompts/process.yaml",
+    "evangelista-rag/src/agents/prompts/financial.yaml",
+    "evangelista-rag/src/agents/specialists",
+    "evangelista-rag/src/agents/prompts",
+    "evangelista-rag/src/agents",
+    "Evangelista-Obsidian/evangelista-vault/frameworks/alcoa-plus/alcoa-protocol.md",
+    "evangelista-rag/qdrant_storage/collection/evangelista_knowledge/storage.sqlite-journal",
+    "Evangelista-Obsidian/evangelista-vault/_meta/tags-taxonomy.md",
+    "Evangelista-Obsidian/evangelista-vault/_templates/tpl-agent-prompt.md",
+    "Evangelista-Obsidian/evangelista-vault/_meta/vault-conventions.md",
+    "Evangelista-Obsidian/evangelista-vault/_meta/changelog.md",
+    "evangelista-vault/_meta/changelog.md",
+    "evangelista-vault/_meta/tags-taxonomy.md",
+    "evangelista-vault/_meta/vault-conventions.md",
+    "evangelista-vault/rules/evangelista-rules.md",
+    "Evangelista-Obsidian/evangelista-vault/rules/regulatory/sat-compliance-pyme.md",
+    "Evangelista-Obsidian/evangelista-vault/rules/clients/_template-client-rules.md",
+    "Evangelista-Obsidian/evangelista-vault/playbooks/textiles/playbook-textiles.md",
+    "Evangelista-Obsidian/evangelista-vault/playbooks/manufactura/playbook-manufactura.md",
+    "Evangelista-Obsidian/evangelista-vault/Flujo de Ingestión.png",
+    "Evangelista-Obsidian/evangelista-vault/Flujo Retrieval.png",
+    "evangelista-vault/Flujo Retrieval.png",
+    "evangelista-vault/Flujo de Ingestión.png",
+    "evangelista-vault/Diagrama-Pipeline.png",
+    "evangelista-vault/Captura de pantalla 2026-03-28 a la(s) 8.41.31 a.m..png",
+    "evangelista-vault/Captura de pantalla 2026-03-28 a la(s) 8.40.02 a.m..png"
+  ]
+}
