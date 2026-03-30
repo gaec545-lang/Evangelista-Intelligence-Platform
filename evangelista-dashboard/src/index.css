@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --eva-cream: #F5F0E8;
+  --eva-olive: #4A5C3A;
+  --eva-olive-light: #6B7D5A;
+  --eva-charcoal: #2C2C2A;
+  --eva-warm-gray: #8A8680;
+  --eva-gold: #B8963E;
+  --eva-red: #A33D3D;
+  --eva-border: rgba(0,0,0,0.08);
+}
+
+body {
+  background-color: var(--eva-cream);
+  color: var(--eva-charcoal);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: Georgia, serif;
+}
+
+* {
+  transition-duration: 150ms;
+}
