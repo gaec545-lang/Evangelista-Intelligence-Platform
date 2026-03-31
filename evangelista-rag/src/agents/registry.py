@@ -6,6 +6,9 @@ class AgentRegistry:
 
     @classmethod
     def register(cls, agent: BaseAgent):
+        if agent.name in cls._agents:
+            # En lugar de error, logeamos y saltamos para evitar fallos en hot-reload
+            return
         cls._agents[agent.name] = agent
 
     @classmethod

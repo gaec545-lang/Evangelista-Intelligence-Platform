@@ -14,6 +14,7 @@ from qdrant_client.http.exceptions import UnexpectedResponse
 from src.models.chunk import Chunk
 from src.utils.logger import get_logger
 from src.config import settings
+from src.utils.qdrant import get_qdrant_client
 
 logger = get_logger(__name__)
 
@@ -26,10 +27,7 @@ class Indexer:
         collection: str = settings.QDRANT_COLLECTION,
         vector_size: int = settings.EMBED_DIMENSIONS,
     ) -> None:
-        if settings.QDRANT_MODE == "local":
-            self.client = QdrantClient(path=settings.QDRANT_LOCAL_PATH)
-        else:
-            self.client = QdrantClient(host=settings.QDRANT_HOST, port=settings.QDRANT_PORT)
+        self.client = get_qdrant_client()
         self.collection = collection
         self.vector_size = vector_size
 

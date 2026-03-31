@@ -11,6 +11,13 @@ interface Props {
   executionTimeMs?: number
 }
 
+/** Sanitiza hrefs — permite sólo https: y mailto: para prevenir javascript: URIs */
+function SafeLink({ href, children, ...rest }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
+  const safe = href && (href.startsWith('https://') || href.startsWith('mailto:'))
+  if (!safe) return <span>{children}</span>
+  return <a href={href} target="_blank" rel="noopener noreferrer" {...rest}>{children}</a>
+}
+
 export function AnalysisResult({ response, confidence, sources = [], errors = [], executionTimeMs }: Props) {
   return (
     <div className="space-y-4">
@@ -21,7 +28,12 @@ export function AnalysisResult({ response, confidence, sources = [], errors = []
       </div>
       <Card>
         <div className="prose prose-sm max-w-none text-eva-charcoal [&_h2]:font-serif [&_h3]:font-serif">
-          <ReactMarkdown>{response}</ReactMarkdown>
+          {/* disallowedElements bloquea tags peligrosos; skipHtml evita HTML crudo → XSS */}
+          <ReactMarkdown
+            skipHtml
+            disallowedElements={['script', 'iframe', 'object', 'embed', 'form', 'input']}
+            components={{ a: SafeLink }}
+          >{response}</ReactMarkdown>
         </div>
       </Card>
       {sources.length > 0 && (
@@ -39,3 +51,4 @@ export function AnalysisResult({ response, confidence, sources = [], errors = []
     </div>
   )
 }
+

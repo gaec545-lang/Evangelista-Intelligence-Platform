@@ -1,4 +1,5 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const REQUEST_TIMEOUT_MS = 60_000 // 60s — evita cuelgues indefinidos
 
 export interface AnalyzeRequest {
   task: string
@@ -16,15 +17,32 @@ export interface AnalyzeResponse {
 }
 
 async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  })
-  if (!res.ok) {
-    const error = await res.text()
-    throw new Error(`API ${res.status}: ${error}`)
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
+
+  try {
+    const res = await fetch(`${API_BASE}${path}`, {
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
+      ...options,
+    })
+    if (!res.ok) {
+      // No exponer mensajes internos del backend al usuario final
+      const status = res.status
+      if (status >= 500) throw new Error('El servicio no está disponible. Intenta más tarde.')
+      if (status === 401 || status === 403) throw new Error('No tienes permisos para realizar esta acción.')
+      if (status === 404) throw new Error('Recurso no encontrado.')
+      throw new Error(`Error en la solicitud (${status}).`)
+    }
+    return res.json()
+  } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      throw new Error('La solicitud tardó demasiado. Intenta de nuevo.')
+    }
+    throw err
+  } finally {
+    clearTimeout(timer)
   }
-  return res.json()
 }
 
 export const api = {

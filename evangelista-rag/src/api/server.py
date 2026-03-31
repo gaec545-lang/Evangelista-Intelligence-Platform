@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.utils.logger import get_logger
+from src.utils.qdrant import close_qdrant_client
 
 logger = get_logger(__name__)
 
@@ -26,6 +27,7 @@ async def lifespan(app: FastAPI):
     yield
 
     logger.info("api_shutdown")
+    close_qdrant_client()
 
 
 app = FastAPI(
@@ -37,7 +39,8 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5174"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

@@ -4,7 +4,13 @@ import type { Client, Analysis, Proposal } from './types'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Si las credenciales faltan, usamos un placeholder que no lanza errors
+const SUPABASE_CONFIGURED = Boolean(supabaseUrl && supabaseAnonKey)
+
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder_key_not_real',
+)
 
 export const clientsDB = {
   async list(): Promise<Client[]> {

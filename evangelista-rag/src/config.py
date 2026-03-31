@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     """Configuración cargada desde variables de entorno o archivo .env."""
 
     # Vault
-    VAULT_PATH: str = "./evangelista-vault"
+    VAULT_PATH: str = "../Evangelista-Obsidian/evangelista-vault"
 
     # Qdrant
     # Modo "local" usa archivo en disco (sin Docker). Modo "server" usa host:port.

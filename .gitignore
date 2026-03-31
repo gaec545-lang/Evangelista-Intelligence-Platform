@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
+.env
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Obsidian
+.obsidian/workspace
+.obsidian/workspace.json
+.obsidian/notifications.json
+
+# Logs
+*.txt
+*.log
+
+# Databases
+qdrant_storage/
+qdrant_storage_v2/
+
+# OS
+.DS_Store
+Thumbs.db

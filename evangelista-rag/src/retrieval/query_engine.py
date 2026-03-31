@@ -14,6 +14,7 @@ from src.retrieval.filters import (
 from src.retrieval.reranker import Reranker
 from src.utils.logger import get_logger
 from src.config import settings
+from src.utils.qdrant import get_qdrant_client
 
 logger = get_logger(__name__)
 
@@ -30,10 +31,7 @@ class QueryEngine:
         collection: str = settings.QDRANT_COLLECTION,
         reranker_enabled: bool = settings.RERANKER_ENABLED,
     ) -> None:
-        if settings.QDRANT_MODE == "local":
-            self.client = QdrantClient(path=settings.QDRANT_LOCAL_PATH)
-        else:
-            self.client = QdrantClient(host=settings.QDRANT_HOST, port=settings.QDRANT_PORT)
+        self.client = get_qdrant_client()
         self.collection = collection
         self.embedder = embedder or Embedder()
         self.reranker = Reranker(enabled=reranker_enabled)

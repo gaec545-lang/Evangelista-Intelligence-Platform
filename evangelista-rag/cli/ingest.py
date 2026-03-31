@@ -13,6 +13,7 @@ from src.ingestion.chunker import SemanticChunker
 from src.ingestion.embedder import Embedder
 from src.ingestion.indexer import Indexer
 from src.ingestion.watcher import VaultWatcher
+from src.utils.qdrant import close_qdrant_client
 
 console = Console()
 
@@ -151,14 +152,19 @@ def main(vault_path, file, stats, watch):
 
     # Ingestión completa del vault
     console.print(f"[bold]Ingestando vault:[/bold] {vault}")
-    result = asyncio.run(ingest_vault(vault))
+    try:
+        result = asyncio.run(ingest_vault(vault))
 
-    table = Table(title="Resultado de Ingestión")
-    table.add_column("Métrica", style="cyan")
-    table.add_column("Valor", style="green")
-    for k, v in result.items():
-        table.add_row(k, str(v))
-    console.print(table)
+        table = Table(title="Resultado de Ingestión")
+        table.add_column("Métrica", style="cyan")
+        table.add_column("Valor", style="green")
+        for k, v in result.items():
+            table.add_row(k, str(v))
+        console.print(table)
+    except Exception as e:
+        console.print(f"[red]Error inesperado:[/red] {e}")
+    finally:
+        close_qdrant_client()
 
 
 if __name__ == "__main__":
