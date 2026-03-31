@@ -17,12 +17,8 @@ async def readiness():
 
     # Qdrant
     try:
-        from qdrant_client import QdrantClient
-        from src.config import settings
-        if settings.QDRANT_MODE == "local":
-            client = QdrantClient(path=settings.QDRANT_LOCAL_PATH)
-        else:
-            client = QdrantClient(host=settings.QDRANT_HOST, port=settings.QDRANT_PORT)
+        from src.utils.qdrant import get_qdrant_client
+        client = get_qdrant_client()
         collections = client.get_collections()
         checks["qdrant"] = {"status": "ready", "collections": len(collections.collections)}
     except Exception as e:

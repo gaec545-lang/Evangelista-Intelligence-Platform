@@ -9,7 +9,8 @@ logger = get_logger(__name__)
 
 
 class FoundationRequest(BaseModel):
-    name: str
+    name: str | None = None
+    client_name: str | None = None  # Compatible con el frontend actual
     sector: str = "manufactura"
     sucursales: int = 1
     sistemas_erp: int = 1
@@ -35,7 +36,11 @@ class ProposalResponse(BaseModel):
 @router.post("/proposals/foundation", response_model=ProposalResponse)
 async def generate_foundation(request: FoundationRequest):
     """Genera propuesta Foundation completa en Markdown."""
-    logger.info("proposal_foundation_request", client=request.name)
+    client_name = request.name or request.client_name
+    if not client_name:
+        raise HTTPException(status_code=400, detail="Se requiere el nombre del cliente (name o client_name)")
+    
+    logger.info("proposal_foundation_request", client=client_name)
     try:
         from src.proposals.generator import ProposalGenerator
         gen = ProposalGenerator()
