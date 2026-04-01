@@ -45,10 +45,11 @@ class GraphRunRequest(BaseModel):
 
 
 class GraphRunResponse(BaseModel):
-    final_response: str
+    response: str
     confidence: float
     route: str
     node_history: list[str]
+    sources: list[str] = []
     execution_time_ms: int
     retry_count: int
     errors: list[str]
@@ -65,10 +66,11 @@ async def run_graph_endpoint(request: GraphRunRequest):
             thread_id=request.thread_id,
         )
         return GraphRunResponse(
-            final_response=state.final_response,
+            response=state.final_response,
             confidence=state.confidence,
             route=state.route or "unknown",
             node_history=state.node_history,
+            sources=state.generation_sources,
             execution_time_ms=state.execution_time_ms,
             retry_count=state.retry_count,
             errors=state.errors,

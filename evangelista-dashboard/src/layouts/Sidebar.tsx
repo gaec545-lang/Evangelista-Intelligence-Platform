@@ -1,14 +1,14 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, Search, Users, Brain, FileText, Settings, BookOpen, LogOut } from 'lucide-react'
+import { LayoutDashboard, Search, Users, Brain, FileText, Settings, BookOpen, LogOut, GitBranch } from 'lucide-react'
 import { useAuthStore } from '../stores/authStore'
 
 const NAV = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/analyze', label: 'Análisis', icon: Brain },
+  { to: '/graph', label: 'Arquitectura RAG', icon: GitBranch },
   { to: '/clients', label: 'Clientes', icon: Users },
   { to: '/agents', label: 'Agentes', icon: Search },
   { to: '/proposals', label: 'Propuestas', icon: FileText },
-  { to: '/graph', label: 'Arquitectura RAG', icon: Brain },
   { to: '/knowledge', label: 'Knowledge Base', icon: BookOpen },
   { to: '/settings', label: 'Configuración', icon: Settings },
 ]
