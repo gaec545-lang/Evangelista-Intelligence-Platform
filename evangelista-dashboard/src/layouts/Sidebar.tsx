@@ -8,6 +8,7 @@ const NAV = [
   { to: '/clients', label: 'Clientes', icon: Users },
   { to: '/agents', label: 'Agentes', icon: Search },
   { to: '/proposals', label: 'Propuestas', icon: FileText },
+  { to: '/graph', label: 'Arquitectura RAG', icon: Brain },
   { to: '/knowledge', label: 'Knowledge Base', icon: BookOpen },
   { to: '/settings', label: 'Configuración', icon: Settings },
 ]

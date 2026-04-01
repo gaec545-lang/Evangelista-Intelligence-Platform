@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useAnalysis } from '../hooks/useAnalysis'
-import { SubtaskTimeline } from './SubtaskTimeline'
-import { AnalysisResult } from './AnalysisResult'
+import AnalysisResultV2 from './AnalysisResultV2'
 import { Button } from './ui/Button'
 import { Spinner } from './ui/Spinner'
 
@@ -50,19 +49,7 @@ export function AnalysisPanel({ clientId, onComplete }: Props) {
 
       {result && !loading && (
         <div className="space-y-4">
-          {result.subtasks && result.subtasks.length > 0 && (
-            <div>
-              <p className="text-xs font-medium text-eva-warm-gray mb-3 uppercase tracking-wide">Subtareas ejecutadas</p>
-              <SubtaskTimeline subtasks={result.subtasks} />
-            </div>
-          )}
-          <AnalysisResult
-            response={result.response}
-            confidence={result.confidence}
-            sources={result.sources}
-            errors={result.errors}
-            executionTimeMs={result.execution_time_ms}
-          />
+          <AnalysisResultV2 data={result as any} />
         </div>
       )}
     </div>

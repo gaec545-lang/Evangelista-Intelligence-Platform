@@ -67,4 +67,23 @@ export const api = {
   async health(): Promise<{ ready: boolean; checks: Record<string, { status: string; count?: number }> }> {
     return fetchAPI('/readiness')
   },
+  async getGraphMermaid(): Promise<{ mermaid: string }> {
+    return fetchAPI('/api/v1/graph/mermaid')
+  },
+  async runGraph(task: string, context?: Record<string, unknown>): Promise<{
+    response: string;
+    confidence: number;
+    route: string;
+    node_history: string[];
+    sources: string[];
+    mermaid_trace: string;
+    execution_time_ms: number;
+    retry_count: number;
+    errors: string[];
+  }> {
+    return fetchAPI('/api/v1/analyze', { 
+      method: 'POST', 
+      body: JSON.stringify({ task, context: context || {} }) 
+    })
+  },
 }

@@ -31,67 +31,76 @@ class BaseAgent(ABC):
             config = yaml.safe_load(f)
         return config.get("system_prompt", "")
 
+    async def _get_rag_context(self, task: str) -> tuple[list, str]:
+        """Obtiene contexto del RAG. Retorna (resultados, contexto_texto)."""
+        try:
+            from src.retrieval.query_engine import QueryEngine
+            engine = QueryEngine()
+            
+            results = await engine.search(
+                query=task,
+                agent_name=self.name,
+                top_k=10,
+                final_k=5
+            )
+            
+            if results:
+                context_text = "\n\n---\n\n".join([
+                    f"**Fuente: {r.document_title}** (relevancia: {r.score:.2f})\n"
+                    f"Sección: {r.section_header}\n\n"
+                    f"{r.content}"
+                    for r in results
+                ])
+                return results, context_text
+            else:
+                return [], "No se encontraron documentos relevantes en el knowledge base para esta consulta."
+                
+        except Exception as e:
+            import structlog
+            structlog.get_logger().error("agent_rag_failed", agent=self.name, error=str(e))
+            return [], "Error al consultar el knowledge base. Respondiendo con conocimiento general del agente."
+
     async def execute(self, task: str, context: Optional[List[dict]] = None) -> AgentOutput:
         """Execute a task with optional RAG context."""
-        from src.retrieval.query_engine import QueryEngine
         from src.llm.factory import get_llm_client
 
-        # 1. RAG Retrieval if no context is provided
+        # 1. SIEMPRE buscar en RAG primero (a menos que venga contexto pre-inyectado)
         if context is None:
-            engine = QueryEngine()
-            results = await engine.search(query=task, agent_name=self.name)
-            context_str = engine.format_context(results)
-            sources = [r.document_id for r in results]
+            rag_results, context_text = await self._get_rag_context(task)
         else:
-            # Format provided context
-            context_str = "\n".join([f"- {c.get('content', '')}" for c in context])
-            sources = list(set([c.get('document_id', 'provided_context') for c in context]))
+            rag_results = []
+            context_text = "\n\n".join([
+                f"**{c.get('title', 'Contexto')}**\n{c.get('content', '')}"
+                for c in context
+            ])
 
-        # 2. Prepare Structured Prompt
-        # We append a request for JSON at the end to map to AgentOutput fields
-        structured_instruction = (
-            "\n\nResponde en el formato Markdown solicitado en tu system prompt, "
-            "pero incluye al final un bloque JSON delimitado por ```json ... ``` "
-            "con los siguientes campos: 'confidence' (float 0-1), 'analysis' (str), "
-            "'recommendations' (list), 'data_points' (list of dicts), 'escalation_needed' (bool)."
-        )
-        
-        llm_prompt = (
-            f"TASK: {task}\n\n"
-            f"CONTEXTO RAG RELEVANTE:\n{context_str}\n\n"
-            f"{structured_instruction}"
-        )
+        # 2. Construir prompt con contexto
+        full_prompt = f"""## Contexto del knowledge base de Evangelista & Co.
 
-        # 3. Call LLM
+{context_text}
+
+## Tarea asignada
+
+{task}
+
+Responde siguiendo estrictamente tu formato de output definido en el system prompt. Usa las fuentes del knowledge base cuando sean relevantes y cítalas."""
+
+        # 3. Llamar al LLM
         client = get_llm_client()
         response_text = await client.generate(
-            prompt=llm_prompt,
-            system_prompt=self.system_prompt
+            prompt=full_prompt,
+            system_prompt=self.system_prompt,
+            temperature=0.3
         )
 
-        # 4. Parse Structured Output
-        try:
-            json_match = re.search(r"```json\s*(.*?)\s*```", response_text, re.DOTALL)
-            if json_match:
-                data = json.loads(json_match.group(1))
-                return AgentOutput(
-                    agent_name=self.name,
-                    confidence=data.get("confidence", 0.7),
-                    analysis=data.get("analysis", response_text),
-                    recommendations=data.get("recommendations", []),
-                    data_points=data.get("data_points", []),
-                    sources_used=sources,
-                    escalation_needed=data.get("escalation_needed", False)
-                )
-        except Exception:
-            # Fallback if JSON parsing fails
-            pass
-
+        # 4. Construir output estandarizado
+        # Cada especialista puede sobrescribir execute para validaciones específicas
         return AgentOutput(
             agent_name=self.name,
-            confidence=0.7,
+            confidence=0.8,
             analysis=response_text,
-            sources_used=sources
+            sources_used=[r.document_id for r in rag_results] if rag_results else [],
+            recommendations=[]
         )
 
     @property

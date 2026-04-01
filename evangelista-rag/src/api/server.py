@@ -50,11 +50,12 @@ from src.api.middleware.logging import RequestLoggingMiddleware
 app.add_middleware(RequestLoggingMiddleware)
 
 # Routes
-from src.api.routes import health, orchestrator, agents, knowledge
+from src.api.routes import health, orchestrator, agents, knowledge, graph_viz
 from src.api.routes import proposals  # type: ignore[attr-defined]
 
 app.include_router(health.router, tags=["Health"])
 app.include_router(orchestrator.router, prefix="/api/v1", tags=["Orchestrator"])
+app.include_router(graph_viz.router, prefix="/api/v1", tags=["Graph Visualization"])
 app.include_router(agents.router, prefix="/api/v1", tags=["Agents"])
 app.include_router(knowledge.router, prefix="/api/v1", tags=["Knowledge"])
 app.include_router(proposals.router, prefix="/api/v1", tags=["Proposals"])

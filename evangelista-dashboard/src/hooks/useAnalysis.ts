@@ -12,8 +12,8 @@ export function useAnalysis() {
     setError(null)
     setResult(null)
     try {
-      const res = await api.analyze({ task, context })
-      setResult(res)
+      const res = await api.runGraph(task, context)
+      setResult(res as any) // Typecast temporal para el MVP
       return res
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Error desconocido'

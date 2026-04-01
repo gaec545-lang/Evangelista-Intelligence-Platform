@@ -22,11 +22,11 @@ export default defineConfig({
       // Content-Security-Policy: permite solo fuentes conocidas
       'Content-Security-Policy': [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline'",   // unsafe-inline requerido por Vite HMR en dev
+        "script-src 'self' 'unsafe-inline' https://esm.sh",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com",
         "img-src 'self' data: https:",
-        "connect-src 'self' https://*.supabase.co wss://*.supabase.co http://localhost:8001",
+        "connect-src 'self' https://*.supabase.co wss://*.supabase.co http://localhost:8001 https://esm.sh",
         "frame-ancestors 'none'",
       ].join('; '),
     },

@@ -16,6 +16,11 @@ class AnalyzeResponse(BaseModel):
     execution_time_ms: int
     errors: list[str]
     subtasks: list[dict] = Field(default_factory=list)
+    # Nuevos campos para Advanced RAG
+    route: str = "unknown"
+    node_history: list[str] = Field(default_factory=list)
+    mermaid_trace: str = ""
+    retry_count: int = 0
 
 
 class AgentExecuteRequest(BaseModel):
