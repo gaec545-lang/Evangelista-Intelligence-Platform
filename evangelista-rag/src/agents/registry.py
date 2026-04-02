@@ -1,4 +1,4 @@
-from .base_agent import BaseAgent
+from .base import BaseAgent
 
 class AgentRegistry:
     """Registro dinámico de agentes. Agregar un agente = 1 línea."""

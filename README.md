@@ -5,7 +5,8 @@ Proyecto de consultoría estratégica asistida por IA para PyMEs mexicanas.
 ## Estructura del Proyecto
 - `evangelista-rag/`: Backend FastAPI con orquestador de agentes y RAG.
 - `evangelista-dashboard/`: Frontend Vite + React para la interfaz de usuario.
-- `evangelista-vault/`: Base de conocimientos en Obsidian (Playbooks, Casos, Benchmarks).
+- `Evangelista-Obsidian/evangelista-vault/`: Base de conocimiento unificada (Playbooks, Casos, Benchmarks, Fórmulas, Regulatorios, Ventas) — para uso con Obsidian.
+- `evangelista-vault-content/`: (archivado, migrado a Evangelista-Obsidian/evangelista-vault/)
 
 ## Configuración para MacBook M2 (Apple Silicon)
 

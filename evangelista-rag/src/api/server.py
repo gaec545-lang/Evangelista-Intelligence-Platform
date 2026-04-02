@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.utils.logger import get_logger
 from src.utils.qdrant import close_qdrant_client
+from src.config import settings
 
 logger = get_logger(__name__)
 
@@ -14,11 +15,12 @@ async def lifespan(app: FastAPI):
     logger.info("api_startup")
 
     # Importar especialistas para disparar auto-registro
-    import src.agents.specialists.financial      # noqa: F401
-    import src.agents.specialists.process        # noqa: F401
-    import src.agents.specialists.data_engineer  # noqa: F401
-    import src.agents.specialists.analyst        # noqa: F401  # type: ignore[import]
-    import src.agents.specialists.risk           # noqa: F401  # type: ignore[import]
+    from src.agents import registry  # noqa: F401
+    
+    # Asegurar que los agentes se carguen
+    import src.agents.financial      # noqa: F401
+    import src.agents.process        # noqa: F401
+    import src.agents.data_engineer  # noqa: F401
 
     from src.agents.registry import AgentRegistry
     agents = AgentRegistry.list_agents()
@@ -50,12 +52,18 @@ from src.api.middleware.logging import RequestLoggingMiddleware
 app.add_middleware(RequestLoggingMiddleware)
 
 # Routes
-from src.api.routes import health, orchestrator, agents, knowledge, graph_viz
-from src.api.routes import proposals  # type: ignore[attr-defined]
+from src.api.routes import (
+    analyze,
+    agents,
+    knowledge,
+    health,
+    graph_viz,
+    proposals
+)
 
 app.include_router(health.router, tags=["Health"])
-app.include_router(orchestrator.router, prefix="/api/v1", tags=["Orchestrator"])
+app.include_router(analyze.router, prefix="/api/v1", tags=["Analyze"])
 app.include_router(graph_viz.router, prefix="/api/v1", tags=["Graph Visualization"])
 app.include_router(agents.router, prefix="/api/v1", tags=["Agents"])
 app.include_router(knowledge.router, prefix="/api/v1", tags=["Knowledge"])
-app.include_router(proposals.router, prefix="/api/v1", tags=["Proposals"])
+

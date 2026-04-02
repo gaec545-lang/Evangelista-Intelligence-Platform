@@ -34,30 +34,40 @@ export function LoginPage() {
       if (attemptsRef.current >= MAX_ATTEMPTS) {
         setLockedUntil(Date.now() + LOCKOUT_SECONDS * 1000)
         attemptsRef.current = 0
-        setError(`Demasiados intentos fallidos. Espera ${LOCKOUT_SECONDS} segundos.`)
+        setError(`Demasiados intentos. Espera ${LOCKOUT_SECONDS}s.`)
       } else {
-        setError('Credenciales inválidas. Verifica tu email y contraseña.')
+        setError('Credenciales inválidas.')
       }
-    } finally { setLoading(false) }
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <div className="min-h-screen bg-eva-cream flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-sm border border-[var(--eva-border)] p-8 w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center bg-surface p-4">
+      <div className="w-full max-w-sm">
+        {/* Brand */}
         <div className="text-center mb-8">
-          <img src="/logo-evangelista.svg" alt="Evangelista" className="w-12 h-12 mx-auto mb-4 rounded-xl" />
-          <h1 className="font-serif text-2xl font-bold text-eva-charcoal">Evangelista &amp; Co.</h1>
-          <p className="text-sm text-eva-warm-gray mt-1">Intelligence Platform</p>
+          <div className="w-12 h-12 mx-auto rounded-xl bg-primary-600 flex items-center justify-center mb-4">
+            <span className="text-white text-lg font-semibold">E</span>
+          </div>
+          <p className="text-sm text-content-primary">Evangelista</p>
+          <p className="text-xs text-content-tertiary mt-0.5">Intelligence Platform</p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus disabled={isLocked} />
-          <Input label="Contraseña" type="password" value={password} onChange={e => setPassword(e.target.value)} required disabled={isLocked} />
-          {error && <p className="text-xs text-eva-red">{error}</p>}
-          {isLocked && <p className="text-xs text-eva-warm-gray">Disponible en {secondsLeft}s</p>}
-          <Button type="submit" loading={loading} className="w-full" disabled={isLocked}>Ingresar</Button>
-        </form>
+
+        {/* Login form */}
+        <div className="bg-white rounded-card border border-surface-border p-6 space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus disabled={isLocked} />
+            <Input label="Contraseña" type="password" value={password} onChange={e => setPassword(e.target.value)} required disabled={isLocked} />
+            {error && <p className="text-xs text-red-600">{error}</p>}
+            {isLocked && <p className="text-xs text-content-tertiary">Disponible en {secondsLeft}s</p>}
+            <Button type="submit" loading={loading} className="w-full" disabled={isLocked}>
+              Ingresar
+            </Button>
+          </form>
+        </div>
       </div>
     </div>
   )
 }
-

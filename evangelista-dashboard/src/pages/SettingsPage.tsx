@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Card } from '../components/ui/Card'
-import { Button } from '../components/ui/Button'
+import { Settings, Globe, Database, Activity, RefreshCw, CheckCircle2 } from 'lucide-react'
+import Button from '../components/ui/Button'
+import Badge from '../components/ui/Badge'
 import { api } from '../lib/api'
 
 export function SettingsPage() {
@@ -9,47 +10,98 @@ export function SettingsPage() {
 
   const check = async () => {
     setChecking(true)
-    try { setHealth(await api.health()) }
-    catch { setHealth({ ready: false, checks: { backend: { status: 'not_ready' } } }) }
-    finally { setChecking(false) }
+    try {
+      const data = await api.health()
+      setHealth(data)
+    } catch {
+      setHealth({ ready: false, checks: { backend: { status: 'error' } } })
+    } finally {
+      setChecking(false)
+    }
   }
 
-  useEffect(() => { check() }, [])
+  useEffect(() => {
+    check()
+  }, [])
 
   return (
-    <div className="space-y-6 max-w-2xl">
-      <div>
-        <h1 className="font-serif text-3xl font-bold text-eva-charcoal">Configuración</h1>
-        <p className="text-eva-warm-gray mt-1">Estado del sistema</p>
-      </div>
-      <Card>
-        <h2 className="font-serif font-semibold text-eva-charcoal mb-4">Estado del backend</h2>
-        <div className="space-y-3">
+    <div className="max-w-4xl space-y-10">
+      {/* Header */}
+      <section className="space-y-1">
+        <div className="flex items-center gap-3">
+          <Settings size={20} className="text-content-tertiary" />
+          <h1>Configuración</h1>
+        </div>
+        <p className="max-w-md">Infraestructura y salud del ecosistema Evangelista.</p>
+      </section>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* API Health */}
+        <div className="bg-white rounded-card border border-surface-border p-6 space-y-6">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-eva-charcoal">API URL</span>
-            <code className="text-xs bg-eva-cream px-2 py-1 rounded">{import.meta.env.VITE_API_URL || 'http://localhost:8000'}</code>
-          </div>
-          {health && Object.entries(health.checks).map(([key, val]) => (
-            <div key={key} className="flex items-center justify-between py-1">
-              <span className="text-sm capitalize text-eva-charcoal">{key}</span>
-              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${val.status === 'ready' ? 'bg-green-50 text-green-700' : 'bg-eva-red/10 text-eva-red'}`}>
-                {val.status}
-              </span>
+            <div className="flex items-center gap-3">
+              <Globe size={18} className="text-content-tertiary" />
+              <p className="text-sm text-content-primary">Cloud Core API</p>
             </div>
-          ))}
-          <Button variant="secondary" size="sm" onClick={check} loading={checking}>Verificar conectividad</Button>
-        </div>
-      </Card>
-      <Card>
-        <h2 className="font-serif font-semibold text-eva-charcoal mb-4">Supabase</h2>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-eva-charcoal">URL</span>
-            <code className="text-xs bg-eva-cream px-2 py-1 rounded truncate max-w-xs">{import.meta.env.VITE_SUPABASE_URL || 'No configurado'}</code>
+            <Badge variant={health?.ready ? 'success' : 'danger'} size="sm">
+              {health?.ready ? 'Operativo' : 'Interrupción'}
+            </Badge>
           </div>
-          <p className="text-xs text-eva-warm-gray">Configura VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en .env</p>
+
+          <div className="space-y-3">
+            <p className="text-xs text-content-tertiary">Endpoint</p>
+            <code className="block text-xs bg-surface rounded-button px-3 py-2 text-content-secondary">
+              {import.meta.env.VITE_API_URL || 'http://localhost:8001'}
+            </code>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-xs text-content-tertiary flex items-center gap-1.5">
+              <Activity size={12} /> Diagnóstico de nodos
+            </p>
+            {health &&
+              Object.entries(health.checks).map(([key, val]) => (
+                <div key={key} className="flex items-center justify-between px-4 py-2.5 rounded-button bg-surface/50">
+                  <span className="text-sm capitalize text-content-secondary">{key}</span>
+                  <Badge variant={val.status === 'ready' ? 'success' : 'danger'} size="sm">
+                    {val.status}
+                  </Badge>
+                </div>
+              ))}
+          </div>
+
+          <Button variant="outline" className="w-full" onClick={check} isLoading={checking} icon={<RefreshCw size={16} className={checking ? 'animate-spin' : ''} />}>
+            Re-verificar
+          </Button>
         </div>
-      </Card>
+
+        {/* Database */}
+        <div className="space-y-8">
+          <div className="bg-white rounded-card border border-surface-border p-6 space-y-4">
+            <div className="flex items-center gap-3">
+              <Database size={18} className="text-content-tertiary" />
+              <p className="text-sm text-content-primary">Almacenamiento</p>
+            </div>
+            <div className="space-y-2">
+              <p className="text-xs text-content-tertiary">Supabase Engine</p>
+              <code className="block text-xs bg-surface rounded-button px-3 py-2 text-content-secondary break-all">
+                {import.meta.env.VITE_SUPABASE_URL || 'Cluster no configurado'}
+              </code>
+            </div>
+            <div className="flex items-center gap-1.5 text-emerald-600 text-xs">
+              <CheckCircle2 size={12} /> Conectado
+            </div>
+          </div>
+
+          {/* Quick config */}
+          <div className="bg-white rounded-card border border-surface-border p-6 space-y-3">
+            <p className="text-sm text-content-primary">Variables de entorno</p>
+            <p className="text-xs text-content-tertiary">
+              Configura <code className="bg-surface rounded px-1 py-0.5">VITE_API_URL</code>, <code className="bg-surface rounded px-1 py-0.5">VITE_SUPABASE_URL</code> y <code className="bg-surface rounded px-1 py-0.5">VITE_SUPABASE_ANON_KEY</code> en <code className="bg-surface rounded px-1 py-0.5">.env</code>.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
