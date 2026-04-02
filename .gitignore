@@ -6,7 +6,7 @@ __pycache__/
 env/
 venv/
 ENV/
-.env
+# .env (repo privado — trackeado)
 
 # Node
 node_modules/

@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuthStore } from '../stores/authStore'
-import { Button } from '../components/ui/Button'
+import Button from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 
 const MAX_ATTEMPTS = 5

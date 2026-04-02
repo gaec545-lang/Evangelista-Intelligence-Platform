@@ -4,6 +4,7 @@ import { ChevronRight, Clock, GitBranch, ShieldCheck, Database, AlertCircle } fr
 import MarkdownRenderer from './MarkdownRenderer';
 import Badge from './ui/Badge';
 import Card from './ui/Card';
+import GraphVisualizer from './GraphVisualizer';
 
 interface AnalysisData {
   response: string;

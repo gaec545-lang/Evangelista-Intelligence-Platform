@@ -57,7 +57,9 @@ export function ClientsPage() {
               className="input-glass h-9 pl-9 pr-3 text-sm rounded-button w-56"
             />
           </div>
-          <Button onClick={() => setShowModal(true)}>Nuevo</Button>
+          <Button onClick={() => setShowModal(true)} icon={<Plus size={16} />}>
+            Nuevo Cliente
+          </Button>
         </div>
       </section>
 
@@ -75,4 +77,112 @@ export function ClientsPage() {
               ? `No hay clientes que coincidan con "${search}"`
               : 'Agrega el primer cliente corporativo para comenzar.'
           }
-          action={!search && <Button onClick={() => setShowModal(true)}>
+          action={!search && (
+            <Button onClick={() => setShowModal(true)} icon={<Plus size={16} />}>
+              Nuevo Cliente
+            </Button>
+          )}
+        />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+          {filtered.map(client => (
+            <ClientCard
+              key={client.id}
+              client={client}
+              statusVariant={getStatusVariant(client.status)}
+              onClick={() => navigate(`/clients/${client.id}`)}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Summary */}
+      {!loading && clients.length > 0 && (
+        <div className="flex items-center justify-between text-xs text-content-tertiary">
+          <span>{filtered.length} de {clients.length} clientes</span>
+          <div className="flex gap-4">
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-success inline-block" /> Active
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="w-2 h-2 rounded-full bg-warning inline-block" /> Prospect
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* Create Modal */}
+      <Modal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        title="Nuevo Cliente"
+      >
+        <ClientForm onSubmit={handleCreate} onCancel={() => setShowModal(false)} />
+      </Modal>
+    </div>
+  )
+}
+
+/* ─── Sub-components ─── */
+
+interface ClientCardProps {
+  client: Client
+  statusVariant: 'success' | 'warning' | 'neutral' | 'danger'
+  onClick: () => void
+}
+
+function ClientCard({ client, statusVariant, onClick }: ClientCardProps) {
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="card-interactive cursor-pointer group"
+      onClick={onClick}
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between gap-2 mb-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+            style={{ background: 'rgba(149,184,119,0.10)' }}
+          >
+            <Building2 size={18} className="text-primary-400" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="text-sm font-semibold truncate">{client.name}</h3>
+            <p className="text-xs text-content-tertiary">{client.sector}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <Badge variant={statusVariant} size="sm">{client.status}</Badge>
+          <ChevronRight
+            size={16}
+            className="text-content-tertiary/40 group-hover:text-accent-olive transition-colors"
+          />
+        </div>
+      </div>
+
+      {/* Contact info */}
+      <div className="flex items-center gap-4 text-xs text-content-tertiary mb-3">
+        <span className="flex items-center gap-1">
+          <MapPin size={12} /> {client.city}
+        </span>
+        <span>{client.sucursales} sucursales</span>
+      </div>
+
+      {/* Factors */}
+      <div className="flex items-center gap-2 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        {client.factor_gamma && (
+          <Badge variant="olive" size="xs">Γ {client.factor_gamma}</Badge>
+        )}
+        {client.factor_alpha && (
+          <Badge variant="neutral" size="xs">α {client.factor_alpha}</Badge>
+        )}
+        {client.factor_beta && (
+          <Badge variant="info" size="xs">β {client.factor_beta}</Badge>
+        )}
+      </div>
+    </motion.div>
+  )
+}
