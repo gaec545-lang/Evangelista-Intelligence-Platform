@@ -50,7 +50,7 @@ Responde siguiendo estrictamente tu formato de output definido. Usa las fuentes 
         client = get_llm_client()
         response = await client.generate(
             prompt=full_prompt,
-            system_prompt=self.system_prompt,
+            system_prompt=await self._load_prompt(),
             temperature=0.3
         )
         

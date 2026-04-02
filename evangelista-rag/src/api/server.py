@@ -66,4 +66,5 @@ app.include_router(analyze.router, prefix="/api/v1", tags=["Analyze"])
 app.include_router(graph_viz.router, prefix="/api/v1", tags=["Graph Visualization"])
 app.include_router(agents.router, prefix="/api/v1", tags=["Agents"])
 app.include_router(knowledge.router, prefix="/api/v1", tags=["Knowledge"])
+app.include_router(proposals.router, prefix="/api/v1", tags=["Proposals"])
 
