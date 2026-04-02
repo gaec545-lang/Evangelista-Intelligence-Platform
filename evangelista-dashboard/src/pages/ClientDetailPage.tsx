@@ -87,7 +87,7 @@ export function ClientDetailPage() {
       {/* KPIs */}
       <section className="grid grid-cols-3 gap-4">
         {kpis.map(kpi => (
-          <div key={kpi.label} className="bg-white rounded-card border border-surface-border p-5">
+          <div key={kpi.label} className="card-glass rounded-card border border-surface-border p-5">
             <div className="flex items-center justify-between mb-3">
               {kpi.icon && <kpi.icon size={18} className="text-content-tertiary" />}
             </div>
@@ -109,7 +109,7 @@ export function ClientDetailPage() {
             <Zap size={18} className="text-accent-gold" />
             <h2>Orquestador</h2>
           </div>
-          <div className="bg-white rounded-card border border-surface-border p-6">
+          <div className="rounded-card border border-surface-border p-6" style={{ background: 'var(--surface-raised, rgba(255,255,255,0.04))' }}>
             <AnalysisPanel clientId={id} onComplete={handleComplete} />
           </div>
         </div>
@@ -123,7 +123,7 @@ export function ClientDetailPage() {
             </div>
             {analyses.length > 0 && <p className="text-xs text-content-tertiary">{analyses.length}</p>}
           </div>
-          <div className="bg-white rounded-card border border-surface-border">
+          <div className="card-glass rounded-card border border-surface-border">
             {loadingHistory ? (
               <div className="p-12 flex items-center justify-center">
                 <Spinner size="md" />

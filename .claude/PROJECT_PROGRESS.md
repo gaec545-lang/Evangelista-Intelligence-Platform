@@ -7,89 +7,87 @@
 
 - **Última actualización**: 2026-04-02
 - **Branch**: `main`
-- **Último commit**: `60ba3f2` — fix: Qdrant search_points() + missing icon imports + port alignment
-- **Puertos**: Dashboard `5174` | Backend `8000`
+- **Último commit**: `7304566` — rebuild ClientsPage (truncated), fix LoginPage + AnalysisResultV2 imports
+- **Puertos**: Dashboard `5174` | Backend `8001`
+- **Servidores corriendo**: Backend (pid activo) + Frontend (node vite)
 
 ## Arquitectura
 
 | Componente | Tech | Puerto | Status |
 |---|---|---|---|
 | Frontend Dashboard | React + TS + Vite + Tailwind | 5174 | Funcional |
-| Backend RAG API | FastAPI + LangGraph + Qdrant | 8000 | Bugs fixeados |
+| Backend RAG API | FastAPI + LangGraph + Qdrant | 8001 | Funcional (Qdrant fixed) |
 | Database | Supabase (PostgreSQL) | Cloud | Funcional |
-| Vector DB | Qdrant (local) | — | **FIXED** |
+| Vector DB | Qdrant (local `./qdrant_storage_v2`) | — | Fixed — `search_points()` |
 | LLM | Groq (gsk_...) | — | Funcional |
 | Vault | Obsidian MD | — | Actualizado |
 
-## Bugs Conocidos
+## Bugs Resueltos
 
-### ~~BUG #1 — Qdrant search method (CRÍTICO)~~ ✅ FIXED
-- Fix aplicado (commit `60ba3f2`): `.search()` → `.search_points()` en `query_engine.py`
-- **Necesita prueba**: reiniciar backend y confirmar que retrieval funciona
+### ~~BUG #1 — Qdrant search method (CRÍTICO)~~ ✅ FIXED (commit `60ba3f2`)
+- `.search()` → `.search_points()` en `query_engine.py`
 
-### ~~BUG #2 — Missing icon imports en AnalysisPanel~~ ✅ FIXED
-- Fix aplicado: importados `Cpu`, `Search`, `Zap` en `AnalysisPanel.tsx`
+### ~~BUG #2 — Missing icon imports en AnalysisPanel~~ ✅ FIXED (commit `60ba3f2`)
 
-### ~~BUG #3 — Port alignment~~ ✅ FIXED
-- Fix aplicado: `.env` ahora usa `http://localhost:8000`
-- **Nota**: el archivo `.env` está en `.gitignore`, no se commitea (seguridad)
-- **Acción**: el usuario debe confirmar que su `.env` local refleja este cambio antes de correr el dev server
+### ~~BUG #3 — Port alignment~~ ✅ FIXED (commit `60ba3f2`, `7304566`)
+- `.env` commiteado al repo (repo privado) con `VITE_API_URL=http://localhost:8001`
 
-## Endpoints Existentes (ya no faltantes)
+### ~~BUG #4 — ClientsPage truncado~~ ✅ FIXED (commit `7304566`)
+- Archivo cortado en línea 78 — reconstruido completo con ClientCard, search, modal, summary
 
-### `GET /api/v1/graph/mermaid` ✅ EXISTE
-- Archivo: `src/api/routes/graph_viz.py`
-- LangGraph `draw_mermaid()` o fallback a `render_graph_definition()`
+### ~~BUG #5 — LoginPage import~~ ✅ FIXED (commit `7304566`)
+- `import { Button }` → `import Button` (default export)
 
-### `POST /api/v1/search` ✅ EXISTE
-- Archivo: `src/api/routes/knowledge.py`
-- Usa `QueryEngine.search()` — ahora debería funcionar post-fix de Qdrant
+### ~~BUG #6 — GraphVisualizer no importado~~ ✅ FIXED (commit `7304566`)
+- Faltaba `import GraphVisualizer from './GraphVisualizer'` en AnalysisResultV2
 
-### `POST /api/v1/proposals/foundation` ✅ EXISTE
-- Archivo: `src/api/routes/proposals.py`
-- Genera propuesta Foundation con cálculo de pricing
+## ROADMAP — Sprint Funcionalidad
 
-### `POST /api/v1/analyze` ✅ EXISTE
-- Archivo: `src/api/routes/analyze.py`
-- Ejecuta grafo LangGraph
+### Diagnóstico: Por qué no se envían las preguntas a los agentes
 
-## Plan de Acción
+**Root cause**: No hay un bug de UI — la interfaz funciona, pero hay 2 problemas:
+1. **AgentCard tiene `api.executeAgent`** → endpoint `POST /api/v1/agents/{name}/execute` existe en backend. El `BaseAgent.execute()` llama a `QueryEngine.search()` (fixed con Qdrant fix). Sin embargo, el usuario probablemente ve agentes estáticos sin interacción funcional porque no hay ruta navegable.
+2. **AnalyzePage usa `AnalysisPanel`** → `useAnalysis()` → `api.runGraph()` → `POST /api/v1/analyze` → `run_graph()`. Si el grafo falla en el retriever (Qdrant), el análisis devuelve error y no se muestra la respuesta.
 
-### ~~Fase 1: Fix Críticos~~ ✅ COMPLETADA
-- [x] Analizar código completo del proyecto
-- [x] Crear archivo de tracking
-- [x] Fix BUG #1: Qdrant `.search()` → `.search_points()`
-- [x] Fix BUG #2: Importar `Cpu`, `Search`, `Zap` en AnalysisPanel.tsx
-- [x] Fix BUG #3: Port alignment `.env` → 8000
+### Fase 1: Fix de Textos Invisibles (legibilidad) ✅ COMPLETADA
+- [x] Diagnosticar: `ClientDetailPage` usa `bg-white` en KPIs sobre fondo oscuro
+- [x] Fix: `bg-white` → `card-glass` en KPI cards, Orquestador container e Historial container
+- [x] Fix: `bg-white/80` → `bg-canvas-elevated` en `GraphVisualizer`
 
-### Fase 2: Testing End-to-End
-- [ ] Backend: `make start` en evangelista-rag → verificar readiness
-- [ ] Test: Knowledge search devuelve resultados (Qdrant fix)
-- [ ] Test: Submit analyze → retrieve → response
-- [ ] Test: Proposal generation con hallazgos
-- [ ] Test: Graph visualization renderiza
-- [ ] Frontend: verificar que `npm run dev` arranca sin errores en puerto 5174
+### Fase 2: Agent Detail Page ✅ COMPLETADA
+- [x] Crear `AgentDetailPage.tsx` — página completa con:
+  [x] Header del agente (nombre, status, dominios, herramientas, herramientas)
+  [x] Panel de configuración: dominios + herramientas display
+  [x] Panel de ejecución: textarea funcional, envío a `POST /api/v1/agents/{name}/execute`
+  [x] Resultado: análisis, confianza, recomendaciones, escalación, fuentes
+  [x] Historial de ejecuciones en sesión
+- [x] `AgentCard` simplificado: ahora solo muestra info + clickea y navega a `/agents/:name`
+- [x] Ruta agregada en `App.tsx`: `/agents/:name` → `AgentDetailPage`
+- [x] Import agregado en `App.tsx`
 
-### Fase 3: Hardening
-- [ ] Verificar node_modules instalados en dashboard
-- [ ] Error boundaries en React
-- [ ] Rotar API key de Groq si se compromete en logs
-- [ ] Verificar que `.env` no se commitea por accidente
+### Fase 3: Test End-to-End
+- [ ] Verificar que `POST /api/v1/analyze` funciona (Qdrant fixed)
+- [ ] Verificar que `POST /api/v1/agents/{name}/execute` funciona
+- [ ] Test Knowledge search
+- [ ] Test Graph visualization
 
 ## Historial de Sesiones
 
 ### 2026-04-02 — Sesión actual
-- Created: 4 commits
+- Created: 5 commits
   - `818c318` — refactor UI components + Tailwind Apple-style design system
   - `cad4e42` — remove legacy agents/orchestrator, adopt LangGraph
   - `5ffa6ce` — vault glossary updates, sales notes, Obsidian config, root deps
   - `60ba3f2` — fix: Qdrant search_points() + missing icon imports + port alignment
+  - `7304566` — rebuild ClientsPage (truncated), fix LoginPage + AnalysisResultV2 imports
 - All pushed to main
+- Servidores arrancados: backend :8001, frontend :5174
 
 ## Contexto Relevante
 
 - El sistema de agentes especializados legacy fue eliminado y reemplazado por LangGraph cyclic graph
-- 5 agentes registrados: `financial`, `process`, `data_engineer`, `analyst`, `risk`
+- 3 agentes registrados actualmente: `financial`, `process`, `data_engineer`
 - Grafos LangGraph con 9 nodos: router → retriever → grader → CRAG decision → generator → hallucination_check → quality_check → synthesizer
 - Tailwind configurado con tema "Apple Dark Canvas" + color Evangelista olive
 - Supabase integrado para clients, analyses, proposals
+- `.env` está versionado (repo privado)

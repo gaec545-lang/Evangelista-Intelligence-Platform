@@ -51,7 +51,7 @@ export default function GraphVisualizer({ mermaid, title, nodeHistory, className
   }, [mermaid]);
 
   return (
-    <div className={`rounded-xl border border-[var(--eva-border)] bg-white/80 backdrop-blur-sm overflow-hidden ${className || ''}`}>
+    <div className={`rounded-xl border border-surface-border bg-canvas-elevated overflow-hidden ${className || ''}`}>
       {title && (
         <div className="px-4 py-3 border-b border-[var(--eva-border)] flex items-center justify-between">
           <h3 className="text-sm font-medium text-[var(--eva-charcoal)]">{title}</h3>
