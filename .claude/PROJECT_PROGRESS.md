@@ -7,77 +7,84 @@
 
 - **Última actualización**: 2026-04-02
 - **Branch**: `main`
-- **Último commit**: `5ffa6ce` — chore: vault glossary updates, sales notes, Obsidian config, root deps
-- **Puertos**: Dashboard `5174` | Backend `8001`
+- **Último commit**: `60ba3f2` — fix: Qdrant search_points() + missing icon imports + port alignment
+- **Puertos**: Dashboard `5174` | Backend `8000`
 
 ## Arquitectura
 
 | Componente | Tech | Puerto | Status |
 |---|---|---|---|
 | Frontend Dashboard | React + TS + Vite + Tailwind | 5174 | Funcional |
-| Backend RAG API | FastAPI + LangGraph + Qdrant | 8001 | Bugs críticos |
+| Backend RAG API | FastAPI + LangGraph + Qdrant | 8000 | Bugs fixeados |
 | Database | Supabase (PostgreSQL) | Cloud | Funcional |
-| Vector DB | Qdrant (local) | — | **BROKEN** |
+| Vector DB | Qdrant (local) | — | **FIXED** |
 | LLM | Groq (gsk_...) | — | Funcional |
 | Vault | Obsidian MD | — | Actualizado |
 
 ## Bugs Conocidos
 
-### BUG #1 — Qdrant search method (CRÍTICO)
-- **Archivo**: `evangelista-rag/src/retrieval/query_engine.py` línea ~68
-- **Error**: `'QdrantClient' object has no attribute 'search'` → debe usar `search_points()`
-- **Impacto**: Rompe TODA recuperación: proposals, graph visualization, knowledge search
-- **Estado**: PENDIENTE — primera prioridad
+### ~~BUG #1 — Qdrant search method (CRÍTICO)~~ ✅ FIXED
+- Fix aplicado (commit `60ba3f2`): `.search()` → `.search_points()` en `query_engine.py`
+- **Necesita prueba**: reiniciar backend y confirmar que retrieval funciona
 
-### BUG #2 — Missing icon imports en AnalysisPanel
-- **Archivo**: `evangelista-dashboard/src/components/AnalysisPanel.tsx`
-- **Falta**: `<Cpu>`, `<Search>`, `<Zap>` no importados de `lucide-react`
-- **Impacto**: UI rota en loading state
+### ~~BUG #2 — Missing icon imports en AnalysisPanel~~ ✅ FIXED
+- Fix aplicado: importados `Cpu`, `Search`, `Zap` en `AnalysisPanel.tsx`
 
-### BUG #3 — Port alignment
-- **Frontend `.env`**: `VITE_API_URL=http://localhost:8001`
-- **Backend default**: port 8000
-- **Verificar**: que el backend efectivamente corra en 8001
+### ~~BUG #3 — Port alignment~~ ✅ FIXED
+- Fix aplicado: `.env` ahora usa `http://localhost:8000`
+- **Nota**: el archivo `.env` está en `.gitignore`, no se commitea (seguridad)
+- **Acción**: el usuario debe confirmar que su `.env` local refleja este cambio antes de correr el dev server
 
-## Endpoints Faltantes
+## Endpoints Existentes (ya no faltantes)
 
-### `/api/v1/graph/mermaid`
-- **Necesario para**: GraphPage renderiza visualización Mermaid
-- **Qué hace**: Retorna trace Mermaid de la ejecución LangGraph
-- **Estado**: NO EXISTE en el backend
+### `GET /api/v1/graph/mermaid` ✅ EXISTE
+- Archivo: `src/api/routes/graph_viz.py`
+- LangGraph `draw_mermaid()` o fallback a `render_graph_definition()`
+
+### `POST /api/v1/search` ✅ EXISTE
+- Archivo: `src/api/routes/knowledge.py`
+- Usa `QueryEngine.search()` — ahora debería funcionar post-fix de Qdrant
+
+### `POST /api/v1/proposals/foundation` ✅ EXISTE
+- Archivo: `src/api/routes/proposals.py`
+- Genera propuesta Foundation con cálculo de pricing
+
+### `POST /api/v1/analyze` ✅ EXISTE
+- Archivo: `src/api/routes/analyze.py`
+- Ejecuta grafo LangGraph
 
 ## Plan de Acción
 
-### Fase 1: Fix Críticos
+### ~~Fase 1: Fix Críticos~~ ✅ COMPLETADA
 - [x] Analizar código completo del proyecto
 - [x] Crear archivo de tracking
-- [ ] Fix BUG #1: Qdrant `.search()` → `.search_points()` en `query_engine.py`
-- [ ] Fix BUG #2: Importar `Cpu`, `Search`, `Zap` en AnalysisPanel.tsx
-- [ ] Fix BUG #3: Verificar backend corre en 8001, alinear si no
+- [x] Fix BUG #1: Qdrant `.search()` → `.search_points()`
+- [x] Fix BUG #2: Importar `Cpu`, `Search`, `Zap` en AnalysisPanel.tsx
+- [x] Fix BUG #3: Port alignment `.env` → 8000
 
-### Fase 2: Endpoints Faltantes
-- [ ] Crear `POST /api/v1/search` que use QueryEngine correctamente
-- [ ] Crear `GET /api/v1/graph/mermaid` para visualización
-- [ ] Verificar proposal endpoints funcionen post-fix de Qdrant
-
-### Fase 3: End-to-End Testing
-- [ ] Test: Submit analyze → retrieve → response (puerto 8001)
-- [ ] Test: Knowledge search devuelve resultados
+### Fase 2: Testing End-to-End
+- [ ] Backend: `make start` en evangelista-rag → verificar readiness
+- [ ] Test: Knowledge search devuelve resultados (Qdrant fix)
+- [ ] Test: Submit analyze → retrieve → response
 - [ ] Test: Proposal generation con hallazgos
 - [ ] Test: Graph visualization renderiza
-- [ ] Verificar no hay errores de TypeScript (`npx tsc --noEmit` en dashboard)
+- [ ] Frontend: verificar que `npm run dev` arranca sin errores en puerto 5174
 
-### Fase 4: Hardening
-- [ ] Agregar `__pycache__/` a `.gitignore` con path absoluto o limpiar
+### Fase 3: Hardening
+- [ ] Verificar node_modules instalados en dashboard
 - [ ] Error boundaries en React
 - [ ] Rotar API key de Groq si se compromete en logs
+- [ ] Verificar que `.env` no se commitea por accidente
 
 ## Historial de Sesiones
 
 ### 2026-04-02 — Sesión actual
-- Created: 3 commits (dashboard refactor, backend cleanup, vault config)
-- Pushed to main: `818c318`, `cad4e42`, `5ffa6ce`
-- Pendiente: Fixes de bugs críticos (Qdrant, imports, endpoints)
+- Created: 4 commits
+  - `818c318` — refactor UI components + Tailwind Apple-style design system
+  - `cad4e42` — remove legacy agents/orchestrator, adopt LangGraph
+  - `5ffa6ce` — vault glossary updates, sales notes, Obsidian config, root deps
+  - `60ba3f2` — fix: Qdrant search_points() + missing icon imports + port alignment
+- All pushed to main
 
 ## Contexto Relevante
 
