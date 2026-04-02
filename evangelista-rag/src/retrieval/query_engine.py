@@ -65,7 +65,7 @@ class QueryEngine:
             combined = combine_filters(*filters) if len(filters) > 1 else filters[0]
             
             # 3. Buscar en Qdrant
-            results = self.client.search(
+            results = self.client.search_points(
                 collection_name=self.collection,
                 query_vector=query_embedding,
                 query_filter=combined,

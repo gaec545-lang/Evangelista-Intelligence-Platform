@@ -3,7 +3,7 @@ import { useAnalysis } from '../hooks/useAnalysis';
 import AnalysisResultV2 from './AnalysisResultV2';
 import Button from './ui/Button';
 import Badge from './ui/Badge';
-import { Sparkles, Send } from 'lucide-react';
+import { Sparkles, Send, Cpu, Search, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Props {
