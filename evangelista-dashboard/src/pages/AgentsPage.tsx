@@ -25,9 +25,9 @@ export function AgentsPage() {
       )}
 
       {error && (
-        <div className="p-6 rounded-card bg-red-50 border border-red-100 text-red-700">
-          <p className="text-sm">Error de conectividad</p>
-          <p className="text-xs mt-1 text-red-500">{error}</p>
+        <div className="card-glass p-6 bg-danger/10 border-danger/30">
+          <p className="text-sm text-danger">Error de conectividad</p>
+          <p className="text-xs mt-1 text-danger/80">{error}</p>
         </div>
       )}
 

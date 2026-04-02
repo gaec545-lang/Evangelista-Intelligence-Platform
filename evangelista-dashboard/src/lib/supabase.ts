@@ -41,11 +41,11 @@ export const clientsDB = {
 
 export const analysesDB = {
   async list(clientId?: string): Promise<Analysis[]> {
-    let query = supabase.from('analyses').select('*').order('created_at', { ascending: false })
+    let query = supabase.from('analyses').select('*, client:clients(name)').order('created_at', { ascending: false })
     if (clientId) query = query.eq('client_id', clientId)
     const { data, error } = await query
     if (error) throw error
-    return data ?? []
+    return (data as any) ?? []
   },
   async create(analysis: Omit<Analysis, 'id' | 'created_at'>): Promise<Analysis> {
     const { data, error } = await supabase.from('analyses').insert(analysis).select().single()

@@ -44,24 +44,51 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface p-4">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center bg-canvas relative overflow-hidden p-4">
+      {/* Olive radial glow */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-30"
+        style={{
+          background: 'radial-gradient(ellipse 60% 50% at 50% 30%, rgba(149,184,119,0.15) 0%, transparent 70%)',
+        }}
+      />
+
+      <div className="w-full max-w-sm relative z-10">
         {/* Brand */}
         <div className="text-center mb-8">
-          <div className="w-12 h-12 mx-auto rounded-xl bg-primary-600 flex items-center justify-center mb-4">
-            <span className="text-white text-lg font-semibold">E</span>
+          <div className="w-12 h-12 mx-auto rounded-xl bg-primary-500/20 olive-glow flex items-center justify-center mb-4 border border-primary-500/20">
+            <span className="text-primary-600 text-lg font-semibold">E</span>
           </div>
           <p className="text-sm text-content-primary">Evangelista</p>
           <p className="text-xs text-content-tertiary mt-0.5">Intelligence Platform</p>
         </div>
 
-        {/* Login form */}
-        <div className="bg-white rounded-card border border-surface-border p-6 space-y-4">
+        {/* Login card */}
+        <div className="glass-strong rounded-card p-6 space-y-4">
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} required autoFocus disabled={isLocked} />
-            <Input label="Contraseña" type="password" value={password} onChange={e => setPassword(e.target.value)} required disabled={isLocked} />
-            {error && <p className="text-xs text-red-600">{error}</p>}
-            {isLocked && <p className="text-xs text-content-tertiary">Disponible en {secondsLeft}s</p>}
+            <Input
+              label="Email"
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              autoFocus
+              disabled={isLocked}
+            />
+            <Input
+              label="Contraseña"
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              disabled={isLocked}
+            />
+            {error && <p className="text-xs text-[#FF453A]">{error}</p>}
+            {isLocked && (
+              <p className="text-xs text-content-tertiary">
+                Disponible en {secondsLeft}s
+              </p>
+            )}
             <Button type="submit" loading={loading} className="w-full" disabled={isLocked}>
               Ingresar
             </Button>

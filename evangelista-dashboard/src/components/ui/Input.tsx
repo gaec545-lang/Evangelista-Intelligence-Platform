@@ -1,19 +1,39 @@
-import React from 'react'
+import React from 'react';
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string
-  error?: string
+  label?: string;
+  error?: string;
+  helper?: string;
 }
 
-export function Input({ label, error, className = '', ...props }: InputProps) {
+export function Input({ label, error, helper, className = '', ...props }: InputProps) {
   return (
-    <div className="flex flex-col gap-1">
-      {label && <label className="text-sm font-medium text-eva-charcoal">{label}</label>}
-      <input
-        className={`px-3 py-2 rounded-lg border border-[var(--eva-border)] bg-white text-eva-charcoal placeholder:text-eva-warm-gray focus:outline-none focus:ring-2 focus:ring-eva-olive/30 focus:border-eva-olive ${error ? 'border-eva-red' : ''} ${className}`}
-        {...props}
-      />
-      {error && <p className="text-xs text-eva-red">{error}</p>}
+    <div className="flex flex-col gap-1.5 w-full">
+      {label && (
+        <label className="text-[9px] font-semibold uppercase tracking-wider text-content-tertiary px-0.5">
+          {label}
+        </label>
+      )}
+      <div className="relative group">
+        <input
+          className={`
+            input-glass w-full px-4 py-2.5 text-[13px] font-medium
+            placeholder:text-content-tertiary/40
+            transition-all duration-200
+            ${error
+              ? '!border-red-500/40 focus:!border-red-500/60 focus:shadow-[0_0_0_3px_rgba(239,68,68,0.10)]'
+              : ''
+            }
+            ${className}
+          `}
+          {...props}
+        />
+      </div>
+      {(error || helper) && (
+        <p className={`text-[9px] px-0.5 ${error ? 'text-red-400/80' : 'text-content-tertiary/60'}`}>
+          {error || helper}
+        </p>
+      )}
     </div>
-  )
+  );
 }

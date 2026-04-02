@@ -1,24 +1,82 @@
-import React from 'react'
+import { ReactNode } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Loader2 } from 'lucide-react';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
-  size?: 'sm' | 'md' | 'lg'
-  loading?: boolean
+interface ButtonProps {
+  children?: ReactNode;
+  onClick?: () => void;
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  isLoading?: boolean;
+  disabled?: boolean;
+  className?: string;
+  icon?: ReactNode;
+  type?: 'button' | 'submit';
 }
 
-export function Button({ variant = 'primary', size = 'md', loading, children, className = '', disabled, ...props }: ButtonProps) {
-  const base = 'inline-flex items-center justify-center gap-2 font-medium rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed'
+export default function Button({
+  children,
+  onClick,
+  variant = 'primary',
+  size = 'md',
+  isLoading = false,
+  disabled = false,
+  className = '',
+  icon,
+  type = 'button'
+}: ButtonProps) {
   const variants = {
-    primary: 'bg-eva-olive text-eva-cream hover:bg-eva-olive-light',
-    secondary: 'bg-white text-eva-charcoal border border-[var(--eva-border)] hover:bg-eva-cream',
-    ghost: 'text-eva-charcoal hover:bg-black/5',
-    danger: 'bg-eva-red text-white hover:opacity-90',
-  }
-  const sizes = { sm: 'px-3 py-1.5 text-sm', md: 'px-4 py-2 text-sm', lg: 'px-6 py-3 text-base' }
+    primary: 'btn-primary',
+    secondary: 'bg-canvas-elevated text-content-primary hover:bg-white/[0.08] border border-white/[0.06]',
+    outline: 'bg-transparent border border-white/[0.08] text-content-primary hover:bg-white/[0.05]',
+    ghost: 'btn-ghost',
+    danger: 'text-[#FF453A] bg-[#FF453A]/10 border border-[#FF453A]/20 hover:bg-[#FF453A]/18',
+  };
+
+  const sizes = {
+    sm: 'px-3 py-1.5 text-[11px]',
+    md: 'px-4 py-2 text-[13px]',
+    lg: 'px-6 py-2.5 text-[14px]',
+  };
+
   return (
-    <button className={`${base} ${variants[variant]} ${sizes[size]} ${className}`} disabled={disabled || loading} {...props}>
-      {loading && <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />}
-      {children}
-    </button>
-  )
+    <motion.button
+      type={type}
+      whileTap={!disabled && !isLoading ? { scale: 0.985 } : {}}
+      onClick={onClick}
+      disabled={disabled || isLoading}
+      className={`
+        inline-flex items-center justify-center gap-1.5 rounded-button font-medium
+        transition-all duration-200
+        ${variants[variant]}
+        ${sizes[size]}
+        ${disabled || isLoading ? 'opacity-50 cursor-not-allowed grayscale-[0.5]' : 'cursor-pointer'}
+        ${className}
+      `}
+    >
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <motion.div
+            key="loader"
+            initial={{ opacity: 0, rotate: -45 }}
+            animate={{ opacity: 1, rotate: 0 }}
+            exit={{ opacity: 0 }}
+          >
+            <Loader2 className="w-4 h-4 animate-spin" />
+          </motion.div>
+        ) : (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex items-center gap-1.5"
+          >
+            {icon && <span className="shrink-0">{icon}</span>}
+            {children}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.button>
+  );
 }

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { AnalysisPanel } from '../components/AnalysisPanel'
 import { useClients } from '../hooks/useClients'
 import { useHistory } from '../hooks/useHistory'
-import { Brain } from 'lucide-react'
+import { Brain, ChevronDown } from 'lucide-react'
 import Badge from '../components/ui/Badge'
 
 export function AnalyzePage() {
@@ -38,16 +38,22 @@ export function AnalyzePage() {
       {/* Client Selector */}
       <section className="flex items-center gap-4">
         <span className="text-sm text-content-tertiary whitespace-nowrap">Contexto:</span>
-        <select
-          value={selectedClient}
-          onChange={e => setSelectedClient(e.target.value)}
-          className="h-9 px-3 pr-10 text-sm rounded-button border border-surface-border bg-white focus:ring-2 focus:ring-primary-500/20 focus:border-primary-600 transition-colors appearance-none cursor-pointer"
-        >
-          <option value="">Análisis genérico</option>
-          {clients.map(c => (
-            <option key={c.id} value={c.id}>{c.name}</option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            value={selectedClient}
+            onChange={e => setSelectedClient(e.target.value)}
+            className="h-9 pl-3 pr-9 text-sm rounded-button border border-white/[0.08] bg-canvas-raised text-content-primary appearance-none cursor-pointer transition-colors focus:border-primary-500/40 focus:ring-2 focus:ring-primary-500/10 outline-none"
+          >
+            <option value="">Análisis genérico</option>
+            {clients.map(c => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+          <ChevronDown
+            size={14}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
+          />
+        </div>
       </section>
 
       {/* Analysis Panel */}

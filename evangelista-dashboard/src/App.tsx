@@ -6,6 +6,7 @@ import { LoginPage } from './pages/LoginPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { AnalyzePage } from './pages/AnalyzePage'
 import GraphPage from './pages/GraphPage'
+import AnalysisHistory from './components/AnalysisHistory'
 import { AgentsPage } from './pages/AgentsPage'
 import { ClientsPage } from './pages/ClientsPage'
 import { ClientDetailPage } from './pages/ClientDetailPage'
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/" element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
           <Route index element={<DashboardPage />} />
           <Route path="analyze" element={<AnalyzePage />} />
+          <Route path="history" element={<AnalysisHistory />} />
           <Route path="graph" element={<GraphPage />} />
           <Route path="agents" element={<AgentsPage />} />
           <Route path="clients" element={<ClientsPage />} />

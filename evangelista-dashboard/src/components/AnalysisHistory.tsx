@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Calendar, Clock, ChevronRight, FileText, Filter, MoreVertical, Database } from 'lucide-react';
+import { Search, Clock, ChevronRight, FileText, Database, Shield } from 'lucide-react';
 import MarkdownRenderer from './MarkdownRenderer';
 import { supabase } from '../lib/supabase';
 import Badge from './ui/Badge';
-import Card from './ui/Card';
 import Button from './ui/Button';
 
 interface AnalysisRecord {
@@ -34,7 +33,7 @@ export default function AnalysisHistory() {
         .select('*')
         .order('created_at', { ascending: false })
         .limit(50);
-      
+
       if (data) {
         setAnalyses(data);
         if (data.length > 0 && !selected) setSelected(data[0]);
@@ -46,180 +45,208 @@ export default function AnalysisHistory() {
     }
   }
 
-  const filtered = analyses.filter(a => a.task.toLowerCase().includes(search.toLowerCase()));
+  const filtered = useMemo(
+    () => analyses.filter(a => a.task.toLowerCase().includes(search.toLowerCase())),
+    [analyses, search],
+  );
 
-  const getConfidenceVariant = (c: number) => {
+  const getConfidenceVariant = (c: number): 'success' | 'warning' | 'danger' => {
     if (c >= 0.8) return 'success';
     if (c >= 0.5) return 'warning';
     return 'danger';
   };
 
   return (
-    <div className="flex bg-surface-card rounded-3xl border border-surface-border overflow-hidden h-[calc(100vh-140px)] shadow-xl shadow-black/5 animate-in fade-in duration-500">
-      {/* Sidebar List */}
-      <div className="w-96 flex flex-col border-r border-surface-border bg-surface/30">
-        <div className="p-6 space-y-4 border-b border-surface-divider bg-white/50 backdrop-blur-md">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold text-content-primary">Historial</h2>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full">
-              <Filter size={16} className="text-content-tertiary" />
-            </Button>
-          </div>
-          <div className="relative group">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary group-focus-within:text-primary-500 transition-colors" />
-            <input 
-              type="text" 
-              placeholder="Buscar en el historial..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 text-[13px] font-medium bg-white rounded-xl border border-surface-border focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500 transition-all outline-none"
-            />
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto scrollbar-hide py-2">
-          {loading ? (
-            <div className="p-12 flex flex-col items-center gap-4 text-center">
-              <div className="w-10 h-10 border-3 border-primary-100 border-t-primary-500 rounded-full animate-spin" />
-              <p className="text-xs font-semibold text-content-tertiary uppercase tracking-wider">Cargando bitácora</p>
+    <div className="rounded-card overflow-hidden animate-glass-enter"
+      style={{ height: 'calc(100vh - 160px)', border: '1px solid rgba(255,255,255,0.06)' }}
+    >
+      <div className="flex h-full">
+        {/* ─── Sidebar ─── */}
+        <div
+          className="w-80 flex-shrink-0 flex flex-col border-r"
+          style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'rgba(255,255,255,0.06)' }}
+        >
+          {/* Search header */}
+          <div className="p-4 pb-3 space-y-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-semibold text-content-primary">Historial</h2>
+              <p className="text-[10px] text-content-tertiary tabular-nums">{filtered.length} registros</p>
             </div>
-          ) : (
-            <div className="px-3 space-y-1">
-              {filtered.map((a, i) => (
+            <div className="relative">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary/50 pointer-events-none" />
+              <input
+                type="text"
+                placeholder="Buscar análisis..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="input-glass w-full pl-9 pr-3 py-2 text-sm rounded-button"
+              />
+            </div>
+          </div>
+
+          {/* List */}
+          <div className="flex-1 overflow-y-auto scrollbar-hide py-2 px-2 space-y-0.5">
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-16 gap-3">
+                <div className="w-8 h-8 border-[2px] border-white/[0.06] border-t-primary-500 rounded-full animate-spin" />
+                <p className="text-[10px] text-content-tertiary uppercase tracking-widest">Cargando</p>
+              </div>
+            ) : filtered.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 gap-2">
+                <FileText size={24} className="text-content-tertiary/40" />
+                <p className="text-xs text-content-tertiary">Sin resultados</p>
+              </div>
+            ) : (
+              filtered.map((a, i) => (
                 <motion.button
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.03 }}
                   key={a.id}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: Math.min(i * 0.03, 0.3) }}
                   onClick={() => setSelected(a)}
-                  className={`w-full text-left p-4 rounded-2xl transition-all duration-200 group relative
-                    ${selected?.id === a.id 
-                      ? 'bg-white shadow-md border border-surface-border ring-1 ring-black/[0.02]' 
-                      : 'hover:bg-surface-hover border border-transparent'}
-                  `}
+                  className="w-full text-left rounded-button transition-all duration-150 group"
+                  style={{
+                    padding: '10px 12px',
+                    background: selected?.id === a.id ? 'rgba(149,184,119,0.08)' : 'transparent',
+                    border: selected?.id === a.id ? '1px solid rgba(149,184,119,0.15)' : '1px solid transparent',
+                  }}
                 >
-                  {selected?.id === a.id && (
-                    <motion.div 
-                      layoutId="active-indicator"
-                      className="absolute left-0 top-4 bottom-4 w-1 bg-primary-500 rounded-r-full"
-                    />
-                  )}
                   <div className="space-y-2">
-                    <p className={`text-[13px] font-semibold leading-relaxed line-clamp-2 transition-colors
-                      ${selected?.id === a.id ? 'text-primary-700' : 'text-content-primary group-hover:text-primary-600'}
-                    `}>
+                    <p
+                      className="text-sm leading-snug line-clamp-2 transition-colors"
+                      style={{ color: selected?.id === a.id ? '#A8CC8D' : '#F5F5F7' }}
+                    >
                       {a.task}
                     </p>
-                    <div className="flex items-center justify-between pointer-events-none">
-                      <div className="flex items-center gap-3">
-                        <Badge variant={getConfidenceVariant(a.confidence)} dot={false} className="opacity-90">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Badge variant={getConfidenceVariant(a.confidence)} size="sm">
                           {(a.confidence * 100).toFixed(0)}%
                         </Badge>
-                        <span className="text-[10px] font-bold text-content-tertiary flex items-center gap-1 uppercase tracking-tighter">
-                          <Calendar size={10} />
+                        <span className="text-[9px] text-content-tertiary tabular-nums">
                           {new Date(a.created_at).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })}
                         </span>
                       </div>
-                      <ChevronRight size={14} className={`transition-all ${selected?.id === a.id ? 'text-primary-400 translate-x-0' : 'text-surface-divider -translate-x-2'}`} />
+                      <ChevronRight
+                        size={14}
+                        style={{
+                          color: selected?.id === a.id ? '#A8CC8D' : 'rgba(255,255,255,0.12)',
+                          transform: selected?.id === a.id ? 'translateX(0)' : 'translateX(-4px)',
+                          transition: 'all 150ms',
+                        }}
+                      />
                     </div>
                   </div>
                 </motion.button>
-              ))}
-            </div>
-          )}
+              ))
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Detail Content */}
-      <div className="flex-1 overflow-y-auto bg-surface/50 scrollbar-hide relative">
-        <AnimatePresence mode="wait">
-          {selected ? (
-            <motion.div 
-              key={selected.id}
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
-              transition={{ duration: 0.3 }}
-              className="p-8 lg:p-12 max-w-5xl mx-auto"
-            >
-              {/* Detail Header */}
-              <div className="mb-10 space-y-6">
-                <div className="flex items-center justify-between">
-                  <Badge variant="primary" dot={true} size="lg">Consulta de Inteligencia</Badge>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" icon={<Database size={14} />}>Exportar JSON</Button>
-                    <Button variant="ghost" size="sm" icon={<MoreVertical size={16} />} />
+        {/* ─── Detail panel ─── */}
+        <div className="flex-1 overflow-y-auto scrollbar-hide" style={{ background: 'rgba(0,0,0,0.15)' }}>
+          <AnimatePresence mode="wait">
+            {selected ? (
+              <motion.div
+                key={selected.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.2 }}
+                className="p-8 max-w-3xl mx-auto space-y-8"
+              >
+                {/* Header */}
+                <div className="space-y-5">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="olive" size="md">Consulta de Inteligencia</Badge>
+                    <Button variant="ghost" size="sm" icon={<Database size={14} />}>
+                      Export JSON
+                    </Button>
                   </div>
-                </div>
-                
-                <h1 className="text-3xl lg:text-4xl font-semibold text-content-primary leading-[1.1] tracking-tight">
-                  {selected.task}
-                </h1>
-                
-                <div className="flex flex-wrap gap-6 pt-2">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[10px] font-bold text-content-tertiary uppercase tracking-widest flex items-center gap-1.5">
-                      <ShieldCheck size={12} className="text-primary-500" /> Confianza
-                    </span>
-                    <p className="text-lg font-bold text-content-primary">{(selected.confidence * 100).toFixed(0)}% <span className="text-sm font-medium text-content-tertiary">Precision</span></p>
-                  </div>
-                  <div className="w-px h-10 bg-surface-divider hidden sm:block" />
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[10px] font-bold text-content-tertiary uppercase tracking-widest flex items-center gap-1.5">
-                      <Clock size={12} className="text-primary-500" /> Latencia
-                    </span>
-                    <p className="text-lg font-bold text-content-primary">{(selected.execution_time_ms / 1000).toFixed(1)}s <span className="text-sm font-medium text-content-tertiary">Total</span></p>
-                  </div>
-                  <div className="w-px h-10 bg-surface-divider hidden sm:block" />
-                  <div className="flex flex-col gap-1">
-                    <span className="text-[10px] font-bold text-content-tertiary uppercase tracking-widest flex items-center gap-1.5">
-                      <Calendar size={12} className="text-primary-500" /> Fecha
-                    </span>
-                    <p className="text-lg font-bold text-content-primary">
-                      {new Date(selected.created_at).toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric' })}
-                    </p>
-                  </div>
-                </div>
-              </div>
 
-              {/* Response Card */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 px-2">
-                  <FileText size={18} className="text-primary-600" />
-                  <h3 className="text-sm font-bold uppercase tracking-widest text-content-secondary">Respuesta Generada</h3>
+                  <h1 className="text-2xl font-semibold text-content-primary leading-tight">
+                    {selected.task}
+                  </h1>
+
+                  {/* Stats row */}
+                  <div className="flex flex-wrap items-center gap-6" style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '1rem' }}>
+                    <StatItem icon={Shield} label="Confianza" value={`${(selected.confidence * 100).toFixed(0)}%`} sub="precision" accent="primary" />
+                    <div style={{ width: '1px', height: '2rem', background: 'rgba(255,255,255,0.06)' }} />
+                    <StatItem icon={Clock} label="Latencia" value={`${(selected.execution_time_ms / 1000).toFixed(1)}s`} sub="total" accent="default" />
+                    <div style={{ width: '1px', height: '2rem', background: 'rgba(255,255,255,0.06)' }} />
+                    <StatItem icon={Database} label="Fecha" value={
+                      new Date(selected.created_at).toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })
+                    } sub="" accent="default" />
+                  </div>
                 </div>
-                <Card className="p-8 lg:p-12 border-surface-border bg-white shadow-lg overflow-hidden relative group">
-                  <MarkdownRenderer content={selected.final_response} />
-                  {/* Subtle "Paper" effect */}
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-surface/50 [clip-path:polygon(100%_0,0_0,100%_100%)] pointer-events-none" />
-                </Card>
-              </div>
-            </motion.div>
-          ) : (
-            <div className="h-full flex flex-col items-center justify-center p-12 text-center">
-              <div className="w-20 h-20 rounded-3xl bg-surface border-2 border-dashed border-surface-divider flex items-center justify-center mb-6">
-                <FileText size={32} className="text-surface-divider" />
-              </div>
-              <h3 className="text-xl font-semibold text-content-primary mb-2">Historial de Operaciones</h3>
-              <p className="text-sm text-content-tertiary max-w-xs leading-relaxed">
-                Selecciona cualquier operación del listado lateral para inspeccionar los resultados detallados y trazas de ejecución.
-              </p>
-            </div>
-          )}
-        </AnimatePresence>
+
+                {/* Response */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 px-1">
+                    <FileText size={16} className="text-primary-500" />
+                    <h3 className="text-xs font-semibold text-content-tertiary uppercase tracking-widest">
+                      Respuesta Generada
+                    </h3>
+                  </div>
+                  <div
+                    className="rounded-card p-8"
+                    style={{
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.06)',
+                    }}
+                  >
+                    <div className="prose prose-invert prose-sm max-w-none prose-headings:font-semibold [&_h1]:text-xl [&_h2]:text-lg [&_h3]:text-base [&_p]:text-content-secondary [&_code]:text-primary-600 [&_pre]:!bg-canvas-elevated [&_pre]:!border [&_pre]:!border-white/[0.06] [&_pre]:!rounded-card">
+                      <MarkdownRenderer content={selected.final_response} />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="empty"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="h-full flex flex-col items-center justify-center gap-3 p-12 text-center"
+              >
+                <div
+                  className="w-16 h-16 rounded-card flex items-center justify-center mb-2"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.06)' }}
+                >
+                  <FileText size={28} className="text-content-tertiary/40" />
+                </div>
+                <h3 className="text-base font-semibold text-content-secondary">Historial de Operaciones</h3>
+                <p className="text-sm text-content-tertiary/70 max-w-xs leading-relaxed">
+                  Selecciona una operación del panel lateral para ver los resultados detallados.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );
 }
 
-function ShieldCheck({ size, className }: { size?: number, className?: string }) {
+/* ─── Stat Item ─── */
+
+function StatItem({
+  icon: Icon, label, value, sub, accent = 'default',
+}: {
+  icon: React.ComponentType<{ size: number; className?: string }>;
+  label: string;
+  value: string;
+  sub?: string;
+  accent?: 'primary' | 'default';
+}) {
   return (
-    <svg 
-      width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}
-    >
-      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-      <path d="m9 12 2 2 4-4" />
-    </svg>
+    <div className="flex flex-col gap-0.5">
+      <span className="text-[9px] font-semibold text-content-tertiary/60 uppercase tracking-widest flex items-center gap-1.5">
+        <Icon size={11} className={accent === 'primary' ? 'text-primary-500' : 'text-content-tertiary/50'} />
+        {label}
+      </span>
+      <p className="text-lg font-semibold text-content-primary tabular-nums">
+        {value}{sub && <span className="text-sm font-normal text-content-tertiary/60 ml-0.5">{sub}</span>}
+      </p>
+    </div>
   );
 }

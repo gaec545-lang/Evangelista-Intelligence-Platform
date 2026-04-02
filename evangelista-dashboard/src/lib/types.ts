@@ -22,6 +22,7 @@ export interface Client {
 export interface Analysis {
   id: string
   client_id?: string
+  client?: { name: string } // Joined from clients table
   task: string
   execution_plan?: string
   final_response?: string

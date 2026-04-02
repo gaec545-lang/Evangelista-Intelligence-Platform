@@ -1,11 +1,23 @@
-export function ConfidenceBadge({ value }: { value: number }) {
-  const pct = Math.round(value * 100)
-  const color = pct >= 80 ? 'text-green-700 bg-green-50' : pct >= 60 ? 'text-eva-gold bg-eva-gold/10' : 'text-eva-red bg-eva-red/10'
-  const label = pct >= 80 ? 'Alta' : pct >= 60 ? 'Media' : 'Baja'
+import Badge from './ui/Badge';
+
+export function ConfidenceBadge({ value, size = 'sm' }: { value: number, size?: 'sm' | 'md' }) {
+  const pct = Math.round(value * 100);
+  
+  const getVariant = (): 'success' | 'warning' | 'danger' => {
+    if (pct >= 85) return 'success';
+    if (pct >= 65) return 'warning';
+    return 'danger';
+  };
+
+  const getLabel = () => {
+    if (pct >= 85) return 'Precisión Alta';
+    if (pct >= 65) return 'Confiable';
+    return 'Revisar';
+  };
+
   return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium ${color}`}>
-      <span className="w-1.5 h-1.5 rounded-full bg-current" />
-      {label} {pct}%
-    </span>
-  )
+    <Badge variant={getVariant()} size={size} dot={true}>
+      {getLabel()} <span className="ml-1 opacity-60 tabular-nums">{pct}%</span>
+    </Badge>
+  );
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { Copy, FileText, CheckCircle2, Sparkles } from 'lucide-react'
+import { Copy, FileText, Sparkles, AlertCircle } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import Button from '../components/ui/Button'
 import { ProposalForm } from '../components/ProposalForm'
@@ -77,10 +77,10 @@ export function ProposalPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Form */}
         <div className="lg:col-span-5">
-          <div className="bg-white rounded-card border border-surface-border p-6 space-y-6">
+          <div className="glass-strong rounded-card border border-white/[0.10] p-6 space-y-6">
             <div className="flex items-center gap-2">
-              <Sparkles size={16} className="text-accent-gold" />
-              <p className="text-xs text-content-tertiary">Configuración</p>
+              <Sparkles size={14} className="text-accent-gold" />
+              <p className="text-[10px] text-content-tertiary uppercase tracking-widest">Configuración</p>
             </div>
             <ProposalForm
               key={clientData ? 'loaded' : 'initial'}
@@ -93,8 +93,9 @@ export function ProposalPage() {
                 <motion.p
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
-                  className="text-xs text-red-600"
+                  className="text-xs text-danger flex items-center gap-1.5"
                 >
+                  <AlertCircle size={12} />
                   {error}
                 </motion.p>
               )}
@@ -114,18 +115,22 @@ export function ProposalPage() {
               >
                 <div className="flex items-center justify-between px-1">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 size={14} className="text-emerald-500" />
-                    <p className="text-sm text-content-secondary">Previsualización</p>
+                    <div className="w-1.5 h-1.5 rounded-full bg-success/80" />
+                    <p className="text-xs text-content-tertiary">Previsualización</p>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-content-tertiary">{proposalType}</span>
-                    <Button variant="outline" size="sm" icon={<Copy size={14} />} onClick={copy}>
+                  <div className="flex items-center gap-3">
+                    <span className="text-[10px] text-content-tertiary uppercase tracking-widest">{proposalType}</span>
+                    <Button variant="ghost" size="sm" onClick={copy}>
                       {copied ? '¡Copiado!' : 'Copiar'}
                     </Button>
                   </div>
                 </div>
-                <div className="bg-white rounded-card border border-surface-border p-8 space-y-6 overflow-y-auto max-h-[700px]">
-                  <div className="prose prose-sm max-w-none prose-headings:text-content-primary prose-p:text-content-secondary prose-strong:text-primary-700 [&_h1]:text-xl [&_h2]:text-lg [&_h3]:text-base [&_hr]:border-surface-border">
+                <div
+                  className="glass-strong rounded-card border border-white/[0.10] p-8 space-y-6 overflow-y-auto max-h-[700px]"
+                >
+                  <div
+                    className="text-sm leading-relaxed [&_h1]:text-xl [&_h1]:font-semibold [&_h1]:mb-4 [&_h1]:text-content-primary"
+                  >
                     <ReactMarkdown>{proposal}</ReactMarkdown>
                   </div>
                 </div>
@@ -135,11 +140,12 @@ export function ProposalPage() {
                 key="empty"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="rounded-card border-2 border-dashed border-surface-border flex flex-col items-center justify-center text-center p-12 bg-surface/50 min-h-[500px]"
+                className="rounded-card border border-dashed border-white/[0.08] flex flex-col items-center justify-center text-center p-12 min-h-[500px]"
+                style={{ background: 'rgba(255,255,255,0.01)' }}
               >
-                <FileText size={40} className="text-content-tertiary mb-4" />
-                <p className="text-sm text-content-secondary mb-1">Esperando parámetros</p>
-                <p className="text-xs text-content-tertiary max-w-xs">
+                <FileText size={36} className="text-content-tertiary/30 mb-4" />
+                <p className="text-sm text-content-tertiary mb-1">Esperando parámetros</p>
+                <p className="text-xs text-content-tertiary/60 max-w-xs">
                   Completa los datos del cliente para generar la propuesta.
                 </p>
               </motion.div>

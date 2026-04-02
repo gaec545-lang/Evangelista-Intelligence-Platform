@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 
 interface ModalProps {
@@ -11,22 +12,58 @@ interface ModalProps {
 
 export function Modal({ open, onClose, title, children, maxWidth = 'max-w-lg' }: ModalProps) {
   useEffect(() => {
-    const h = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    const h = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
     if (open) document.addEventListener('keydown', h)
     return () => document.removeEventListener('keydown', h)
   }, [open, onClose])
 
-  if (!open) return null
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={onClose} />
-      <div className={`relative bg-white rounded-2xl shadow-xl w-full ${maxWidth} max-h-[90vh] overflow-y-auto`}>
-        <div className="flex items-center justify-between p-6 border-b border-[var(--eva-border)]">
-          <h2 className="text-lg font-serif font-semibold text-eva-charcoal">{title}</h2>
-          <button onClick={onClose} className="text-eva-warm-gray hover:text-eva-charcoal"><X size={20} /></button>
+    <AnimatePresence>
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Overlay — fade in */}
+          <motion.div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={onClose}
+          />
+
+          {/* Content — scale in */}
+          <motion.div
+            className={`relative w-full ${maxWidth} max-h-[90vh] overflow-y-auto rounded-2xl`}
+            style={{
+              background: 'rgba(255,255,255,0.08)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              boxShadow: '0 16px 48px rgba(0,0,0,0.48)',
+            }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b border-white/[0.08]">
+              <h2 className="text-lg font-semibold text-content-primary tracking-tight">{title}</h2>
+              <motion.button
+                onClick={onClose}
+                whileTap={{ scale: 0.92 }}
+                className="text-content-tertiary hover:text-content-primary transition-colors duration-200 rounded-lg p-1 hover:bg-white/[0.05]"
+              >
+                <X size={18} />
+              </motion.button>
+            </div>
+            {/* Body */}
+            <div className="p-6">{children}</div>
+          </motion.div>
         </div>
-        <div className="p-6">{children}</div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   )
 }

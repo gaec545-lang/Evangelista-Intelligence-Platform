@@ -5,51 +5,110 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Evangelista brand — olive/cream/charcoal
+        // ════════════════════════════════════════════
+        // Apple Dark Canvas
+        // ════════════════════════════════════════════
+        canvas: {
+          DEFAULT:  '#0D0D0F',  // Deep dark background
+          elevated: '#151518',  // Elevated surface (lighter)
+          raised:   '#1C1C1E',  // Card / elevated layer
+          surface:  '#2C2C2E',  // Raised element
+        },
+        // ════════════════════════════════════════════
+        // Evangelista Olive (adapted for dark)
+        // ════════════════════════════════════════════
         primary: {
-          50:  '#F1F5EB',
-          100: '#E2EBD7',
-          200: '#C5D7AF',
-          300: '#A8C387',
-          400: '#8AAF5F',
-          500: '#4A5C3A',  // Evangelista Olive
-          600: '#3D4C30',
-          700: '#2F3C26',
-          800: '#222B1B',
-          900: '#141A11',
+          50:  '#1A2010',
+          100: '#2A3520',
+          200: '#3D4D2F',
+          300: '#50663E',
+          400: '#7C9C62',
+          500: '#95B877',  // Base olive — visible on dark
+          600: '#A8CC8D',  // Hover
+          700: '#BCDEA6',
+          800: '#D0F0BF',
+          900: '#E5FAD8',
         },
+        // ════════════════════════════════════════════
+        // Surface aliases → dark glass tokens
+        // These bridge old component references → dark theme
+        // ════════════════════════════════════════════
         surface: {
-          DEFAULT: '#FAFAF8',  // Subtler cream — almost white
-          card:  '#FFFFFF',
-          hover: '#F5F2EE',    // Warm hover
-          border:'#E8E4DE',    // Warm border
-          divider:'#E8E4DE',
+          DEFAULT:  '#0D0D0F',              // Main background
+          card:     'rgba(255,255,255,0.05)',   // Glass card bg
+          hover:    'rgba(255,255,255,0.07)',   // Hover state
+          border:   'rgba(255,255,255,0.08)',   // Border color
+          divider:  'rgba(255,255,255,0.06)',   // Divider line
         },
+        // ════════════════════════════════════════════
+        // Text aliases → Apple dark text palette
+        // ════════════════════════════════════════════
         content: {
-          primary:   '#2C2C2A',  // Charcoal
-          secondary: '#6B6B68',
-          tertiary:  '#9A9690',  // Warm gray
-          inverse:   '#FFFFFF',
+          primary:   '#F5F5F7',
+          secondary: '#A1A1A6',
+          tertiary:  '#636366',
+          inverse:   '#0D0D0F',
         },
+        // ════════════════════════════════════════════
+        // Glass Surfaces (Apple-style)
+        // ════════════════════════════════════════════
+        glass: {
+          subtle:  'rgba(255,255,255,0.03)',
+          DEFAULT: 'rgba(255,255,255,0.05)',
+          strong:  'rgba(255,255,255,0.08)',
+          active:  'rgba(149,184,119,0.12)',  // Olive glass
+        },
+        // ════════════════════════════════════════════
+        // Evangelista Accents
+        // ════════════════════════════════════════════
         accent: {
-          gold: '#B8963E',
-          red:  '#A33D3D',
+          gold: '#D4A843',
+          red:  '#FF6B6B',
         },
+        // ════════════════════════════════════════════
+        // Borders
+        // ════════════════════════════════════════════
+        border: {
+          subtle: 'rgba(255,255,255,0.04)',
+          DEFAULT: 'rgba(255,255,255,0.08)',
+          strong: 'rgba(255,255,255,0.12)',
+          active: 'rgba(149,184,119,0.30)',
+        },
+        // ════════════════════════════════════════════
+        // Status colors — dark theme tints
+        // ════════════════════════════════════════════
+        success: { light: 'rgba(48,209,88,0.15)', DEFAULT: '#30D158', dark: '#34C759' },
+        warning: { light: 'rgba(255,214,10,0.15)', DEFAULT: '#FFD60A', dark: '#FF9F0A' },
+        danger:  { light: 'rgba(255,69,58,0.15)',  DEFAULT: '#FF453A', dark: '#FF3B30' },
+        info:    { light: 'rgba(100,210,255,0.15)',DEFAULT: '#64D2FF', dark: '#5AC8FA' },
       },
       fontFamily: {
-        sans:  ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        mono:  ['JetBrains Mono', 'menlo', 'monospace'],
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        mono: ['JetBrains Mono', 'SF Mono', 'Menlo', 'monospace'],
       },
       fontSize: {
-        // Tighter UI scale
-        'xs':   ['0.6875rem', { lineHeight: '1rem' }],       // 11px
-        'sm':   ['0.8125rem', { lineHeight: '1.25rem' }],    // 13px
-        'base': ['0.875rem',  { lineHeight: '1.5rem' }],     // 14px
-        'lg':   ['1rem',      { lineHeight: '1.5rem' }],     // 16px
-        'xl':   ['1.125rem',  { lineHeight: '1.75rem' }],    // 18px
-        '2xl':  ['1.375rem',  { lineHeight: '1.75rem' }],    // 22px
-        '3xl':  ['1.75rem',   { lineHeight: '2rem' }],       // 28px
-        '4xl':  ['2.25rem',   { lineHeight: '2.5rem' }],     // 36px
+        'xs':  ['0.6875rem', { lineHeight: '1rem' }],    // 11px
+        'sm':  ['0.75rem',    { lineHeight: '1.25rem' }], // 12px
+        'base':['0.8125rem',  { lineHeight: '1.375rem'}], // 13px
+        'lg':  ['0.875rem',   { lineHeight: '1.5rem' }],  // 14px — body
+        'xl':  ['1rem',       { lineHeight: '1.5rem' }],  // 16px
+        '2xl': ['1.25rem',    { lineHeight: '1.75rem'}],  // 20px
+        '3xl': ['1.5rem',     { lineHeight: '2rem' }],    // 24px
+        '4xl': ['1.875rem',   { lineHeight: '2.25rem'}],  // 30px
+      },
+      borderRadius: {
+        'card':   '14px',
+        'button': '10px',
+        'badge':  '8px',
+        'input':  '10px',
+      },
+      boxShadow: {
+        'card':       '0 1px 3px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.04)',
+        'card-hover': '0 4px 12px rgba(0,0,0,0.2),  0 0 0 1px rgba(255,255,255,0.08)',
+        'glass':      '0 4px 24px rgba(0,0,0,0.24), 0 0 0 1px rgba(255,255,255,0.05)',
+        'glass-lg':   '0 8px 32px rgba(0,0,0,0.32), 0 0 0 1px rgba(255,255,255,0.08)',
+        'elevated':   '0 16px 48px rgba(0,0,0,0.48)',
+        'olive-glow': '0 0 0 1px rgba(149,184,119,0.25), 0 0 20px rgba(149,184,119,0.10)',
       },
       spacing: {
         '4.5': '1.125rem',
@@ -57,40 +116,44 @@ export default {
         '15':  '3.75rem',
         '18':  '4.5rem',
         '22':  '5.5rem',
-      },
-      borderRadius: {
-        'card':   '12px',
-        'button': '8px',
-        'badge':  '6px',
-        'input':  '10px',
-      },
-      boxShadow: {
-        'card':       '0 1px 2px 0 rgba(0, 0, 0, 0.025), 0 1px 1px 0 rgba(0, 0, 0, 0.015)',
-        'card-hover': '0 4px 8px -1px rgba(0, 0, 0, 0.05), 0 2px 2px -2px rgba(0, 0, 0, 0.04)',
-        'dropdown':   '0 8px 24px -4px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04)',
-        'modal':      '0 24px 80px -16px rgba(0, 0, 0, 0.16)',
+        '28':  '7rem',
       },
       animation: {
-        'fade-in':  'fadeIn 0.3s ease-out',
-        'slide-up': 'slideUp 0.3s ease-out',
-        'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+        'fade-in':   'fadeIn 0.35s ease-out',
+        'slide-up':  'slideUp 0.3s ease-out',
+        'shimmer':   'shimmer 3s ease-in-out infinite',
+        'pulse-soft':'pulseSoft 3s ease-in-out infinite',
+        'scale-in':  'scaleIn 0.2s ease-out',
       },
       keyframes: {
-        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+        fadeIn: {
+          '0%':   { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
         slideUp: {
-          '0%':   { opacity: '0', transform: 'translateY(10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+          '0%':   { opacity: '0', transform: 'translateY(12px)', filter: 'blur(3px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)',      filter: 'blur(0)' },
+        },
+        shimmer: {
+          '0%':   { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
         },
         pulseSoft: {
           '0%, 100%': { opacity: '1' },
           '50%':      { opacity: '0.6' },
         },
+        scaleIn: {
+          '0%':   { opacity: '0', transform: 'scale(0.96)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
       },
-      transitionTimingFunction: {
-        'bounce-sm': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+      backdropBlur: {
+        'glass': '20px',
+        'heavy': '40px',
       },
-      transitionDuration: {
-        DEFAULT: '150ms',
+      backgroundImage: {
+        'canvas-glow':  'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(149,184,119,0.08) 0%, transparent 60%)',
+        'shimmer-strip': 'linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.03) 37%, transparent 63%)',
       },
     },
   },

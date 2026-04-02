@@ -1,5 +1,9 @@
 import { useState } from 'react';
-import GraphVisualizer from './GraphVisualizer';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronRight, Clock, GitBranch, ShieldCheck, Database, AlertCircle } from 'lucide-react';
+import MarkdownRenderer from './MarkdownRenderer';
+import Badge from './ui/Badge';
+import Card from './ui/Card';
 
 interface AnalysisData {
   response: string;
@@ -16,99 +20,171 @@ interface AnalysisData {
 export default function AnalysisResultV2({ data }: { data: AnalysisData }) {
   const [showGraph, setShowGraph] = useState(false);
 
-  const confidenceColor = data.confidence >= 0.8 ? 'text-green-700 bg-green-50 border-green-200'
-    : data.confidence >= 0.5 ? 'text-amber-700 bg-amber-50 border-amber-200'
-    : 'text-red-700 bg-red-50 border-red-200';
+  const getConfidenceVariant = (val: number): 'success' | 'warning' | 'danger' => {
+    if (val >= 0.8) return 'success';
+    if (val >= 0.5) return 'warning';
+    return 'danger';
+  };
 
   const routeLabel: Record<string, string> = {
     rag: 'Knowledge Base',
-    tools: 'Cálculo directo',
-    web: 'Búsqueda web',
-    multi: 'Multi-fuente',
+    tools: 'Calculated',
+    web: 'Web Search',
+    multi: 'Hybrid RAG',
   };
 
   return (
-    <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* Header con métricas */}
+    <div className="space-y-6">
+      {/* Metrics Row */}
       <div className="flex flex-wrap gap-3">
-        <div className={`px-3 py-1.5 rounded-lg border text-sm font-medium ${confidenceColor}`}>
-          Confianza: {(data.confidence * 100).toFixed(0)}%
+        <Badge
+          variant={getConfidenceVariant(data.confidence)}
+          size="lg"
+        >
+          {(data.confidence * 100).toFixed(0)}%
+        </Badge>
+
+        <div
+          className="flex items-center gap-2 px-3 py-1 rounded-button text-[11px] font-medium"
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', color: '#A1A1A6' }}
+        >
+          <Database size={13} className="text-primary-500" />
+          {routeLabel[data.route] || data.route}
         </div>
-        <div className="px-3 py-1.5 rounded-lg border border-[var(--eva-border)] text-sm text-[var(--eva-charcoal)] bg-white">
-          Ruta: {routeLabel[data.route] || data.route}
+
+        <div
+          className="flex items-center gap-2 px-3 py-1 rounded-button text-[11px] font-medium"
+          style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)', color: '#A1A1A6' }}
+        >
+          <Clock size={13} className="text-primary-500" />
+          {(data.execution_time_ms / 1000).toFixed(1)}s
         </div>
-        <div className="px-3 py-1.5 rounded-lg border border-[var(--eva-border)] text-sm text-[var(--eva-warm-gray)] bg-white">
-          {(data.execution_time_ms / 1000).toFixed(1)}s · {data.node_history.length} nodos
-          {data.retry_count > 0 && ` · ${data.retry_count} correcciones`}
-        </div>
+
+        {data.retry_count > 0 && (
+          <Badge variant="warning" size="sm">
+            {data.retry_count} auto-corrección
+          </Badge>
+        )}
       </div>
 
-      {/* Respuesta principal */}
-      <div className="bg-white rounded-xl border border-[var(--eva-border)] p-6 shadow-sm">
-        <div className="prose prose-sm max-w-none text-[var(--eva-charcoal)] leading-relaxed"
-             dangerouslySetInnerHTML={{ __html: formatMarkdown(data.response) }} />
+      {/* Main Response */}
+      <Card className="p-0" hover={false}>
+        <div
+          className="rounded-card p-8 lg:p-10 max-h-[70vh] overflow-y-auto scrollbar-hide"
+          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.04)' }}
+        >
+          <MarkdownRenderer content={data.response} />
+        </div>
+      </Card>
+
+      {/* Sources & Errors */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Sources */}
+        <AnimatePresence>
+          {data.sources && data.sources.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              <Card className="h-full" hover={false}>
+                <h4 className="text-[9px] font-semibold text-content-tertiary uppercase tracking-widest mb-3 flex items-center gap-2">
+                  <ShieldCheck size={13} />
+                  Fuentes
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  {data.sources.map((s, i) => (
+                    <span
+                      key={i}
+                      className="px-2.5 py-1 rounded-badge text-[10px] font-medium"
+                      style={{
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid rgba(255,255,255,0.06)',
+                        color: '#A1A1A6',
+                      }}
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Errors */}
+        {data.errors && data.errors.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <Card className="h-full" hover={false}>
+              <h4 className="text-[9px] font-semibold text-warning uppercase tracking-widest mb-3 flex items-center gap-2">
+                <AlertCircle size={13} />
+                Technical Insights
+              </h4>
+              <div className="space-y-1.5">
+                {data.errors.map((e, i) => (
+                  <p key={i} className="text-xs text-content-secondary/80 leading-relaxed flex gap-2 items-start">
+                    <span className="text-warning mt-0.5 shrink-0">•</span> {e}
+                  </p>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
+        )}
       </div>
 
-      {/* Fuentes */}
-      {data.sources && data.sources.length > 0 && (
-        <div className="bg-[var(--eva-cream)]/60 rounded-xl border border-[var(--eva-border)] p-4">
-          <h4 className="text-xs font-medium text-[var(--eva-warm-gray)] uppercase tracking-wider mb-2">
-            Fuentes consultadas
-          </h4>
-          <div className="flex flex-wrap gap-2">
-            {data.sources.map((s, i) => (
-              <span key={i} className="px-2.5 py-1 text-xs rounded-lg bg-white border border-[var(--eva-border)] text-[var(--eva-charcoal)]">
-                {s}
-              </span>
-            ))}
+      {/* Graph Toggle */}
+      <div className="pt-4">
+        <button
+          onClick={() => setShowGraph(!showGraph)}
+          className="group flex items-center gap-3 px-4 py-2 rounded-button transition-all duration-200 text-sm font-medium text-content-secondary hover:text-content-primary"
+          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+        >
+          <div className={`p-1.5 rounded-button transition-colors ${showGraph ? 'bg-primary-500 text-white' : ''}`}
+               style={!showGraph ? { background: 'rgba(149,184,119,0.08)' } : {}}
+          >
+            <GitBranch size={15} />
           </div>
-        </div>
-      )}
+          <span className={showGraph ? 'text-primary-600' : ''}>
+            {showGraph ? 'Ocultar' : 'Inspeccionar'} Traza
+          </span>
+          <ChevronRight size={15} className={`text-content-tertiary/50 transition-transform ${showGraph ? 'rotate-90' : ''}`} />
+        </button>
 
-      {/* Toggle del grafo */}
-      <button
-        onClick={() => setShowGraph(!showGraph)}
-        className="flex items-center gap-2 text-sm text-[var(--eva-olive)] hover:text-[var(--eva-olive-light)] transition-colors px-1"
-      >
-        <svg className={`w-4 h-4 transition-transform ${showGraph ? 'rotate-90' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-        {showGraph ? 'Ocultar' : 'Ver'} recorrido del grafo
-      </button>
-
-      {showGraph && data.mermaid_trace && (
-        <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-          <GraphVisualizer
-            mermaid={data.mermaid_trace}
-            title="Recorrido del análisis"
-            nodeHistory={data.node_history}
-          />
-        </div>
-      )}
-
-      {/* Errores/advertencias */}
-      {data.errors && data.errors.length > 0 && (
-        <div className="bg-amber-50 rounded-xl border border-amber-200 p-4">
-          <h4 className="text-xs font-medium text-amber-700 uppercase tracking-wider mb-2">Advertencias</h4>
-          {data.errors.map((e, i) => (
-            <p key={i} className="text-sm text-amber-800">{e}</p>
-          ))}
-        </div>
-      )}
+        <AnimatePresence>
+          {showGraph && data.mermaid_trace && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="overflow-hidden mt-4"
+            >
+              <Card className="p-0" hover={false}>
+                <div
+                  className="p-3 flex items-center justify-between"
+                  style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+                >
+                  <span className="text-[9px] font-semibold text-content-tertiary uppercase tracking-widest">
+                    Grafo de Decisión
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-success/80" />
+                    <span className="text-[9px] text-content-tertiary/60">Completado</span>
+                  </div>
+                </div>
+                <div className="p-6">
+                  <GraphVisualizer
+                    mermaid={data.mermaid_trace}
+                    nodeHistory={data.node_history}
+                  />
+                </div>
+              </Card>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
-}
-
-function formatMarkdown(text: string): string {
-  // Conversión básica de Markdown a HTML para el MVP
-  if (!text) return '';
-  
-  return text
-    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/\n- /g, '</p><li>')
-    .replace(/\n(\d+)\. /g, '</p><li>')
-    .replace(/\n---\n/g, '<hr class="my-4 border-[var(--eva-border)]">')
-    .replace(/^/, '<p>')
-    .replace(/$/, '</p>');
 }

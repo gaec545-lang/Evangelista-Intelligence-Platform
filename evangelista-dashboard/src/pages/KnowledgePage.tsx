@@ -35,7 +35,7 @@ export function KnowledgePage() {
       </section>
 
       {/* Search */}
-      <div className="bg-surface-card rounded-card border border-surface-border p-6">
+      <div className="card-glass p-6">
         <p className="text-xs text-content-tertiary mb-4">Consulta semántica — Ingresa un término de búsqueda</p>
         <SearchBar onSearch={handleSearch} loading={loading} />
         <div className="mt-3 flex items-center gap-5 text-xs text-content-tertiary">
@@ -58,7 +58,7 @@ export function KnowledgePage() {
       )}
 
       {searched && !loading && results.length === 0 && (
-        <div className="rounded-card border border-dashed border-surface-border p-12 text-center">
+        <div className="card-glass border-dashed p-12 text-center">
           <p className="text-sm text-content-secondary">Sin hallazgos relevantes</p>
           <p className="text-xs text-content-tertiary mt-1 max-w-xs mx-auto">No encontramos coincidencias. Prueba con términos más simples.</p>
         </div>

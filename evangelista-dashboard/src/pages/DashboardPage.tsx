@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Brain, Users, CheckCircle, TrendingUp, Plus, ArrowRight } from 'lucide-react'
-import Card from '../components/ui/Card'
 import Badge from '../components/ui/Badge'
 import Counter from '../components/ui/Counter'
 import { HistoryList } from '../components/HistoryList'
@@ -10,10 +9,10 @@ import { useClients } from '../hooks/useClients'
 import { api } from '../lib/api'
 
 const STAT_CARD_COLORS = [
-  { bg: 'bg-primary-50',   text: 'text-primary-600',   iconColor: 'text-primary-600' },
-  { bg: 'bg-amber-50',     text: 'text-amber-700',     iconColor: 'text-amber-600' },
-  { bg: 'bg-emerald-50',   text: 'text-emerald-700',   iconColor: 'text-emerald-600' },
-  { bg: 'bg-sky-50',       text: 'text-sky-700',       iconColor: 'text-sky-600' },
+  { bg: 'bg-primary-500/10', text: 'text-primary-600', icon: 'text-primary-500' },
+  { bg: 'bg-warning/10',   text: 'text-warning',   icon: 'text-warning' },
+  { bg: 'bg-success/10',   text: 'text-success',   icon: 'text-success' },
+  { bg: 'bg-info/10',      text: 'text-info',      icon: 'text-info' },
 ]
 
 export function DashboardPage() {
@@ -51,7 +50,7 @@ export function DashboardPage() {
           </p>
         </div>
         <Link to="/analyze">
-          <button className="inline-flex items-center gap-2 h-9 px-4 text-sm font-medium text-white bg-primary-600 rounded-button hover:bg-primary-700 transition-colors">
+          <button className="btn-primary h-9 px-4 text-sm font-medium">
             <Plus size={16} />
             Nuevo análisis
           </button>
@@ -65,13 +64,17 @@ export function DashboardPage() {
           return (
             <div
               key={stat.label}
-              className="bg-white rounded-card border border-surface-border p-5 hover:shadow-card-hover transition-shadow"
+              className="card-glass p-5 hover:shadow-card-hover transition-all duration-200"
             >
               <div className="flex items-center justify-between mb-3">
-                <stat.icon size={18} className={colors.iconColor} />
+                <div
+                  className={`w-9 h-9 rounded-lg ${colors.bg} flex items-center justify-center ${colors.icon} transition-all`}
+                >
+                  <stat.icon size={18} />
+                </div>
                 <Badge variant={stat.variant as any} size="sm" />
               </div>
-              <p className="text-2xl font-semibold tracking-tight mt-2">
+              <p className="text-2xl font-semibold tracking-tight text-content-primary mt-2">
                 <Counter target={stat.value} suffix={stat.suffix} />
               </p>
               <p className="text-xs text-content-tertiary mt-1">{stat.label}</p>
@@ -82,6 +85,7 @@ export function DashboardPage() {
 
       {/* Activity + Quick Actions */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Activity */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between px-1">
             <h2>Actividad reciente</h2>
@@ -90,38 +94,39 @@ export function DashboardPage() {
               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
-          <Card padding={false}>
-            <div className="divide-y divide-surface-border">
+          <div className="card-glass p-0 overflow-hidden">
+            <div className="divide-y divide-white/[0.06]">
               <HistoryList analyses={analyses} limit={6} />
             </div>
-          </Card>
+          </div>
         </div>
 
+        {/* Quick Actions */}
         <div className="space-y-4">
           <h2>Accesos rápidos</h2>
-          <Card padding={false}>
+          <div className="card-glass p-0 overflow-hidden">
             {[
-              { to: '/analyze',   icon: Brain,   label: 'Nuevo análisis',    sub: 'Orquestador RAG' },
-              { to: '/clients',   icon: Users,   label: 'Clientes',           sub: `${clients.length} registros` },
-              { to: '/proposals', icon: CheckCircle, label: 'Propuestas',     sub: 'Foundation & Architecture' },
-              { to: '/graph',     icon: TrendingUp, label: 'Arquitectura',    sub: 'Grafo LangGraph' },
+              { to: '/analyze',   icon: Brain,         label: 'Nuevo análisis', sub: 'Orquestador RAG' },
+              { to: '/clients',   icon: Users,          label: 'Clientes',       sub: `${clients.length} registros` },
+              { to: '/proposals', icon: CheckCircle,    label: 'Propuestas',     sub: 'Foundation & Architecture' },
+              { to: '/graph',     icon: TrendingUp,     label: 'Arquitectura',   sub: 'Grafo LangGraph' },
             ].map(item => (
               <Link
                 key={item.to}
                 to={item.to}
-                className="group flex items-center gap-3 px-5 py-3 hover:bg-surface-hover transition-colors"
+                className="group flex items-center gap-3 px-5 py-3 hover:bg-white/[0.03] transition-colors cursor-pointer"
               >
-                <div className="w-9 h-9 rounded-lg bg-surface border border-surface-border flex items-center justify-center text-content-tertiary group-hover:text-primary-600 group-hover:border-primary-200 transition-all">
+                <div className="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-content-tertiary group-hover:text-primary-500 group-hover:border-primary-500/30 transition-all">
                   <item.icon size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-content-primary">{item.label}</p>
                   <p className="text-xs text-content-tertiary truncate">{item.sub}</p>
                 </div>
-                <ArrowRight size={14} className="text-surface-border group-hover:text-primary-500 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all" />
+                <ArrowRight size={14} className="text-white/[0.06] group-hover:text-primary-500 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all" />
               </Link>
             ))}
-          </Card>
+          </div>
         </div>
       </section>
     </div>
