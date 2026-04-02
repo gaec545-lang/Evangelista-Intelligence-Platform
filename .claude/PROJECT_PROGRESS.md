@@ -56,7 +56,7 @@
 
 ### Fase 2: Agent Detail Page ✅ COMPLETADA
 - [x] Crear `AgentDetailPage.tsx` — página completa con:
-  [x] Header del agente (nombre, status, dominios, herramientas, herramientas)
+  [x] Header del agente (nombre, status, dominios, herramientas)
   [x] Panel de configuración: dominios + herramientas display
   [x] Panel de ejecución: textarea funcional, envío a `POST /api/v1/agents/{name}/execute`
   [x] Resultado: análisis, confianza, recomendaciones, escalación, fuentes
@@ -64,6 +64,7 @@
 - [x] `AgentCard` simplificado: ahora solo muestra info + clickea y navega a `/agents/:name`
 - [x] Ruta agregada en `App.tsx`: `/agents/:name` → `AgentDetailPage`
 - [x] Import agregado en `App.tsx`
+- [x] **Fix**: Ruta `/agents/:name` faltaba en App.tsx (commit separado pendiente)
 
 ### Fase 3: Test End-to-End
 - [ ] Verificar que `POST /api/v1/analyze` funciona (Qdrant fixed)

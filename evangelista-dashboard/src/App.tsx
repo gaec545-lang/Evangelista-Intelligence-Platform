@@ -37,6 +37,7 @@ export default function App() {
           <Route path="history" element={<AnalysisHistory />} />
           <Route path="graph" element={<GraphPage />} />
           <Route path="agents" element={<AgentsPage />} />
+          <Route path="agents/:name" element={<AgentDetailPage />} />
           <Route path="clients" element={<ClientsPage />} />
           <Route path="clients/:id" element={<ClientDetailPage />} />
           <Route path="proposals" element={<ProposalPage />} />
