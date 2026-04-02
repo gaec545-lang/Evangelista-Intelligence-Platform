@@ -11,7 +11,7 @@ from qdrant_client.models import (
 )
 from qdrant_client.http.exceptions import UnexpectedResponse
 
-from src.models.chunk import Chunk
+from src.core.models import Chunk
 from src.utils.logger import get_logger
 from src.config import settings
 from src.utils.qdrant import get_qdrant_client
@@ -27,9 +27,15 @@ class Indexer:
         collection: str = settings.QDRANT_COLLECTION,
         vector_size: int = settings.EMBED_DIMENSIONS,
     ) -> None:
-        self.client = get_qdrant_client()
+        self._client = None
         self.collection = collection
         self.vector_size = vector_size
+
+    @property
+    def client(self):
+        if self._client is None:
+            self._client = get_qdrant_client()
+        return self._client
 
     def ensure_collection(self) -> None:
         """Crea la colección en Qdrant si no existe, con índices de payload."""

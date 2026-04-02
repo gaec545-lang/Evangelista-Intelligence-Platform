@@ -1,7 +1,7 @@
 """Chunking semántico por headers Markdown para el pipeline RAG."""
 import re
-from src.models.document import VaultDocument
-from src.models.chunk import Chunk
+from typing import List
+from src.core.models import VaultDocument, Chunk
 from src.utils.logger import get_logger
 from src.config import settings
 

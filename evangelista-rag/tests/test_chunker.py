@@ -1,7 +1,8 @@
 """Tests para el módulo de chunking semántico."""
 import pytest
 from src.ingestion.chunker import SemanticChunker
-from src.models.document import VaultDocument
+from src.core.models import VaultDocument
+from src.core.models import Chunk
 
 SAMPLE_CONTENT = """# Título Principal
 

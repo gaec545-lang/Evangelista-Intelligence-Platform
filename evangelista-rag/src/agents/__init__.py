@@ -2,7 +2,10 @@
 """Agents package initialization.
 Imports specialist agents to ensure they are auto‑registered with AgentRegistry.
 """
-from src.agents.registry import AgentRegistry
-from src.agents.specialists import financial, process, data_engineer  # noqa: F401
+from .base import BaseAgent
+from .registry import AgentRegistry
+from .financial import FinancialAgent
+from .process import ProcessAgent
+from .data_engineer import DataEngineerAgent
 
 __all__ = ["AgentRegistry"]

@@ -1,7 +1,7 @@
 import structlog
 from qdrant_client.models import Filter
 
-from src.models.chunk import SearchResult
+from src.core.models import SearchResult
 from src.ingestion.embedder import Embedder
 from src.retrieval.filters import (
     build_agent_filter,
@@ -24,10 +24,20 @@ class QueryEngine:
         embedder: Embedder | None = None,
         collection: str = settings.QDRANT_COLLECTION,
     ) -> None:
-        self.client = get_qdrant_client()
+        self._client = None
         self.collection = collection
         self.embedder = embedder or Embedder()
         self.settings = settings
+
+    @property
+    def client(self):
+        if self._client is None:
+            self._client = get_qdrant_client()
+        return self._client
+
+    @client.setter
+    def client(self, value):
+        self._client = value
 
     async def search(
         self,

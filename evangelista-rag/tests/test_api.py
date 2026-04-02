@@ -3,30 +3,22 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from httpx import AsyncClient, ASGITransport
 
-from src.orchestrator.state import OrchestratorState, SubTask, TaskStatus
+from src.graph.state import GraphState
 
 
 @pytest.fixture
 def mock_state():
     """Estado de orquestador simulado para tests de API."""
-    return OrchestratorState(
-        original_task="Analiza la empresa XYZ",
-        subtasks=[
-            SubTask(
-                id="st-1",
-                description="Análisis financiero",
-                assigned_agent="financial",
-                status=TaskStatus.COMPLETED,
-                confidence=0.85,
-            )
-        ],
-        agent_outputs={"st-1": "Análisis financiero completo."},
+    return GraphState(
+        question="Analiza la empresa XYZ",
+        context={},
+        documents=[],
+        generation="Análisis financiero completo.",
         final_response="Resumen ejecutivo de la empresa XYZ.",
-        total_confidence=0.85,
+        confidence=0.85,
         execution_time_ms=1200,
-        sources_used=["doc-finanzas-01"],
+        node_history=["router", "retriever", "generator"],
         errors=[],
-        status=TaskStatus.COMPLETED,
     )
 
 
@@ -87,7 +79,7 @@ class TestHealthEndpoints:
 class TestAnalyzeEndpoint:
     @pytest.mark.asyncio
     async def test_analyze_returns_response(self, app_with_mocked_agents, mock_state):
-        with patch("src.api.routes.orchestrator.run_orchestrator", AsyncMock(return_value=mock_state)):
+        with patch("src.api.routes.analyze.run_graph", AsyncMock(return_value=mock_state)):
             async with AsyncClient(
                 transport=ASGITransport(app=app_with_mocked_agents), base_url="http://test"
             ) as client:

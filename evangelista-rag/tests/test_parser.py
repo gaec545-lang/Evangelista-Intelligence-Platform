@@ -4,6 +4,7 @@ import tempfile
 from pathlib import Path
 
 from src.ingestion.parser import MarkdownParser
+from src.core.models import VaultDocument
 
 VALID_MD = """---
 id: "EVK-TEST-001"

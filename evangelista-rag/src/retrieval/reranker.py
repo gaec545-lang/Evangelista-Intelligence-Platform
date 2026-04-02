@@ -1,5 +1,5 @@
 """Reranker opcional para mejora de resultados (requiere GPU)."""
-from src.models.chunk import SearchResult
+from src.core.models import SearchResult
 from src.utils.logger import get_logger
 
 logger = get_logger(__name__)

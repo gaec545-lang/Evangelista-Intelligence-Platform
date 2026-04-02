@@ -3,7 +3,7 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock
 
 from src.retrieval.query_engine import QueryEngine
-from src.models.chunk import SearchResult
+from src.core.models import SearchResult
 
 
 def make_mock_hit(

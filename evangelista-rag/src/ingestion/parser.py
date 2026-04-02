@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Optional
 import yaml
 
-from src.models.document import VaultDocument
+from src.core.models import VaultDocument
 from src.utils.logger import get_logger
 from src.utils.hashing import compute_file_hash
 

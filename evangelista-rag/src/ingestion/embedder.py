@@ -24,7 +24,9 @@ class Embedder:
         self.base_url = base_url.rstrip("/")
         self._fastembed_model: Any = None
 
-        if self.provider == "fastembed":
+    @property
+    def fastembed_model(self):
+        if self.provider == "fastembed" and self._fastembed_model is None:
             try:
                 from fastembed import TextEmbedding
                 self._fastembed_model = TextEmbedding(model_name=self.model)
@@ -32,12 +34,14 @@ class Embedder:
             except Exception as e:
                 logger.error("error_inicializando_fastembed", error=str(e))
                 self.provider = "ollama"
+        return self._fastembed_model
 
     async def embed_single(self, text: str) -> list[float]:
         """Genera el embedding de un texto individual."""
-        if self.provider == "fastembed" and self._fastembed_model:
+        model = self.fastembed_model
+        if self.provider == "fastembed" and model:
             # FastEmbed.embed devuelve un iterador de numpy arrays
-            embeddings = list(self._fastembed_model.embed([text]))
+            embeddings = list(model.embed([text]))
             return embeddings[0].tolist()
 
         # Fallback a Ollama
