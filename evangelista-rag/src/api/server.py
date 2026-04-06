@@ -76,6 +76,7 @@ from src.api.routes import (
     team_management,
     monte_carlo,
     foundation_analysis,
+    documents,
 )
 
 app.include_router(health.router, tags=["Health"])
@@ -88,4 +89,5 @@ app.include_router(erp_connections.router, tags=["ERP Connections"])
 app.include_router(team_management.router, tags=["Team"])
 app.include_router(monte_carlo.router, tags=["Sentinel Monte Carlo"])
 app.include_router(foundation_analysis.router, tags=["Foundation Analysis"])
+app.include_router(documents.router, prefix="/api/v1", tags=["Documents"])
 
