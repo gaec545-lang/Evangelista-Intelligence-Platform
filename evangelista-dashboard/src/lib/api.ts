@@ -86,4 +86,23 @@ export const api = {
       body: JSON.stringify({ task, context: context || {} }) 
     })
   },
+  async downloadDocument(template: string, data: Record<string, any>): Promise<void> {
+    const response = await fetch(`${API_BASE}/api/v1/documents/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ template, data }),
+    });
+    
+    if (!response.ok) throw new Error('Error generando documento');
+    
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = response.headers.get('Content-Disposition')?.split('filename=')[1]?.replace(/"/g, '') || `${template}.docx`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  },
 }

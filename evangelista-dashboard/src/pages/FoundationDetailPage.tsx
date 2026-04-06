@@ -12,6 +12,8 @@ import {
   Plus,
   Wand2,
 } from 'lucide-react';
+import MarkdownRenderer from '../components/MarkdownRenderer';
+import DocumentDownloader from '../components/DocumentDownloader';
 import CitaPipeline from '../components/foundation/CitaPipeline';
 import ScopingCalculator from '../components/foundation/ScopingCalculator';
 import DataUploadWizard from '../components/foundation/DataUploadWizard';
@@ -646,6 +648,73 @@ export default function FoundationDetailPage() {
               )}
             </div>
           )}
+
+          {/* Documentos War Room */}
+          <div className="mt-8 bg-[#1C1C1E] rounded-xl border border-[rgba(255,255,255,0.06)] p-5">
+            <h3 className="font-serif text-lg text-[#F5F5F7] mb-4">Documentos</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <DocumentDownloader
+                template="propuesta_foundation"
+                label="Propuesta Foundation"
+                accent="foundation"
+                data={{
+                  cliente_nombre: engagement.clients?.name,
+                  razon_social: engagement.clients?.name,
+                  sector: engagement.clients?.sector,
+                  nodo_critico: engagement.nodo_critico,
+                  factor_gamma: engagement.factor_gamma,
+                  foundation_fee: engagement.foundation_fee,
+                  contacto_nombre: engagement.clients?.contact_name,
+                  ciudad: engagement.clients?.city,
+                }}
+              />
+              <DocumentDownloader
+                template="dictamen_forense"
+                label="Dictamen Forense"
+                accent="foundation"
+                data={{
+                  cliente_nombre: engagement.clients?.name,
+                  sector: engagement.clients?.sector,
+                  nodo_critico: engagement.nodo_critico,
+                  factor_gamma: engagement.factor_gamma,
+                  total_impacto: engagement.dictamen_total_impacto,
+                  hallazgos: engagement.hallazgos,
+                  ceo_nombre: 'Adriel Evangelista',
+                  cto_nombre: 'CTO Evangelista',
+                }}
+              />
+              <DocumentDownloader
+                template="contrato_foundation"
+                label="Contrato Foundation"
+                accent="foundation"
+                data={{
+                  cliente_nombre: engagement.clients?.name,
+                  foundation_fee: engagement.foundation_fee,
+                  contacto_nombre: engagement.clients?.contact_name,
+                }}
+              />
+              <DocumentDownloader
+                template="orden_servicio"
+                label="Orden de Servicio"
+                accent="foundation"
+                data={{
+                  cliente_nombre: engagement.clients?.name,
+                  foundation_fee: engagement.foundation_fee,
+                }}
+              />
+              <DocumentDownloader
+                template="expediente_operativo"
+                label="Expediente Operativo"
+                accent="foundation"
+                data={{
+                  cliente_nombre: engagement.clients?.name,
+                  sector: engagement.clients?.sector,
+                  ceo_nombre: 'Adriel Evangelista',
+                  cto_nombre: 'CTO Evangelista',
+                }}
+              />
+            </div>
+          </div>
         </main>
       </div>
 

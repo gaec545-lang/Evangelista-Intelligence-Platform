@@ -8,6 +8,7 @@ import {
   Plus, Save, ExternalLink, CheckCircle, Circle,
 } from 'lucide-react';
 import { agentActions } from '../lib/agentActions';
+import DocumentDownloader from '../components/DocumentDownloader';
 
 type Tab = 'sprints' | 'financiero' | 'erp' | 'delivery';
 const TABS: { key: Tab; label: string; icon: React.ComponentType<any> }[] = [
@@ -394,6 +395,37 @@ export default function ArchitectureDetailPage() {
                 ) : (
                   <p className="text-xs text-[#A1A1A6] mt-1">Sin foundation engagement vinculado</p>
                 )}
+              </div>
+
+              {/* Documentos Architecture */}
+              <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] p-5">
+                <h3 className="text-sm font-medium text-[#A1A1A6] mb-3">Documentos Legales y Comerciales</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <DocumentDownloader
+                    template="propuesta_architecture"
+                    label="Propuesta Architecture"
+                    accent="architecture"
+                    data={{
+                      cliente_nombre: project.clients?.name,
+                      sector: project.clients?.sector,
+                      factor_gamma: foundation?.factor_gamma,
+                      setup_fee: project.setup_fee,
+                      total_impacto: foundation?.dictamen_total_impacto,
+                      nodo_critico: foundation?.nodo_critico,
+                    }}
+                  />
+                  <DocumentDownloader
+                    template="contrato_architecture"
+                    label="Contrato Architecture"
+                    accent="architecture"
+                    data={{
+                      cliente_nombre: project.clients?.name,
+                      factor_gamma: foundation?.factor_gamma,
+                      setup_fee: project.setup_fee,
+                      success_fee_estimado: project.success_fee_estimado,
+                    }}
+                  />
+                </div>
               </div>
             </div>
           )}
