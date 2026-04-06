@@ -37,7 +37,7 @@ export function AnalysisPanel({ clientId, onComplete }: Props) {
             onChange={e => setTask(e.target.value)}
             placeholder={"Describe la tarea para el orquestador...\nEj: 'Realiza el análisis de gap financiero para el cliente X'"}
             rows={5}
-            className="relative w-full px-6 py-5 text-base rounded-[20px] resize-none transition-all duration-200 placeholder:text-content-tertiary/40 leading-relaxed outline-none"
+            className="relative w-full px-6 py-5 text-base rounded-[20px] resize-none transition-all duration-200 placeholder:text-content-secondary/40 leading-relaxed outline-none"
             style={{
               background: 'rgba(255,255,255,0.04)',
               border: '1px solid rgba(255,255,255,0.08)',
@@ -60,7 +60,7 @@ export function AnalysisPanel({ clientId, onComplete }: Props) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   onClick={() => setTask('')}
-                  className="h-10 w-10 rounded-button flex items-center justify-center text-content-tertiary/60 hover:text-accent-red transition-colors"
+                  className="h-10 w-10 rounded-button flex items-center justify-center text-content-secondary/60 hover:text-accent-red transition-colors"
                   style={{ background: 'rgba(255,255,255,0.04)' }}
                 >
                   <Sparkles size={16} />
@@ -83,7 +83,7 @@ export function AnalysisPanel({ clientId, onComplete }: Props) {
         {/* Suggestion chips */}
         {!loading && !result && (
           <div className="flex flex-wrap gap-2 px-1">
-            <span className="text-[9px] font-semibold text-content-tertiary uppercase tracking-widest mr-1 py-1">
+            <span className="text-[9px] font-semibold text-content-secondary uppercase tracking-widest mr-1 py-1">
               Sugerencias:
             </span>
             {['Análisis financiero', 'Optimización operativa', 'Cálculo Factor Γ'].map(s => (

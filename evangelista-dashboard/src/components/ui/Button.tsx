@@ -26,10 +26,10 @@ export default function Button({
   type = 'button'
 }: ButtonProps) {
   const variants = {
-    primary: 'btn-primary',
-    secondary: 'bg-canvas-elevated text-content-primary hover:bg-white/[0.08] border border-white/[0.06]',
-    outline: 'bg-transparent border border-white/[0.08] text-content-primary hover:bg-white/[0.05]',
-    ghost: 'btn-ghost',
+    primary: 'bg-[#95B877] text-white hover:bg-[#85AB67] border border-[#85AB67]/50',
+    secondary: 'bg-[#1C1C1E] text-[#F5F5F7] hover:bg-white/[0.08] border border-white/[0.06]',
+    outline: 'bg-transparent border border-white/[0.08] text-[#F5F5F7] hover:bg-white/[0.05]',
+    ghost: 'bg-transparent hover:bg-white/[0.06] text-[#A1A1A6] hover:text-[#F5F5F7]',
     danger: 'text-[#FF453A] bg-[#FF453A]/10 border border-[#FF453A]/20 hover:bg-[#FF453A]/18',
   };
 

@@ -37,7 +37,7 @@ export function AnalyzePage() {
 
       {/* Client Selector */}
       <section className="flex items-center gap-4">
-        <span className="text-sm text-content-tertiary whitespace-nowrap">Contexto:</span>
+        <span className="text-sm text-content-secondary whitespace-nowrap">Contexto:</span>
         <div className="relative">
           <select
             value={selectedClient}
@@ -51,7 +51,7 @@ export function AnalyzePage() {
           </select>
           <ChevronDown
             size={14}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-content-tertiary pointer-events-none"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-content-secondary pointer-events-none"
           />
         </div>
       </section>

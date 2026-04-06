@@ -169,7 +169,7 @@ export default function ArchitectureDetailPage() {
   if (!project) {
     return (
       <div className="flex flex-col items-center justify-center py-24 gap-4">
-        <p className="text-[#A1A1A6] text-sm">Proyecto no encontrado.</p>
+        <p className="text-content-secondary text-sm">Proyecto no encontrado.</p>
         <Button variant="outline" icon={<ArrowLeft className="w-4 h-4" />} onClick={() => navigate('/architecture')}>
           Volver
         </Button>
@@ -192,7 +192,7 @@ export default function ArchitectureDetailPage() {
       <div className="mb-6">
         <button
           onClick={() => navigate('/architecture')}
-          className="inline-flex items-center gap-1.5 text-sm text-[#A1A1A6] hover:text-[#F5F5F7] transition mb-3"
+          className="inline-flex items-center gap-1.5 text-sm text-content-secondary hover:text-content-primary transition mb-3"
         >
           <ArrowLeft className="w-4 h-4" />
           Volver
@@ -200,13 +200,13 @@ export default function ArchitectureDetailPage() {
 
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-serif text-[#F5F5F7]">
-              Architecture {clientName && <span className="text-[#A1A1A6]">—</span>} {clientName}
+            <h1 className="text-2xl font-serif text-content-primary">
+              Architecture {clientName && <span className="text-content-secondary">—</span>} {clientName}
             </h1>
-            <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-[#A1A1A6]">
+            <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-content-secondary">
               {project.escenario_infra && (
                 <span>
-                  Scenario: <strong className="text-[#F5F5F7]">{project.escenario_infra === 'A' ? 'Infra Cliente' : 'Infra Evangelista'}</strong>
+                  Scenario: <strong className="text-content-primary">{project.escenario_infra === 'A' ? 'Infra Cliente' : 'Infra Evangelista'}</strong>
                 </span>
               )}
               <span className="text-[rgba(255,255,255,0.08)]">|</span>
@@ -216,7 +216,7 @@ export default function ArchitectureDetailPage() {
                   <span className="text-[rgba(255,255,255,0.08)]">|</span>
                   <span>
                     Sprint activo:{' '}
-                    <strong className="text-[#F5F5F7]">{activeSprint.sprint_num} — {activeSprint.titulo}</strong>
+                    <strong className="text-content-primary">{activeSprint.sprint_num} — {activeSprint.titulo}</strong>
                   </span>
                 </>
               )}
@@ -251,7 +251,7 @@ export default function ArchitectureDetailPage() {
                     border-b-2 -mb-px
                     ${activeTab === tab.key
                       ? 'border-[#95B877] text-[#95B877]'
-                      : 'border-transparent text-[#A1A1A6] hover:text-[#F5F5F7] hover:border-[rgba(255,255,255,0.08)]'
+                      : 'border-transparent text-content-secondary hover:text-content-primary hover:border-[rgba(255,255,255,0.08)]'
                     }
                   `}
                 >
@@ -270,17 +270,17 @@ export default function ArchitectureDetailPage() {
                 return (
                   <div
                     key={sprint.sprint_num}
-                    className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] overflow-hidden"
+                    className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-canvas overflow-hidden"
                   >
                     <div className="flex items-center justify-between px-4 py-3 border-b border-[rgba(255,255,255,0.08)]/50">
                       <div className="flex items-center gap-2">
                         <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-[#95B877]/15 text-xs font-bold text-[#95B877]">
                           {sprint.sprint_num}
                         </span>
-                        <span className="text-sm font-medium text-[#F5F5F7]">{sprint.titulo}</span>
+                        <span className="text-sm font-medium text-content-primary">{sprint.titulo}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-xs text-[#A1A1A6]">{done}/{total}</span>
+                        <span className="text-xs text-content-secondary">{done}/{total}</span>
                         <span className="text-xs font-mono text-[#95B877] w-10 text-right">{Math.round(pct)}%</span>
                       </div>
                     </div>
@@ -298,7 +298,7 @@ export default function ArchitectureDetailPage() {
                           key={i}
                           className={`
                             flex items-center gap-3 px-4 py-2.5 cursor-pointer transition
-                            ${task.done ? 'text-[#A1A1A6]' : 'text-[#F5F5F7]'}
+                            ${task.done ? 'text-content-secondary' : 'text-content-primary'}
                           `}
                         >
                           {task.done ? (
@@ -326,23 +326,23 @@ export default function ArchitectureDetailPage() {
           {/* TAB: Financiero */}
           {activeTab === 'financiero' && (
             <div className="space-y-4">
-              <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] p-5">
-                <h3 className="text-sm font-medium text-[#A1A1A6] mb-1">Setup Fee</h3>
-                <p className="text-2xl font-serif text-[#F5F5F7]">{formatCurrency(project.setup_fee)}</p>
+              <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-canvas p-5">
+                <h3 className="text-sm font-medium text-content-secondary mb-1">Setup Fee</h3>
+                <p className="text-2xl font-serif text-content-primary">{formatCurrency(project.setup_fee)}</p>
                 {gamma > 0 && (
-                  <p className="text-xs text-[#A1A1A6] mt-1">basado en Γ = {gamma} (180,000 x {gamma})</p>
+                  <p className="text-xs text-content-secondary mt-1">basado en Γ = {gamma} (180,000 x {gamma})</p>
                 )}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className={`rounded-xl border p-4 transition ${project.tramo_a_pagado ? 'border-green-400/50 bg-green-900/20' : 'border-[rgba(255,255,255,0.08)] bg-[#0D0D0F]'}`}>
+                <div className={`rounded-xl border p-4 transition ${project.tramo_a_pagado ? 'border-green-400/50 bg-green-900/20' : 'border-[rgba(255,255,255,0.08)] bg-canvas'}`}>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-[#F5F5F7]">Tramo A (70%)</span>
+                    <span className="text-sm font-medium text-content-primary">Tramo A (70%)</span>
                     {project.tramo_a_pagado
                       ? <CheckCircle className="w-4 h-4 text-green-600" />
                       : <Circle className="w-4 h-4 text-amber-500" />}
                   </div>
-                  <p className="text-lg font-mono text-[#F5F5F7] mb-2">{formatCurrency(project.tramo_a)}</p>
+                  <p className="text-lg font-mono text-content-primary mb-2">{formatCurrency(project.tramo_a)}</p>
                   <button
                     onClick={() => handleToggleTramo('tramo_a_pagado')}
                     disabled={saving}
@@ -356,14 +356,14 @@ export default function ArchitectureDetailPage() {
                   </button>
                 </div>
 
-                <div className={`rounded-xl border p-4 transition ${project.tramo_b_pagado ? 'border-green-400/50 bg-green-900/20' : 'border-[rgba(255,255,255,0.08)] bg-[#0D0D0F]'}`}>
+                <div className={`rounded-xl border p-4 transition ${project.tramo_b_pagado ? 'border-green-400/50 bg-green-900/20' : 'border-[rgba(255,255,255,0.08)] bg-canvas'}`}>
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium text-[#F5F5F7]">Tramo B (30%)</span>
+                    <span className="text-sm font-medium text-content-primary">Tramo B (30%)</span>
                     {project.tramo_b_pagado
                       ? <CheckCircle className="w-4 h-4 text-green-600" />
                       : <Circle className="w-4 h-4 text-amber-500" />}
                   </div>
-                  <p className="text-lg font-mono text-[#F5F5F7] mb-2">{formatCurrency(project.tramo_b)}</p>
+                  <p className="text-lg font-mono text-content-primary mb-2">{formatCurrency(project.tramo_b)}</p>
                   <button
                     onClick={() => handleToggleTramo('tramo_b_pagado')}
                     disabled={saving}
@@ -378,28 +378,28 @@ export default function ArchitectureDetailPage() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] p-5">
-                <h3 className="text-sm font-medium text-[#A1A1A6] mb-1">Success Fee Estimado</h3>
-                <p className="text-2xl font-serif text-[#F5F5F7]">{formatCurrency(project.success_fee_estimado)}</p>
+              <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-canvas p-5">
+                <h3 className="text-sm font-medium text-content-secondary mb-1">Success Fee Estimado</h3>
+                <p className="text-2xl font-serif text-content-primary">{formatCurrency(project.success_fee_estimado)}</p>
               </div>
 
-              <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] p-5">
-                <h3 className="text-sm font-medium text-[#A1A1A6] mb-1">Estimación de Timeline</h3>
-                <p className="text-lg font-mono text-[#F5F5F7]">
+              <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-canvas p-5">
+                <h3 className="text-sm font-medium text-content-secondary mb-1">Estimación de Timeline</h3>
+                <p className="text-lg font-mono text-content-primary">
                   {timelineWeeks !== '-' ? timelineWeeks : 'Sin dato de Γ'}
                 </p>
                 {foundation ? (
-                  <p className="text-xs text-[#A1A1A6] mt-1">
+                  <p className="text-xs text-content-secondary mt-1">
                     Foundation engagement de {clientName} — Γ = {foundation.factor_gamma}
                   </p>
                 ) : (
-                  <p className="text-xs text-[#A1A1A6] mt-1">Sin foundation engagement vinculado</p>
+                  <p className="text-xs text-content-secondary mt-1">Sin foundation engagement vinculado</p>
                 )}
               </div>
 
               {/* Documentos Architecture */}
-              <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] p-5">
-                <h3 className="text-sm font-medium text-[#A1A1A6] mb-3">Documentos Legales y Comerciales</h3>
+              <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-canvas p-5">
+                <h3 className="text-sm font-medium text-content-secondary mb-3">Documentos Legales y Comerciales</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <DocumentDownloader
                     template="propuesta_architecture"
@@ -434,19 +434,19 @@ export default function ArchitectureDetailPage() {
           {activeTab === 'erp' && (
             <div>
               {(project.erp_connection_id || project.erp_type) ? (
-                <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] p-6 space-y-4">
+                <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-canvas p-6 space-y-4">
                   <div className="flex items-center gap-3">
                     <Plug className="w-5 h-5 text-[#95B877]" />
-                    <h3 className="text-base font-medium text-[#F5F5F7]">Conexión ERP activa</h3>
+                    <h3 className="text-base font-medium text-content-primary">Conexión ERP activa</h3>
                     <Badge variant="success" size="sm">Conectado</Badge>
                   </div>
                   {project.erp_type && (
-                    <p className="text-sm text-[#F5F5F7]">
+                    <p className="text-sm text-content-primary">
                       Tipo de ERP: <strong>{project.erp_type}</strong>
                     </p>
                   )}
                   {project.erp_connection_id && (
-                    <p className="text-sm text-[#A1A1A6]">
+                    <p className="text-sm text-content-secondary">
                       Connection ID:{' '}
                       <code className="text-xs font-mono px-1.5 py-0.5 rounded bg-[rgba(255,255,255,0.08)]/20">
                         {project.erp_connection_id}
@@ -455,10 +455,10 @@ export default function ArchitectureDetailPage() {
                   )}
                 </div>
               ) : (
-                <div className="rounded-xl border border-dashed border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] p-8 text-center space-y-4">
+                <div className="rounded-xl border border-dashed border-[rgba(255,255,255,0.08)] bg-canvas p-8 text-center space-y-4">
                   <Plug className="w-8 h-8 text-[rgba(255,255,255,0.08)] mx-auto" />
-                  <h3 className="text-base font-medium text-[#F5F5F7]">Sin conexión ERP configurada</h3>
-                  <p className="text-sm text-[#A1A1A6] max-w-sm mx-auto">
+                  <h3 className="text-base font-medium text-content-primary">Sin conexión ERP configurada</h3>
+                  <p className="text-sm text-content-secondary max-w-sm mx-auto">
                     Configura una conexión ERP para habilitar la extracción de datos para el Data Warehouse del proyecto.
                   </p>
                   <Button
@@ -476,11 +476,11 @@ export default function ArchitectureDetailPage() {
           {/* TAB: Delivery Handshake */}
           {activeTab === 'delivery' && (
             <div className="space-y-4">
-              <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] overflow-hidden">
+              <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-canvas overflow-hidden">
                 <div className="flex items-center justify-between px-5 py-3 border-b border-[rgba(255,255,255,0.08)]/50">
                   <div className="flex items-center gap-2">
                     <ClipboardCheck className="w-4 h-4 text-[#95B877]" />
-                    <h3 className="text-sm font-medium text-[#F5F5F7]">Checklist de Entrega</h3>
+                    <h3 className="text-sm font-medium text-content-primary">Checklist de Entrega</h3>
                   </div>
                   {(() => {
                     const sprint6 = project.sprints?.find((s: any) => s.sprint_num === 6);
@@ -496,7 +496,7 @@ export default function ArchitectureDetailPage() {
                     ?.tareas?.map((task: any, i: number) => (
                       <label
                         key={i}
-                        className={`flex items-center gap-3 px-5 py-3 cursor-pointer transition ${task.done ? 'text-[#A1A1A6]' : 'text-[#F5F5F7]'}`}
+                        className={`flex items-center gap-3 px-5 py-3 cursor-pointer transition ${task.done ? 'text-content-secondary' : 'text-content-primary'}`}
                       >
                         {task.done ? (
                           <CheckCircle className="w-4 h-4 text-[#95B877] shrink-0" />
@@ -545,33 +545,33 @@ export default function ArchitectureDetailPage() {
         {/* Right sidebar */}
         <aside className="lg:w-[320px] shrink-0 space-y-4">
           {/* Project info card */}
-          <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] p-4">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#A1A1A6] mb-3">
+          <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-canvas p-4">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-content-secondary mb-3">
               Info del Proyecto
             </h3>
             <dl className="space-y-3 text-sm">
               <div>
-                <dt className="text-[#A1A1A6]">Estado</dt>
-                <dd className="text-[#F5F5F7] font-medium">{STATUS_LABELS[project.status] || project.status}</dd>
+                <dt className="text-content-secondary">Estado</dt>
+                <dd className="text-content-primary font-medium">{STATUS_LABELS[project.status] || project.status}</dd>
               </div>
               <div>
-                <dt className="text-[#A1A1A6]">Infraestructura</dt>
-                <dd className="text-[#F5F5F7] font-medium">
+                <dt className="text-content-secondary">Infraestructura</dt>
+                <dd className="text-content-primary font-medium">
                   {project.escenario_infra === 'A' ? 'Infra Cliente (A)' : project.escenario_infra === 'B' ? 'Infra Evangelista (B)' : '-'}
                 </dd>
               </div>
               <div>
-                <dt className="text-[#A1A1A6]">Asignado a</dt>
-                <dd className="text-[#F5F5F7] font-medium">{project.team_members?.full_name || 'Sin asignar'}</dd>
+                <dt className="text-content-secondary">Asignado a</dt>
+                <dd className="text-content-primary font-medium">{project.team_members?.full_name || 'Sin asignar'}</dd>
               </div>
 
               {/* Progress summary */}
               <div>
-                <dt className="text-[#A1A1A6] mb-1">Progreso global</dt>
+                <dt className="text-content-secondary mb-1">Progreso global</dt>
                 <dd>
                   <div>
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="text-[#A1A1A6]">{doneTasks}/{totalTasks} tareas</span>
+                      <span className="text-content-secondary">{doneTasks}/{totalTasks} tareas</span>
                       <span className="font-mono text-[#95B877]">{Math.round(globalPct)}%</span>
                     </div>
                     <div className="h-2 rounded-full bg-[rgba(255,255,255,0.08)]/30 overflow-hidden">
@@ -586,21 +586,21 @@ export default function ArchitectureDetailPage() {
 
               {/* Financial summary */}
               <div className="pt-3 border-t border-[rgba(255,255,255,0.08)]/50">
-                <dt className="text-[#A1A1A6] mb-2">Resumen financiero</dt>
+                <dt className="text-content-secondary mb-2">Resumen financiero</dt>
                 <dd>
                   <div className="space-y-1 text-xs">
                     <div className="flex justify-between">
-                      <span className="text-[#A1A1A6]">Setup fee</span>
-                      <span className="font-mono text-[#F5F5F7]">{formatCurrency(project.setup_fee)}</span>
+                      <span className="text-content-secondary">Setup fee</span>
+                      <span className="font-mono text-content-primary">{formatCurrency(project.setup_fee)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#A1A1A6]">Tramo A</span>
+                      <span className="text-content-secondary">Tramo A</span>
                       <span className={project.tramo_a_pagado ? 'text-green-600' : 'text-amber-600'}>
                         {project.tramo_a_pagado ? 'Pagado' : 'Pendiente'}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#A1A1A6]">Tramo B</span>
+                      <span className="text-content-secondary">Tramo B</span>
                       <span className={project.tramo_b_pagado ? 'text-green-600' : 'text-amber-600'}>
                         {project.tramo_b_pagado ? 'Pagado' : 'Pendiente'}
                       </span>
@@ -612,7 +612,7 @@ export default function ArchitectureDetailPage() {
               {/* Foundation link */}
               {project.foundation_id && (
                 <div className="pt-3 border-t border-[rgba(255,255,255,0.08)]/50">
-                  <dt className="text-[#A1A1A6] mb-2">Foundation</dt>
+                  <dt className="text-content-secondary mb-2">Foundation</dt>
                   <dd>
                     <button
                       onClick={() => navigate(`/foundation/${project.foundation_id}`)}
@@ -628,8 +628,8 @@ export default function ArchitectureDetailPage() {
           </div>
 
           {/* Quick actions */}
-          <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] p-4">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#A1A1A6] mb-3">
+          <div className="rounded-xl border border-[rgba(255,255,255,0.08)] bg-canvas p-4">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-content-secondary mb-3">
               Acciones rápidas
             </h3>
             <div className="space-y-2">

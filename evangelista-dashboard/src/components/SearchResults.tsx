@@ -31,13 +31,13 @@ export function SearchResults({ results }: { results: SearchResult[] }) {
                   className="w-9 h-9 rounded-lg flex items-center justify-center transition-colors"
                   style={{ background: 'rgba(255,255,255,0.04)' }}
                 >
-                  <FileText size={16} className="text-content-tertiary group-hover:text-primary-500 transition-colors" />
+                  <FileText size={16} className="text-content-secondary group-hover:text-primary-500 transition-colors" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-content-primary tracking-tight">{r.document_title ?? 'Documento sin título'}</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <Hash size={10} className="text-content-tertiary/40" />
-                    <p className="text-[9px] font-semibold text-content-tertiary/60 uppercase tracking-widest">{r.section_header || 'General'}</p>
+                    <Hash size={10} className="text-content-secondary/40" />
+                    <p className="text-[9px] font-semibold text-content-secondary/60 uppercase tracking-widest">{r.section_header || 'General'}</p>
                   </div>
                 </div>
               </div>
@@ -69,7 +69,7 @@ export function SearchResults({ results }: { results: SearchResult[] }) {
 
             {r.metadata?.type && (
               <div className="mt-3 flex items-center gap-2">
-                <span className="text-[9px] font-semibold text-content-tertiary/50 uppercase tracking-widest">Metadata:</span>
+                <span className="text-[9px] font-semibold text-content-secondary/50 uppercase tracking-widest">Metadata:</span>
                 <Badge variant="info" size="sm">{String(r.metadata.type)}</Badge>
               </div>
             )}

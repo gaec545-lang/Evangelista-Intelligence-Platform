@@ -1,10 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { Sidebar } from './Sidebar'
+import Sidebar from './Sidebar'
 import { Outlet, useLocation } from 'react-router-dom'
 
 export function AppLayout() {
   return (
-    <div className="h-screen bg-canvas overflow-hidden">
+    <div className="h-screen bg-canvas overflow-hidden text-content-primary">
       <Sidebar />
       <div className="ml-64 flex flex-col h-full min-w-0 overflow-hidden">
         <Header />
@@ -35,7 +35,7 @@ function Header() {
   return (
     <header className="h-14 flex items-center justify-between px-8 bg-canvas/80 backdrop-blur-xl border-b border-white/[0.06] z-10">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-xs text-content-tertiary">
+      <div className="flex items-center gap-2 text-xs text-content-secondary">
         <span className="font-medium">EIP</span>
         <span>/</span>
         <span className="text-content-primary font-medium">{pageName}</span>
@@ -43,7 +43,7 @@ function Header() {
 
       {/* User */}
       <div className="flex items-center gap-3">
-        <div className="w-7 h-7 rounded-full bg-primary-500/20 border border-primary-500/30 flex items-center justify-center text-primary-600 text-[10px] font-semibold">
+        <div className="w-7 h-7 rounded-full bg-[#95B877]/20 border border-[#95B877]/30 flex items-center justify-center text-[#95B877] text-[10px] font-semibold">
           AD
         </div>
       </div>

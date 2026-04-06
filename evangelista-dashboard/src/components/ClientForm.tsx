@@ -77,15 +77,15 @@ export function ClientForm({ initial, onSubmit, onCancel }: ClientFormProps) {
 
       {/* Operative Metrics */}
       <div
-        className="rounded-card p-6 space-y-5"
+        className="rounded-[12px] p-6 space-y-5"
         style={{
           background: 'rgba(255,255,255,0.03)',
           border: '1px dashed rgba(255,255,255,0.08)',
         }}
       >
         <div className="flex items-center gap-2">
-          <Calculator size={16} className="text-primary-500" />
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-content-tertiary">
+          <Calculator size={16} className="text-[#95B877]" />
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-[#A1A1A6]">
             Métricas Operativas
           </h3>
         </div>
@@ -117,23 +117,23 @@ export function ClientForm({ initial, onSubmit, onCancel }: ClientFormProps) {
 
         {/* Γ Factor */}
         <div
-          className="rounded-card p-4 flex items-center justify-between"
+          className="rounded-[12px] p-4 flex items-center justify-between"
           style={{
             background: 'rgba(149,184,119,0.06)',
             border: '1px solid rgba(149,184,119,0.15)',
           }}
         >
           <div>
-            <p className="text-[10px] font-semibold text-primary-600 uppercase tracking-widest">
+            <p className="text-[10px] font-semibold text-[#95B877] uppercase tracking-widest">
               Evangelista Factor Γ
             </p>
-            <p className="text-[11px] text-content-tertiary/70 mt-0.5">
+            <p className="text-[11px] text-[#A1A1A6] mt-0.5">
               Coeficiente de complejidad logística proyectado
             </p>
           </div>
           <div className="text-right">
-            <span className="text-2xl font-semibold text-primary-600">{gamma.toFixed(2)}</span>
-            <p className="text-[9px] font-semibold uppercase tracking-widest text-content-tertiary/60">INDEX</p>
+            <span className="text-2xl font-semibold text-[#95B877]">{gamma.toFixed(2)}</span>
+            <p className="text-[9px] font-semibold uppercase tracking-widest text-[#A1A1A6]/80">INDEX</p>
           </div>
         </div>
       </div>
@@ -141,8 +141,8 @@ export function ClientForm({ initial, onSubmit, onCancel }: ClientFormProps) {
       {/* Contact Section */}
       <div className="space-y-5">
         <div className="flex items-center gap-2 px-1">
-          <User size={16} className="text-primary-500" />
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-content-tertiary">
+          <User size={16} className="text-[#95B877]" />
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-[#A1A1A6]">
             Información de Contacto
           </h3>
         </div>
@@ -174,8 +174,8 @@ export function ClientForm({ initial, onSubmit, onCancel }: ClientFormProps) {
       {/* Notes */}
       <div className="space-y-4">
         <div className="flex items-center gap-2 px-1">
-          <FileEdit size={16} className="text-primary-500" />
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-content-tertiary">
+          <FileEdit size={16} className="text-[#95B877]" />
+          <h3 className="text-xs font-semibold uppercase tracking-widest text-[#A1A1A6]">
             Notas y Observaciones
           </h3>
         </div>
@@ -205,7 +205,7 @@ function SelectField({
   label, icon: Icon, value, onChange, options, iconTrailing = false,
 }: {
   label: string;
-  icon?: React.ComponentType<{ size: number; className?: string }>;
+  icon?: React.ComponentType<{ size?: number | string; className?: string }>;
   value: string;
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
@@ -213,12 +213,12 @@ function SelectField({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-[10px] font-semibold text-content-tertiary uppercase tracking-widest px-1">
+      <label className="text-[10px] font-semibold text-[#A1A1A6] uppercase tracking-widest px-1">
         {label}
       </label>
       <div className="relative group">
         {Icon && !iconTrailing && (
-          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary/50 size-4 pointer-events-none group-focus-within:text-primary-500 transition-colors" size={14} />
+          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A1A1A6]/80 size-4 pointer-events-none group-focus-within:text-[#95B877] transition-colors" size={14} />
         )}
         <select
           value={value}
@@ -229,7 +229,7 @@ function SelectField({
           {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
         {Icon && iconTrailing && (
-          <Icon className="absolute right-3 top-1/2 -translate-y-1/2 text-content-tertiary/40 size-4 pointer-events-none" size={14} />
+          <Icon className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A1A1A6]/60 size-4 pointer-events-none" size={14} />
         )}
       </div>
     </div>

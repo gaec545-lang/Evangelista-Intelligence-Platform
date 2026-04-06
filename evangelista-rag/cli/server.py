@@ -11,7 +11,7 @@ import uvicorn
 
 @click.command()
 @click.option("--host", default="0.0.0.0", show_default=True, help="Host de escucha")
-@click.option("--port", default=8000, show_default=True, help="Puerto")
+@click.option("--port", default=8001, show_default=True, help="Puerto")
 @click.option("--reload", is_flag=True, default=False, help="Hot-reload (solo desarrollo)")
 @click.option("--workers", default=1, show_default=True, help="Número de workers")
 def main(host: str, port: int, reload: bool, workers: int):

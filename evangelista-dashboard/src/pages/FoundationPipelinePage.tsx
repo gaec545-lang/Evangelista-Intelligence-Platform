@@ -119,7 +119,7 @@ export default function FoundationPipelinePage() {
     engs.map((e) => e.assigned_to || e.team_members?.full_name).filter(Boolean)
   )] as string[];
   const sectors = [...new Set(clients.map((c) => c.sector).filter(Boolean))] as string[];
-  const activeEngs = engs.filter((e) => !e.status.startsWith('closed_'));
+  const activeEngs = engs.filter((e) => e && e.status && !e.status.startsWith('closed_'));
   const activeCount = activeEngs.length;
 
   const clientMap = new Map<string, Client>();
@@ -171,7 +171,7 @@ export default function FoundationPipelinePage() {
     return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(n);
   }
 
-  const activeClientIds = new Set(engs.filter((e) => !e.status.startsWith('closed_')).map((e) => e.client_id));
+  const activeClientIds = new Set(engs.filter((e) => e && e.status && !e.status.startsWith('closed_')).map((e) => e.client_id));
   const availableClients = clients.filter((c) => !activeClientIds.has(c.id) && c.status !== 'archived');
 
   async function handleCreateEngagement(clientId: string) {
@@ -198,10 +198,10 @@ export default function FoundationPipelinePage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-center">
         <Building2 className="h-16 w-16 mb-4" style={{ color: '#95B877' }} />
-        <h2 className="text-2xl font-semibold mb-2 text-[#F5F5F7]">
+        <h2 className="text-2xl font-semibold mb-2 text-content-primary">
           No hay engagements de Foundation
         </h2>
-        <p className="text-lg mb-6 text-[#A1A1A6]">
+        <p className="text-lg mb-6 text-content-secondary">
           Comienza creando el primer engagement para iniciar el pipeline.
         </p>
         <button
@@ -230,12 +230,12 @@ export default function FoundationPipelinePage() {
         <div>
           <div className="flex items-center gap-3">
             <Building2 className="h-7 w-7" style={{ color: '#95B877' }} />
-            <h1 className="text-2xl font-bold text-[#F5F5F7]">Foundation Pipeline</h1>
+            <h1 className="text-2xl font-bold text-content-primary">Foundation Pipeline</h1>
             <span className="inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-sm font-semibold" style={{ backgroundColor: 'rgba(149,184,119,0.15)', color: '#95B877' }}>
               {activeCount}
             </span>
           </div>
-          <p className="text-sm mt-1 text-[#A1A1A6]">
+          <p className="text-sm mt-1 text-content-secondary">
             {engs.length} en total &middot; {activeCount} activos
           </p>
         </div>
@@ -246,7 +246,7 @@ export default function FoundationPipelinePage() {
             <button
               onClick={() => setView('pipeline')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-colors
-                ${view === 'pipeline' ? 'text-white' : 'bg-[#1C1C1E] hover:bg-[#2C2C2E] text-[#A1A1A6]'}`}
+                ${view === 'pipeline' ? 'text-white' : 'bg-[#1C1C1E] hover:bg-[#2C2C2E] text-content-secondary'}`}
               style={view === 'pipeline' ? { backgroundColor: '#95B877', color: '#0D0D0F' } : {}}
             >
               <LayoutGrid className="h-4 w-4" />
@@ -255,7 +255,7 @@ export default function FoundationPipelinePage() {
             <button
               onClick={() => setView('table')}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-colors
-                ${view === 'table' ? 'text-white' : 'bg-[#1C1C1E] hover:bg-[#2C2C2E] text-[#A1A1A6]'}`}
+                ${view === 'table' ? 'text-white' : 'bg-[#1C1C1E] hover:bg-[#2C2C2E] text-content-secondary'}`}
               style={view === 'table' ? { backgroundColor: '#95B877', color: '#0D0D0F' } : {}}
             >
               <List className="h-4 w-4" />
@@ -292,9 +292,9 @@ export default function FoundationPipelinePage() {
                 <div className="flex items-center justify-between px-3 py-2.5 rounded-t-xl border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full" style={{ backgroundColor: col.accent }} />
-                    <span className="text-sm font-semibold text-[#F5F5F7]">{col.label}</span>
+                    <span className="text-sm font-semibold text-content-primary">{col.label}</span>
                   </div>
-                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-full text-xs font-bold text-[#F5F5F7]" style={{ backgroundColor: `${col.accent}33` }}>
+                  <span className="inline-flex items-center justify-center h-6 w-6 rounded-full text-xs font-bold text-content-primary" style={{ backgroundColor: `${col.accent}33` }}>
                     {colEngs.length}
                   </span>
                 </div>
@@ -317,19 +317,19 @@ export default function FoundationPipelinePage() {
                           borderColor: 'rgba(255,255,255,0.06)',
                         }}
                       >
-                        <p className="font-semibold text-sm text-[#F5F5F7] truncate">{cl?.name || 'Cliente desconocido'}</p>
-                        <div className="flex items-center gap-2 mt-1 text-xs text-[#A1A1A6]">
+                        <p className="font-semibold text-sm text-content-primary truncate">{cl?.name || 'Cliente desconocido'}</p>
+                        <div className="flex items-center gap-2 mt-1 text-xs text-content-secondary">
                           <span>{cl?.sector || ''}</span>
                           {cl?.city && <span>&middot; {cl.city}</span>}
                         </div>
                         <div className="flex items-center justify-between mt-2">
                           <GammaBadge gamma={eng.factor_gamma} />
                           {eng.foundation_fee != null && (
-                            <span className="text-xs font-medium text-[#A1A1A6] tabular-nums">{formatCurrency(eng.foundation_fee)}</span>
+                            <span className="text-xs font-medium text-content-secondary tabular-nums">{formatCurrency(eng.foundation_fee)}</span>
                           )}
                         </div>
                         {assignedName && (
-                          <div className="flex items-center gap-1 mt-1.5 text-xs text-[#A1A1A6]">
+                          <div className="flex items-center gap-1 mt-1.5 text-xs text-content-secondary">
                             <User className="h-3 w-3" />
                             <span className="truncate">{assignedName}</span>
                           </div>
@@ -377,7 +377,7 @@ export default function FoundationPipelinePage() {
                   {TABLE_COLUMNS.map((col) => (
                     <th
                       key={col.key}
-                      className={`text-left px-4 py-3 font-semibold text-[#A1A1A6] ${col.sortable ? 'cursor-pointer select-none hover:text-[#F5F5F7] transition-colors' : ''}`}
+                      className={`text-left px-4 py-3 font-semibold text-content-secondary ${col.sortable ? 'cursor-pointer select-none hover:text-content-primary transition-colors' : ''}`}
                       onClick={() => col.sortable && handleSort(col.key)}
                       style={{ whiteSpace: 'nowrap' }}
                     >
@@ -406,12 +406,12 @@ export default function FoundationPipelinePage() {
                       style={{ borderColor: 'rgba(255,255,255,0.04)' }}
                       onClick={() => navigate(`/foundation/${eng.id}`)}
                     >
-                      <td className="px-4 py-3 font-medium text-[#F5F5F7]">{cl?.name || '-'}</td>
-                      <td className="px-4 py-3 text-[#A1A1A6]">{cl?.sector || '-'}</td>
+                      <td className="px-4 py-3 font-medium text-content-primary">{cl?.name || '-'}</td>
+                      <td className="px-4 py-3 text-content-secondary">{cl?.sector || '-'}</td>
                       <td className="px-4 py-3"><StatusBadge status={eng.status} /></td>
                       <td className="px-4 py-3"><GammaBadge gamma={eng.factor_gamma} /></td>
-                      <td className="px-4 py-3 text-[#A1A1A6] tabular-nums">{formatCurrency(eng.foundation_fee)}</td>
-                      <td className="px-4 py-3 text-[#A1A1A6]">{assignedName || '-'}</td>
+                      <td className="px-4 py-3 text-content-secondary tabular-nums">{formatCurrency(eng.foundation_fee)}</td>
+                      <td className="px-4 py-3 text-content-secondary">{assignedName || '-'}</td>
                       <td className="px-4 py-3 text-xs text-[#636366]">{formatDate(eng.updated_at)}</td>
                     </tr>
                   );
@@ -453,7 +453,7 @@ function FilterSelect({ value, onChange, label, options }: {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="appearance-none rounded-lg border bg-[#1C1C1E] pl-3 pr-8 py-1.5 text-sm text-[#A1A1A6] focus:outline-none focus:ring-1 focus:ring-[#95B877]/50"
+        className="appearance-none rounded-lg border bg-[#1C1C1E] pl-3 pr-8 py-1.5 text-sm text-content-secondary focus:outline-none focus:ring-1 focus:ring-[#95B877]/50"
         style={{ borderColor: 'rgba(255,255,255,0.06)' }}
       >
         <option value="">{label}</option>
@@ -480,7 +480,7 @@ function NewEngagementModal({
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative rounded-xl shadow-2xl border max-w-lg w-full mx-4 flex flex-col overflow-hidden" style={{ backgroundColor: '#151518', borderColor: 'rgba(255,255,255,0.08)' }}>
         <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-          <h2 className="text-lg font-semibold text-[#F5F5F7]">
+          <h2 className="text-lg font-semibold text-content-primary">
             Nuevo Engagement
           </h2>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-[rgba(255,255,255,0.06)] transition-colors">
@@ -488,13 +488,13 @@ function NewEngagementModal({
           </button>
         </div>
 
-        <div className="px-5 py-3 text-sm text-[#A1A1A6]">
+        <div className="px-5 py-3 text-sm text-content-secondary">
           Selecciona un cliente para crear un engagement en fase de Scoping.
         </div>
 
         <div className="overflow-y-auto flex-1 px-5 pb-5 space-y-2" style={{ maxHeight: '50vh' }}>
           {clients.length === 0 && (
-            <div className="text-center py-8 text-sm text-[#A1A1A6]">
+            <div className="text-center py-8 text-sm text-content-secondary">
               No hay clientes disponibles.
             </div>
           )}
@@ -507,8 +507,8 @@ function NewEngagementModal({
             >
               <Building2 className="h-5 w-5 mt-0.5 flex-shrink-0" style={{ color: '#95B877' }} />
               <div className="min-w-0">
-                <p className="font-medium truncate text-[#F5F5F7]">{c.name}</p>
-                <div className="flex items-center gap-2 text-xs mt-0.5 text-[#A1A1A6]">
+                <p className="font-medium truncate text-content-primary">{c.name}</p>
+                <div className="flex items-center gap-2 text-xs mt-0.5 text-content-secondary">
                   <span>{c.sector}</span>
                   {c.city && <><span>&middot;</span><span>{c.city}</span></>}
                   {c.sucursales > 0 && <><span>&middot;</span><span>{c.sucursales} sucursal(es)</span></>}

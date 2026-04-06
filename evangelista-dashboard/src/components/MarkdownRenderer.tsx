@@ -16,24 +16,24 @@ export default function MarkdownRenderer({ content, className }: MarkdownRendere
         components={{
           // Headers con estilo Evangelista
           h1: ({ children }) => (
-            <h1 className="text-xl font-serif font-medium text-[#F5F5F7] mt-6 mb-3 pb-2 border-b border-[rgba(255,255,255,0.08)]">
+            <h1 className="text-xl font-serif font-medium text-content-primary mt-6 mb-3 pb-2 border-b border-[rgba(255,255,255,0.08)]">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-lg font-serif font-medium text-[#F5F5F7] mt-5 mb-2">
+            <h2 className="text-lg font-serif font-medium text-content-primary mt-5 mb-2">
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="text-base font-medium text-[#F5F5F7] mt-4 mb-2">
+            <h3 className="text-base font-medium text-content-primary mt-4 mb-2">
               {children}
             </h3>
           ),
           
           // Párrafos con espaciado correcto
           p: ({ children }) => (
-            <p className="text-sm leading-relaxed text-[#F5F5F7] mb-3">
+            <p className="text-sm leading-relaxed text-content-primary mb-3">
               {children}
             </p>
           ),
@@ -57,19 +57,19 @@ export default function MarkdownRenderer({ content, className }: MarkdownRendere
             </th>
           ),
           td: ({ children }) => (
-            <td className="px-4 py-2.5 text-sm text-[#F5F5F7] border-t border-[rgba(255,255,255,0.08)]/50">
+            <td className="px-4 py-2.5 text-sm text-content-primary border-t border-[rgba(255,255,255,0.08)]/50">
               {children}
             </td>
           ),
           
           // Listas
           ul: ({ children }) => (
-            <ul className="list-disc list-outside ml-5 mb-3 space-y-1 text-sm text-[#F5F5F7]">
+            <ul className="list-disc list-outside ml-5 mb-3 space-y-1 text-sm text-content-primary">
               {children}
             </ul>
           ),
           ol: ({ children }) => (
-            <ol className="list-decimal list-outside ml-5 mb-3 space-y-1 text-sm text-[#F5F5F7]">
+            <ol className="list-decimal list-outside ml-5 mb-3 space-y-1 text-sm text-content-primary">
               {children}
             </ol>
           ),
@@ -97,7 +97,7 @@ export default function MarkdownRenderer({ content, className }: MarkdownRendere
           
           // Blockquotes como callouts
           blockquote: ({ children }) => (
-            <blockquote className="my-3 pl-4 border-l-3 border-[#95B877] bg-[#95B877]/5 rounded-r-lg py-2 pr-3 text-sm text-[#F5F5F7]">
+            <blockquote className="my-3 pl-4 border-l-3 border-[#95B877] bg-[#95B877]/5 rounded-r-lg py-2 pr-3 text-sm text-content-primary">
               {children}
             </blockquote>
           ),
@@ -109,10 +109,10 @@ export default function MarkdownRenderer({ content, className }: MarkdownRendere
           
           // Negritas y cursivas
           strong: ({ children }) => (
-            <strong className="font-bold text-[#F5F5F7]">{children}</strong>
+            <strong className="font-bold text-content-primary">{children}</strong>
           ),
           em: ({ children }) => (
-            <em className="italic text-[#A1A1A6]">{children}</em>
+            <em className="italic text-content-secondary">{children}</em>
           ),
           
           // Links

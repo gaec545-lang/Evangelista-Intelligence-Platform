@@ -48,7 +48,7 @@ export function ClientsPage() {
         </div>
         <div className="flex items-center gap-3">
           <div className="relative group hidden lg:block">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary/50 pointer-events-none" />
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-secondary/50 pointer-events-none" />
             <input
               type="text"
               placeholder="Buscar…"
@@ -66,7 +66,7 @@ export function ClientsPage() {
       {loading ? (
         <div className="py-24 flex flex-col items-center gap-3">
           <Spinner size="lg" />
-          <p className="text-xs text-content-tertiary">Cargando clientes…</p>
+          <p className="text-xs text-content-secondary">Cargando clientes…</p>
         </div>
       ) : filtered.length === 0 ? (
         <EmptyState
@@ -98,7 +98,7 @@ export function ClientsPage() {
 
       {/* Summary */}
       {!loading && clients.length > 0 && (
-        <div className="flex items-center justify-between text-xs text-content-tertiary">
+        <div className="flex items-center justify-between text-xs text-content-secondary">
           <span>{filtered.length} de {clients.length} clientes</span>
           <div className="flex gap-4">
             <span className="flex items-center gap-1">
@@ -151,20 +151,20 @@ function ClientCard({ client, statusVariant, onClick }: ClientCardProps) {
           </div>
           <div className="min-w-0">
             <h3 className="text-sm font-semibold truncate">{client.name}</h3>
-            <p className="text-xs text-content-tertiary">{client.sector}</p>
+            <p className="text-xs text-content-secondary">{client.sector}</p>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <Badge variant={statusVariant} size="sm">{client.status}</Badge>
           <ChevronRight
             size={16}
-            className="text-content-tertiary/40 group-hover:text-accent-olive transition-colors"
+            className="text-content-secondary/40 group-hover:text-accent-olive transition-colors"
           />
         </div>
       </div>
 
       {/* Contact info */}
-      <div className="flex items-center gap-4 text-xs text-content-tertiary mb-3">
+      <div className="flex items-center gap-4 text-xs text-content-secondary mb-3">
         <span className="flex items-center gap-1">
           <MapPin size={12} /> {client.city}
         </span>

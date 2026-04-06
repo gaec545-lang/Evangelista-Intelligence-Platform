@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8001'
 const REQUEST_TIMEOUT_MS = 60_000 // 60s — evita cuelgues indefinidos
 
 export interface AnalyzeRequest {
@@ -21,8 +21,14 @@ async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
 
   try {
+    const session = JSON.parse(localStorage.getItem('auth-storage') || '{}')?.state?.session;
+    const token = session?.access_token;
+
     const res = await fetch(`${API_BASE}${path}`, {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
       signal: controller.signal,
       ...options,
     })
@@ -104,5 +110,14 @@ export const api = {
     a.click();
     a.remove();
     window.URL.revokeObjectURL(url);
+  },
+  async post<T>(path: string, body: any): Promise<T> {
+    return fetchAPI<T>(path, { method: 'POST', body: JSON.stringify(body) });
+  },
+  async get<T>(path: string): Promise<T> {
+    return fetchAPI<T>(path, { method: 'GET' });
+  },
+  async delete<T>(path: string): Promise<T> {
+    return fetchAPI<T>(path, { method: 'DELETE' });
   },
 }

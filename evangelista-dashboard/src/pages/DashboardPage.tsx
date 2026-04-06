@@ -61,9 +61,9 @@ export function DashboardPage() {
     }).catch(() => setLoading(false))
   }, [])
 
-  const activeFoundations = foundations.filter((f) => !f.status.startsWith('closed_'))
-  const activeArchitectures = architectures.filter((a) => a.status !== 'completed' && a.status !== 'on_hold')
-  const activeSentinels = sentinels.filter((s) => s.status === 'active')
+  const activeFoundations = foundations.filter((f) => f && f.status && !f.status.startsWith('closed_'))
+  const activeArchitectures = architectures.filter((a) => a && a.status && a.status !== 'completed' && a.status !== 'on_hold')
+  const activeSentinels = sentinels.filter((s) => s && s.status === 'active')
 
   // Pipeline Foundation stage counts
   const stageCounts: Record<string, number> = {}
@@ -92,15 +92,15 @@ export function DashboardPage() {
       <section className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-serif text-[#F5F5F7] tracking-tight">Intelligence War Room</h1>
+            <h1 className="text-3xl font-serif text-content-primary tracking-tight">Intelligence War Room</h1>
             {health && (
               <Badge variant={health.ready ? 'success' : 'danger'} size="sm">
                 {health.ready ? 'Sistema operativo' : 'Backend offline'}
               </Badge>
             )}
           </div>
-          <p className="max-w-md text-sm text-[#A1A1A6]">
-            Consola central de <span className="text-[#F5F5F7]">Evangelista &amp; Co.</span> — intelligence pipeline y control de riesgo operativo.
+          <p className="max-w-md text-sm text-content-secondary">
+            Consola central de <span className="text-content-primary">Evangelista &amp; Co.</span> — intelligence pipeline y control de riesgo operativo.
           </p>
         </div>
         <Link to="/analyze">
@@ -130,7 +130,7 @@ export function DashboardPage() {
               <p className="text-2xl font-semibold tracking-tight text-content-primary mt-2">
                 <Counter target={stat.value} />
               </p>
-              <p className="text-xs text-content-tertiary mt-1">{stat.label}</p>
+              <p className="text-xs text-content-secondary mt-1">{stat.label}</p>
             </div>
           )
         })}
@@ -139,12 +139,12 @@ export function DashboardPage() {
       {/* Row 2: Foundation Pipeline */}
       {!loading && foundations.length > 0 && (
         <section className="space-y-4">
-          <h2 className="text-xs font-semibold text-[#A1A1A6] tracking-wider uppercase">Pipeline Foundation</h2>
+          <h2 className="text-xs font-semibold text-content-secondary tracking-wider uppercase">Pipeline Foundation</h2>
           <div className="bg-[#1C1C1E] border border-[rgba(255,255,255,0.08)] rounded-xl p-5 space-y-3">
             {Object.entries(stageCounts).map(([stage, count]) => (
               <div key={stage} className="flex items-center gap-4">
-                <span className="text-xs text-content-tertiary w-24 text-right truncate">{stage}</span>
-                <div className="flex-1 bg-[#0D0D0F]/50 rounded-full h-6 overflow-hidden">
+                <span className="text-xs text-content-secondary w-24 text-right truncate">{stage}</span>
+                <div className="flex-1 bg-canvas/50 rounded-full h-6 overflow-hidden">
                   <div
                     className="h-full bg-primary-500/30 rounded-full flex items-center px-2 transition-all"
                     style={{ width: `${Math.max((count / foundations.length) * 100, 8)}%` }}
@@ -163,7 +163,7 @@ export function DashboardPage() {
         {/* Activity */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between px-1">
-            <h2 className="text-lg font-serif text-[#F5F5F7]">Actividad reciente</h2>
+            <h2 className="text-lg font-serif text-content-primary">Actividad reciente</h2>
             <Link to="/history" className="text-sm text-[#95B877] hover:text-[#95B877]/80 flex items-center gap-1 group">
               Ver todo
               <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
@@ -176,12 +176,12 @@ export function DashboardPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-content-primary">{act.action}</p>
-                      <p className="text-xs text-content-tertiary">
+                      <p className="text-xs text-content-secondary">
                         {act.team_members?.full_name || '—'}
                         {act.clients?.name ? ` · ${act.clients.name}` : ''}
                       </p>
                     </div>
-                    <span className="text-xs text-content-tertiary">
+                    <span className="text-xs text-content-secondary">
                       {new Date(act.created_at).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })}
                     </span>
                   </div>
@@ -189,15 +189,42 @@ export function DashboardPage() {
               ))}
             </div>
           ) : (
-            <div className="card-glass p-8 text-center text-content-tertiary text-sm">
+            <div className="card-glass p-8 text-center text-content-secondary text-sm">
               Sin actividad registrada. Usa el sistema para generar entradas.
             </div>
           )}
         </div>
 
-        {/* Quick Actions */}
+        {/* Upcoming Actions & Quick Actions */}
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-lg font-serif text-content-primary px-1">Acciones pendientes</h2>
+            <div className="bg-[#1C1C1E] border border-[rgba(255,255,255,0.08)] rounded-xl p-0 overflow-hidden divide-y divide-[rgba(255,255,255,0.04)]">
+              {activeFoundations.filter(f => f.status !== 'closed_go' && f.status !== 'closed_nogo' && f.status !== 'closed_lost').slice(0, 5).map((f: any) => {
+                let actionText = '';
+                if (f.status === 'scoping') actionText = 'Redactar Dictamen Predictivo';
+                else if (f.status.includes('scheduled')) actionText = `Preparar ${STAGE_LABELS[f.status] || 'Cita'}`;
+                else if (f.status === 'dictamen_review') actionText = 'Aprobación de Dictamen (Socio)';
+                else if (f.status === 'vetting_gate') actionText = 'Revisión Vetting (CTO/CQA)';
+                else actionText = 'Seguimiento de cuenta';
+                
+                return (
+                  <div key={f.id} className="px-5 py-3 flex items-center justify-between hover:bg-white/[0.03] transition-colors">
+                    <div>
+                      <p className="text-sm text-content-primary">{actionText}</p>
+                      <p className="text-xs text-[#95B877]">{f.clients?.name || 'Cliente desconocido'}</p>
+                    </div>
+                    <CheckCircle size={14} className="text-content-secondary hover:text-[#95B877] cursor-pointer transition-colors" />
+                  </div>
+                )
+              })}
+              {activeFoundations.length === 0 && (
+                <div className="px-5 py-4 text-center text-content-secondary text-sm">Bandeja limpia. Todo al día.</div>
+              )}
+            </div>
+          </div>
         <div className="space-y-4">
-          <h2 className="text-lg font-serif text-[#F5F5F7] px-1">Accesos rápidos</h2>
+          <h2 className="text-lg font-serif text-content-primary px-1">Accesos rápidos</h2>
           <div className="bg-[#1C1C1E] border border-[rgba(255,255,255,0.08)] rounded-xl p-0 overflow-hidden divide-y divide-[rgba(255,255,255,0.04)]">
             {[
               { to: '/analyze',   icon: Brain,         label: 'Nuevo análisis', sub: 'Orquestador RAG' },
@@ -210,44 +237,45 @@ export function DashboardPage() {
                 to={item.to}
                 className="group flex items-center gap-3 px-5 py-3 hover:bg-white/[0.03] transition-colors cursor-pointer"
               >
-                <div className="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-content-tertiary group-hover:text-primary-500 group-hover:border-primary-500/30 transition-all">
+                <div className="w-9 h-9 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-content-secondary group-hover:text-primary-500 group-hover:border-primary-500/30 transition-all">
                   <item.icon size={18} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm text-content-primary">{item.label}</p>
-                  <p className="text-xs text-content-tertiary truncate">{item.sub}</p>
+                  <p className="text-xs text-content-secondary truncate">{item.sub}</p>
                 </div>
                 <ArrowRight size={14} className="text-white/[0.06] group-hover:text-primary-500 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all" />
               </Link>
             ))}
           </div>
         </div>
+        </div>
       </section>
 
       {/* Row 4: Revenue Snapshot */}
       <section className="space-y-4">
-        <h2 className="text-xs font-semibold text-[#A1A1A6] tracking-wider uppercase">Revenue Snapshot</h2>
+        <h2 className="text-xs font-semibold text-content-secondary tracking-wider uppercase">Revenue Snapshot</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-[#1C1C1E] border border-[rgba(255,255,255,0.08)] rounded-xl p-5 hover:border-[rgba(255,255,255,0.15)] transition-all">
-            <p className="text-xs text-content-tertiary mb-1">MRR Sentinel</p>
+            <p className="text-xs text-content-secondary mb-1">MRR Sentinel</p>
             <p className="text-xl font-semibold text-content-primary">
               ${sentinelMRR.toLocaleString('es-MX')}
             </p>
-            <p className="text-xs text-content-tertiary">mensual recurrente</p>
+            <p className="text-xs text-content-secondary">mensual recurrente</p>
           </div>
           <div className="bg-[#1C1C1E] border border-[rgba(255,255,255,0.08)] rounded-xl p-5 hover:border-[rgba(255,255,255,0.15)] transition-all">
-            <p className="text-xs text-[#A1A1A6] mb-1">Pipeline Architecture</p>
-            <p className="text-xl font-bold text-[#F5F5F7]">
+            <p className="text-xs text-content-secondary mb-1">Pipeline Architecture</p>
+            <p className="text-xl font-bold text-content-primary">
               ${architecturePipeline.toLocaleString('es-MX')}
             </p>
-            <p className="text-[10px] text-[#A1A1A6]">{activeArchitectures.length} proyectos activos</p>
+            <p className="text-[10px] text-content-secondary">{activeArchitectures.length} proyectos activos</p>
           </div>
           <div className="bg-[#1C1C1E] border border-[rgba(255,255,255,0.08)] rounded-xl p-5 hover:border-[rgba(255,255,255,0.15)] transition-all">
-            <p className="text-xs text-[#A1A1A6] mb-1">Foundation Fees</p>
-            <p className="text-xl font-bold text-[#F5F5F7]">
+            <p className="text-xs text-content-secondary mb-1">Foundation Fees</p>
+            <p className="text-xl font-bold text-content-primary">
               {foundations.length} engagements
             </p>
-            <p className="text-xs text-content-tertiary">{activeFoundations.length} en curso</p>
+            <p className="text-xs text-content-secondary">{activeFoundations.length} en curso</p>
           </div>
         </div>
       </section>

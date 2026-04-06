@@ -88,7 +88,7 @@ export default function AnalysisResultV2({ data }: { data: AnalysisData }) {
               animate={{ opacity: 1, x: 0 }}
             >
               <Card className="h-full" hover={false}>
-                <h4 className="text-[9px] font-semibold text-content-tertiary uppercase tracking-widest mb-3 flex items-center gap-2">
+                <h4 className="text-[9px] font-semibold text-content-secondary uppercase tracking-widest mb-3 flex items-center gap-2">
                   <ShieldCheck size={13} />
                   Fuentes
                 </h4>
@@ -150,7 +150,7 @@ export default function AnalysisResultV2({ data }: { data: AnalysisData }) {
           <span className={showGraph ? 'text-primary-600' : ''}>
             {showGraph ? 'Ocultar' : 'Inspeccionar'} Traza
           </span>
-          <ChevronRight size={15} className={`text-content-tertiary/50 transition-transform ${showGraph ? 'rotate-90' : ''}`} />
+          <ChevronRight size={15} className={`text-content-secondary/50 transition-transform ${showGraph ? 'rotate-90' : ''}`} />
         </button>
 
         <AnimatePresence>
@@ -167,12 +167,12 @@ export default function AnalysisResultV2({ data }: { data: AnalysisData }) {
                   className="p-3 flex items-center justify-between"
                   style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
                 >
-                  <span className="text-[9px] font-semibold text-content-tertiary uppercase tracking-widest">
+                  <span className="text-[9px] font-semibold text-content-secondary uppercase tracking-widest">
                     Grafo de Decisión
                   </span>
                   <div className="flex items-center gap-1.5">
                     <div className="w-1.5 h-1.5 rounded-full bg-success/80" />
-                    <span className="text-[9px] text-content-tertiary/60">Completado</span>
+                    <span className="text-[9px] text-content-secondary/60">Completado</span>
                   </div>
                 </div>
                 <div className="p-6">

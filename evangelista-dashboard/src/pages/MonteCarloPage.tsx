@@ -4,6 +4,7 @@ import { useAuthStore } from '../stores/authStore';
 import { sentinelDB } from '../lib/supabase';
 import Button from '../components/ui/Button';
 import { ArrowLeft, Shield, AlertTriangle, Play, XCircle, BarChart3, Activity, Zap, TrendingUp, Plus } from 'lucide-react';
+import { agentActions } from '../lib/agentActions';
 
 export default function MonteCarloPage() {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +29,6 @@ export default function MonteCarloPage() {
   const [mcError, setMcError] = useState<string | null>(null);
   const [mcHistory, setMcHistory] = useState<any[]>([]);
 
-  const API_BASE = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8001';
 
   useEffect(() => {
     if (!id) return;
@@ -81,42 +81,15 @@ export default function MonteCarloPage() {
       const token = session?.access_token;
       if (!token) throw new Error('No activo');
 
-      setTimeout(() => setMcProgress('computing'), 300);
-      setTimeout(() => setMcProgress('analyzing'), 1200);
+      setMcProgress('analyzing');
 
-      const body = {
+      const data: any = await agentActions.ejecutarMonteCarlo({
         subscription_id: id,
         iterations: mcIterations,
-        variables: mcVariables,
+        variables: mcVariables as any,
         modelo_negocio: mcModelo?.trim() || null,
-      };
-
-      const res = await fetch(`${API_BASE}/api/v1/sentinel/${id}/simulate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify(body),
-        signal: controller.signal,
       });
 
-      if (!res.ok) {
-        const errData = await res.json().catch(() => null);
-        if (res.status === 429) {
-          const retryAfter = errData?.detail?.retry_after || 60;
-          setMcError(errData?.detail?.message || 'Demasiadas solicitudes.');
-          setMcCooldown(true);
-          setMcRemaining(retryAfter);
-          let remaining = retryAfter;
-          const interval = setInterval(() => {
-            remaining--;
-            setMcRemaining(remaining);
-            if (remaining <= 0) { clearInterval(interval); setMcCooldown(false); }
-          }, 1000);
-        } else {
-          setMcError(errData?.detail || 'Error en simulacion.');
-        }
-        return;
-      }
-      const data = await res.json();
       setMcResults(data);
       setMcHistory(p => [data, ...p].slice(0, 10));
     } catch (e: any) {
@@ -198,6 +171,37 @@ export default function MonteCarloPage() {
             <div className="bg-[#1C1C1E] border border-white/10 p-4 rounded-xl text-center"><p className="text-xs text-gray-400 mb-1">VaR 95%</p><p className="text-xl font-bold text-white">${mcResults.statistics?.var_95?.toLocaleString('es-MX')}</p></div>
           </div>
 
+          {mcResults.executive_summary && (
+            <div className="bg-[#1C1C1E] border border-white/10 p-5 rounded-xl">
+              <h3 className="font-semibold flex items-center gap-2 mb-4"><Zap size={16} className="text-[#95B877]"/> Resumen Ejecutivo (Decision Intelligence)</h3>
+              <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{mcResults.executive_summary}</p>
+            </div>
+          )}
+
+          {mcResults.histogram && mcResults.histogram.length > 0 && (
+            <div className="bg-[#1C1C1E] border border-white/10 p-5 rounded-xl">
+              <h3 className="font-semibold flex items-center gap-2 mb-4"><BarChart3 size={16}/> Distribución de Probabilidad</h3>
+              <div className="flex items-end gap-1 h-32 w-full pt-4">
+                {mcResults.histogram.map((bin: any, idx: number) => {
+                  const maxCount = Math.max(...mcResults.histogram.map((b: any) => b.count));
+                  const heightPct = maxCount > 0 ? (bin.count / maxCount) * 100 : 0;
+                  return (
+                    <div 
+                      key={idx} 
+                      className="flex-1 bg-[#95B877]/80 hover:bg-[#95B877] transition-all rounded-t relative max-w-[24px]" 
+                      style={{ height: `${heightPct}%` }} 
+                      title={`Rango: $${bin.low.toLocaleString()} - $${bin.high.toLocaleString()} | Sim. count: ${bin.count}`}
+                    />
+                  );
+                })}
+              </div>
+              <div className="flex justify-between mt-2 text-[10px] text-gray-500 font-mono">
+                <span>${mcResults.histogram[0]?.low?.toLocaleString('es-MX')}</span>
+                <span>${mcResults.histogram[mcResults.histogram.length - 1]?.high?.toLocaleString('es-MX')}</span>
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-[#1C1C1E] border border-white/10 p-5 rounded-xl">
               <h3 className="font-semibold flex items-center gap-2 mb-4"><Activity size={16}/> Triggers de Riesgo</h3>
@@ -214,10 +218,23 @@ export default function MonteCarloPage() {
               <h3 className="font-semibold flex items-center gap-2 mb-4"><TrendingUp size={16}/> Recomendaciones (IA)</h3>
               <div className="space-y-3">
                 {mcResults.recommendations?.map((r: any, i: number) => (
-                  <div key={i} className="p-3 border border-[#95B877]/20 bg-[#95B877]/5 rounded">
-                    <p className="text-sm font-semibold text-[#95B877]">{r.action}</p>
-                    <p className="text-xs text-white/70">Impacto: {r.impact}</p>
-                  </div>
+                    <div key={i} className="p-4 border border-[#95B877]/20 bg-[#95B877]/5 rounded">
+                      <p className="text-sm font-semibold text-[#95B877]">{r.title || r.action || "Recomendación"}</p>
+                      <p className="text-xs text-white/70 mt-1">{r.description || r.impact || "Acción sugerida"}</p>
+                      {r.actions && r.actions.length > 0 && (
+                        <div className="mt-3 space-y-2">
+                          {r.actions.map((act: any, actIdx: number) => (
+                            <div key={actIdx} className="flex items-start gap-2 text-xs border-t border-white/5 pt-2">
+                              <span className="text-gray-500 font-mono mt-0.5">{act.step}.</span>
+                              <div>
+                                <span className="text-gray-300">{act.action}</span>
+                                <div className="text-gray-500 mt-0.5">Resp: {act.responsible} • {act.deadline_days} días</div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                 ))}
               </div>
             </div>

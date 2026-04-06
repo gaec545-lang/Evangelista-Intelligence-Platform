@@ -9,7 +9,7 @@ setup:
 
 # === DESARROLLO ===
 dev:
-	uvicorn src.api.server:app --reload --host 0.0.0.0 --port 8000
+	uvicorn src.api.server:app --reload --host 0.0.0.0 --port 8001
 
 # === PRODUCCIÓN ===
 prod:
@@ -35,11 +35,11 @@ analyze:
 
 # === AGENTES ===
 agents:
-	curl -s http://localhost:8000/api/v1/agents | python -m json.tool
+	curl -s http://localhost:8001/api/v1/agents | python -m json.tool
 
 # === HEALTH ===
 health:
-	curl -s http://localhost:8000/readiness | python -m json.tool
+	curl -s http://localhost:8001/readiness | python -m json.tool
 
 # === TESTS ===
 test:
@@ -51,7 +51,7 @@ qdrant:
 
 # === PROPUESTAS ===
 proposal:
-	curl -s -X POST http://localhost:8000/api/v1/proposals/foundation \
+	curl -s -X POST http://localhost:8001/api/v1/proposals/foundation \
 		-H "Content-Type: application/json" \
 		-d '{"name":"$(or $(client),Empresa Demo)","sector":"$(or $(sector),manufactura)","sucursales":$(or $(sucursales),2),"sistemas_erp":$(or $(erps),1),"city":"Puebla"}' \
 		| python -m json.tool

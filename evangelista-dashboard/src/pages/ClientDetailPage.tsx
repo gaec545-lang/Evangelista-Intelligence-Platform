@@ -38,7 +38,7 @@ export function ClientDetailPage() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">
         <Spinner size="lg" />
-        <p className="text-xs text-content-tertiary">Cargando archivo…</p>
+        <p className="text-xs text-content-secondary">Cargando archivo…</p>
       </div>
     )
   }
@@ -56,7 +56,7 @@ export function ClientDetailPage() {
         <div className="space-y-4">
           <button
             onClick={() => navigate('/clients')}
-            className="flex items-center gap-2 text-sm text-content-tertiary hover:text-primary-600 transition-colors"
+            className="flex items-center gap-2 text-sm text-content-secondary hover:text-primary-600 transition-colors"
           >
             <ArrowLeft size={16} />
             Clientes
@@ -68,7 +68,7 @@ export function ClientDetailPage() {
             <div>
               <h1 className="!text-2xl">{client.name}</h1>
               <div className="flex items-center gap-2 mt-1">
-                <span className="flex items-center gap-1 text-xs text-content-tertiary">
+                <span className="flex items-center gap-1 text-xs text-content-secondary">
                   <MapPin size={12} /> {client.city}
                 </span>
                 <span className="w-1 h-1 rounded-full bg-surface-border" />
@@ -89,14 +89,14 @@ export function ClientDetailPage() {
         {kpis.map(kpi => (
           <div key={kpi.label} className="card-glass rounded-card border border-surface-border p-5">
             <div className="flex items-center justify-between mb-3">
-              {kpi.icon && <kpi.icon size={18} className="text-content-tertiary" />}
+              {kpi.icon && <kpi.icon size={18} className="text-content-secondary" />}
             </div>
             <p className="text-2xl font-semibold tracking-tight mt-2">
               {kpi.isFloat
                 ? (kpi.value as number).toFixed(2)
                 : <Counter target={kpi.value as number} />}
             </p>
-            <p className="text-xs text-content-tertiary mt-1">{kpi.label}</p>
+            <p className="text-xs text-content-secondary mt-1">{kpi.label}</p>
           </div>
         ))}
       </section>
@@ -118,10 +118,10 @@ export function ClientDetailPage() {
         <div className="lg:col-span-5 space-y-6">
           <div className="flex items-center justify-between px-1">
             <div className="flex items-center gap-2">
-              <Clock size={18} className="text-content-tertiary" />
+              <Clock size={18} className="text-content-secondary" />
               <h2>Historial</h2>
             </div>
-            {analyses.length > 0 && <p className="text-xs text-content-tertiary">{analyses.length}</p>}
+            {analyses.length > 0 && <p className="text-xs text-content-secondary">{analyses.length}</p>}
           </div>
           <div className="card-glass rounded-card border border-surface-border">
             {loadingHistory ? (

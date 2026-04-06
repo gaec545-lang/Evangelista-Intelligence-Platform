@@ -70,10 +70,10 @@ export default function AnalysisHistory() {
           <div className="p-4 pb-3 space-y-3 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-semibold text-content-primary">Historial</h2>
-              <p className="text-[10px] text-content-tertiary tabular-nums">{filtered.length} registros</p>
+              <p className="text-[10px] text-content-secondary tabular-nums">{filtered.length} registros</p>
             </div>
             <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-tertiary/50 pointer-events-none" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-content-secondary/50 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Buscar análisis..."
@@ -89,12 +89,12 @@ export default function AnalysisHistory() {
             {loading ? (
               <div className="flex flex-col items-center justify-center py-16 gap-3">
                 <div className="w-8 h-8 border-[2px] border-white/[0.06] border-t-primary-500 rounded-full animate-spin" />
-                <p className="text-[10px] text-content-tertiary uppercase tracking-widest">Cargando</p>
+                <p className="text-[10px] text-content-secondary uppercase tracking-widest">Cargando</p>
               </div>
             ) : filtered.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 gap-2">
-                <FileText size={24} className="text-content-tertiary/40" />
-                <p className="text-xs text-content-tertiary">Sin resultados</p>
+                <FileText size={24} className="text-content-secondary/40" />
+                <p className="text-xs text-content-secondary">Sin resultados</p>
               </div>
             ) : (
               filtered.map((a, i) => (
@@ -123,7 +123,7 @@ export default function AnalysisHistory() {
                         <Badge variant={getConfidenceVariant(a.confidence)} size="sm">
                           {(a.confidence * 100).toFixed(0)}%
                         </Badge>
-                        <span className="text-[9px] text-content-tertiary tabular-nums">
+                        <span className="text-[9px] text-content-secondary tabular-nums">
                           {new Date(a.created_at).toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })}
                         </span>
                       </div>
@@ -184,7 +184,7 @@ export default function AnalysisHistory() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 px-1">
                     <FileText size={16} className="text-primary-500" />
-                    <h3 className="text-xs font-semibold text-content-tertiary uppercase tracking-widest">
+                    <h3 className="text-xs font-semibold text-content-secondary uppercase tracking-widest">
                       Respuesta Generada
                     </h3>
                   </div>
@@ -212,10 +212,10 @@ export default function AnalysisHistory() {
                   className="w-16 h-16 rounded-card flex items-center justify-center mb-2"
                   style={{ background: 'rgba(255,255,255,0.03)', border: '1px dashed rgba(255,255,255,0.06)' }}
                 >
-                  <FileText size={28} className="text-content-tertiary/40" />
+                  <FileText size={28} className="text-content-secondary/40" />
                 </div>
                 <h3 className="text-base font-semibold text-content-secondary">Historial de Operaciones</h3>
-                <p className="text-sm text-content-tertiary/70 max-w-xs leading-relaxed">
+                <p className="text-sm text-content-secondary/70 max-w-xs leading-relaxed">
                   Selecciona una operación del panel lateral para ver los resultados detallados.
                 </p>
               </motion.div>
@@ -240,12 +240,12 @@ function StatItem({
 }) {
   return (
     <div className="flex flex-col gap-0.5">
-      <span className="text-[9px] font-semibold text-content-tertiary/60 uppercase tracking-widest flex items-center gap-1.5">
-        <Icon size={11} className={accent === 'primary' ? 'text-primary-500' : 'text-content-tertiary/50'} />
+      <span className="text-[9px] font-semibold text-content-secondary/60 uppercase tracking-widest flex items-center gap-1.5">
+        <Icon size={11} className={accent === 'primary' ? 'text-primary-500' : 'text-content-secondary/50'} />
         {label}
       </span>
       <p className="text-lg font-semibold text-content-primary tabular-nums">
-        {value}{sub && <span className="text-sm font-normal text-content-tertiary/60 ml-0.5">{sub}</span>}
+        {value}{sub && <span className="text-sm font-normal text-content-secondary/60 ml-0.5">{sub}</span>}
       </p>
     </div>
   );

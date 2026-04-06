@@ -89,9 +89,9 @@ export default function GraphVisualizer({ mermaid, title, nodeHistory, className
     <div className={`rounded-xl border border-surface-border bg-canvas-elevated overflow-hidden ${className || ''}`}>
       {title && (
         <div className="px-4 py-3 border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between">
-          <h3 className="text-sm font-medium text-[#F5F5F7]">{title}</h3>
+          <h3 className="text-sm font-medium text-content-primary">{title}</h3>
           {nodeHistory && (
-            <span className="text-xs text-[#A1A1A6]">
+            <span className="text-xs text-content-secondary">
               {nodeHistory.length} nodos recorridos
             </span>
           )}
@@ -153,7 +153,7 @@ export default function GraphVisualizer({ mermaid, title, nodeHistory, className
       </TransformWrapper>
 
       {nodeHistory && nodeHistory.length > 0 && (
-        <div className="px-4 py-2 border-t border-[rgba(255,255,255,0.08)] bg-[#0D0D0F]/50">
+        <div className="px-4 py-2 border-t border-[rgba(255,255,255,0.08)] bg-canvas/50">
           <div className="flex flex-wrap gap-1.5">
             {nodeHistory.map((node, i) => (
               <span key={i} className="inline-flex items-center gap-1">
@@ -161,7 +161,7 @@ export default function GraphVisualizer({ mermaid, title, nodeHistory, className
                   {node}
                 </span>
                 {i < nodeHistory.length - 1 && (
-                  <span className="text-[#A1A1A6] text-xs">→</span>
+                  <span className="text-content-secondary text-xs">→</span>
                 )}
               </span>
             ))}

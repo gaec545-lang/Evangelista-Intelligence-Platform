@@ -23,7 +23,7 @@ export function SearchBar({ onSearch, loading, agents = ['all', 'financial', 'pr
       <div className="flex-1 relative group">
         <Search
           size={16}
-          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-content-tertiary/50 group-focus-within:text-primary-500 transition-colors pointer-events-none"
+          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-content-secondary/50 group-focus-within:text-primary-500 transition-colors pointer-events-none"
         />
         <input
           value={query}

@@ -208,15 +208,15 @@ export default function ArchitectureListPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-serif text-[#F5F5F7]">Architecture — Proyectos</h1>
-          <p className="text-sm text-[#A1A1A6] mt-1">
+          <h1 className="text-2xl font-serif text-content-primary">Architecture — Proyectos</h1>
+          <p className="text-sm text-content-secondary mt-1">
             {activeCount} proyecto{activeCount !== 1 ? 's' : ''} activo{activeCount !== 1 ? 's' : ''}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setFilterOpen(!filterOpen)}
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] text-[#F5F5F7] hover:bg-[rgba(255,255,255,0.08)]/30 transition"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium rounded-lg border border-[rgba(255,255,255,0.08)] bg-canvas text-content-primary hover:bg-[rgba(255,255,255,0.08)]/30 transition"
           >
             <Filter className="w-3.5 h-3.5" />
             Filtrar
@@ -229,7 +229,7 @@ export default function ArchitectureListPage() {
 
       {/* Filter bar */}
       {filterOpen && (
-        <div className="mb-6 p-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] flex flex-wrap gap-2">
+        <div className="mb-6 p-3 rounded-xl border border-[rgba(255,255,255,0.08)] bg-canvas flex flex-wrap gap-2">
           {getStatusOptions().map(opt => (
             <button
               key={opt.value}
@@ -238,7 +238,7 @@ export default function ArchitectureListPage() {
                 px-3 py-1.5 text-xs font-medium rounded-full transition
                 ${statusFilter === opt.value
                   ? 'bg-[#95B877] text-white'
-                  : 'bg-transparent text-[#A1A1A6] hover:bg-[rgba(255,255,255,0.08)]/20'
+                  : 'bg-transparent text-content-secondary hover:bg-[rgba(255,255,255,0.08)]/20'
                 }
               `}
             >
@@ -250,9 +250,9 @@ export default function ArchitectureListPage() {
 
       {/* Grid */}
       {filteredProjects.length === 0 ? (
-        <div className="text-center py-16 rounded-2xl border border-dashed border-[rgba(255,255,255,0.08)] bg-[#0D0D0F]">
-          <p className="text-[#A1A1A6] text-sm">No hay proyectos de Architecture a\u00fan.</p>
-          <p className="text-xs text-[#A1A1A6] mt-1">
+        <div className="text-center py-16 rounded-2xl border border-dashed border-[rgba(255,255,255,0.08)] bg-canvas">
+          <p className="text-content-secondary text-sm">No hay proyectos de Architecture a\u00fan.</p>
+          <p className="text-xs text-content-secondary mt-1">
             Crea el primero con el bot\u00f3n de arriba.
           </p>
         </div>
@@ -267,15 +267,15 @@ export default function ArchitectureListPage() {
               <div
                 key={project.id}
                 onClick={() => navigate(`/architecture/${project.id}`)}
-                className="group cursor-pointer rounded-2xl border border-[rgba(255,255,255,0.08)] bg-[#0D0D0F] p-4 hover:shadow-md hover:border-[#95B877]/40 transition-all duration-200"
+                className="group cursor-pointer rounded-2xl border border-[rgba(255,255,255,0.08)] bg-canvas p-4 hover:shadow-md hover:border-[#95B877]/40 transition-all duration-200"
               >
                 {/* Client name + sector */}
                 <div className="mb-3">
-                  <h3 className="font-semibold text-[#F5F5F7] group-hover:text-[#95B877] transition">
+                  <h3 className="font-semibold text-content-primary group-hover:text-[#95B877] transition">
                     {project.clients?.name || 'Sin cliente'}
                   </h3>
                   {project.clients?.sector && (
-                    <p className="text-xs text-[#A1A1A6] mt-0.5">{project.clients.sector}</p>
+                    <p className="text-xs text-content-secondary mt-0.5">{project.clients.sector}</p>
                   )}
                 </div>
 
@@ -285,7 +285,7 @@ export default function ArchitectureListPage() {
                     {STATUS_LABELS[project.status] || project.status}
                   </Badge>
                   {project.escenario_infra && (
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-[rgba(255,255,255,0.08)]/20 text-[#A1A1A6]">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-medium bg-[rgba(255,255,255,0.08)]/20 text-content-secondary">
                       {INFRA_LABELS[project.escenario_infra]}
                     </span>
                   )}
@@ -293,7 +293,7 @@ export default function ArchitectureListPage() {
 
                 {/* Progress bar */}
                 <div className="mb-3">
-                  <div className="flex items-center justify-between text-[11px] text-[#A1A1A6] mb-1">
+                  <div className="flex items-center justify-between text-[11px] text-content-secondary mb-1">
                     <span>Progreso</span>
                     <span className="font-mono">{Math.round(progress)}%</span>
                   </div>
@@ -308,17 +308,17 @@ export default function ArchitectureListPage() {
                 {/* Financial info */}
                 <div className="mb-3 space-y-1.5 text-xs">
                   <div className="flex justify-between">
-                    <span className="text-[#A1A1A6]">Setup fee</span>
-                    <span className="font-mono text-[#F5F5F7]">{formatCurrency(project.setup_fee)}</span>
+                    <span className="text-content-secondary">Setup fee</span>
+                    <span className="font-mono text-content-primary">{formatCurrency(project.setup_fee)}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-[#A1A1A6]">Tramo A</span>
+                    <span className="text-content-secondary">Tramo A</span>
                     <span className={project.tramo_a_pagado ? 'text-green-600' : 'text-amber-600'}>
                       {project.tramo_a_pagado ? '\u2705 pagado' : '\u23f3 pendiente'}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-[#A1A1A6]">Tramo B</span>
+                    <span className="text-content-secondary">Tramo B</span>
                     <span className={project.tramo_b_pagado ? 'text-green-600' : 'text-amber-600'}>
                       {project.tramo_b_pagado ? '\u2705 pagado' : '\u23f3 pendiente'}
                     </span>
@@ -326,7 +326,7 @@ export default function ArchitectureListPage() {
                 </div>
 
                 {/* Footer info */}
-                <div className="pt-3 border-t border-[rgba(255,255,255,0.08)]/50 flex items-center justify-between text-[11px] text-[#A1A1A6]">
+                <div className="pt-3 border-t border-[rgba(255,255,255,0.08)]/50 flex items-center justify-between text-[11px] text-content-secondary">
                   <span>{project.team_members?.full_name || 'Sin asignar'}</span>
                   <span>{formatDate(project.created_at)}</span>
                 </div>
@@ -339,13 +339,13 @@ export default function ArchitectureListPage() {
       {/* Modal: Nuevo proyecto */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-[#0D0D0F] border border-[rgba(255,255,255,0.08)] shadow-xl max-h-[90vh] overflow-y-auto">
+          <div className="w-full max-w-lg rounded-2xl bg-canvas border border-[rgba(255,255,255,0.08)] shadow-xl max-h-[90vh] overflow-y-auto">
             {/* Modal header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(255,255,255,0.08)]/50">
-              <h2 className="text-lg font-serif text-[#F5F5F7]">Nuevo proyecto Architecture</h2>
+              <h2 className="text-lg font-serif text-content-primary">Nuevo proyecto Architecture</h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-[#A1A1A6] hover:text-[#F5F5F7] transition"
+                className="text-content-secondary hover:text-content-primary transition"
               >
                 ✕
               </button>
@@ -355,11 +355,11 @@ export default function ArchitectureListPage() {
             <div className="px-6 py-5 space-y-5">
               {/* Client select */}
               <div>
-                <label className="block text-sm font-medium text-[#F5F5F7] mb-1.5">Cliente</label>
+                <label className="block text-sm font-medium text-content-primary mb-1.5">Cliente</label>
                 <select
                   value={selectedClient}
                   onChange={e => setSelectedClient(e.target.value)}
-                  className="w-full rounded-lg border border-[rgba(255,255,255,0.08)] bg-white/60 px-3 py-2 text-sm text-[#F5F5F7] focus:outline-none focus:ring-2 focus:ring-[#95B877]/40 focus:border-[#95B877]"
+                  className="w-full rounded-lg border border-[rgba(255,255,255,0.08)] bg-white/60 px-3 py-2 text-sm text-content-primary focus:outline-none focus:ring-2 focus:ring-[#95B877]/40 focus:border-[#95B877]"
                 >
                   <option value="">Seleccionar cliente...</option>
                   {foundations
@@ -376,19 +376,19 @@ export default function ArchitectureListPage() {
                   const fees = f ? calcFeeFromFoundation(f) : null;
                   return fees ? (
                     <div className="mt-2 p-2.5 rounded-lg bg-[rgba(255,255,255,0.08)]/15 text-xs space-y-1">
-                      <div className="flex justify-between text-[#A1A1A6]">
+                      <div className="flex justify-between text-content-secondary">
                         <span>Setup fee</span>
                         <span className="font-mono">{formatCurrency(fees.setupFee)}</span>
                       </div>
-                      <div className="flex justify-between text-[#A1A1A6]">
+                      <div className="flex justify-between text-content-secondary">
                         <span>Tramo A (70%)</span>
                         <span className="font-mono">{formatCurrency(fees.tramoA)}</span>
                       </div>
-                      <div className="flex justify-between text-[#A1A1A6]">
+                      <div className="flex justify-between text-content-secondary">
                         <span>Tramo B (30%)</span>
                         <span className="font-mono">{formatCurrency(fees.tramoB)}</span>
                       </div>
-                      <div className="flex justify-between text-[#A1A1A6]">
+                      <div className="flex justify-between text-content-secondary">
                         <span>Success fee est.</span>
                         <span className="font-mono">{formatCurrency(fees.successFee)}</span>
                       </div>
@@ -399,7 +399,7 @@ export default function ArchitectureListPage() {
 
               {/* Infra scenario */}
               <div>
-                <label className="block text-sm font-medium text-[#F5F5F7] mb-2">Infraestructura</label>
+                <label className="block text-sm font-medium text-content-primary mb-2">Infraestructura</label>
                 <div className="flex gap-4">
                   {(['A', 'B'] as const).map(val => (
                     <label
@@ -407,8 +407,8 @@ export default function ArchitectureListPage() {
                       className={`
                         flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl border cursor-pointer transition
                         ${infra === val
-                          ? 'border-[#95B877] bg-[#95B877]/10 text-[#F5F5F7]'
-                          : 'border-[rgba(255,255,255,0.08)] text-[#A1A1A6] hover:border-[#95B877]/50'
+                          ? 'border-[#95B877] bg-[#95B877]/10 text-content-primary'
+                          : 'border-[rgba(255,255,255,0.08)] text-content-secondary hover:border-[#95B877]/50'
                         }
                       `}
                     >
@@ -422,7 +422,7 @@ export default function ArchitectureListPage() {
                       />
                       <div>
                         <div className="text-sm font-medium">{INFRA_LABELS[val]}</div>
-                        <div className="text-[11px] text-[#A1A1A6]">
+                        <div className="text-[11px] text-content-secondary">
                           {val === 'A' ? 'Infra del cliente' : 'Infra Evangelista'}
                         </div>
                       </div>

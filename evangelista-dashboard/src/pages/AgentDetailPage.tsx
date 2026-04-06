@@ -72,7 +72,7 @@ export function AgentDetailPage() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">
         <Spinner size="lg" />
-        <p className="text-xs text-content-tertiary">Cargando agente…</p>
+        <p className="text-xs text-content-secondary">Cargando agente…</p>
       </div>
     )
   }
@@ -85,7 +85,7 @@ export function AgentDetailPage() {
       <section>
         <button
           onClick={() => navigate('/agents')}
-          className="flex items-center gap-2 text-sm text-content-tertiary hover:text-primary-600 transition-colors mb-4"
+          className="flex items-center gap-2 text-sm text-content-secondary hover:text-primary-600 transition-colors mb-4"
         >
           <ArrowLeft size={16} /> Agentes
         </button>
@@ -99,11 +99,11 @@ export function AgentDetailPage() {
           <div>
             <h1 className="!text-2xl capitalize">{agent.name}</h1>
             <div className="flex items-center gap-3 mt-1">
-              <span className="flex items-center gap-1 text-xs text-content-tertiary">
+              <span className="flex items-center gap-1 text-xs text-content-secondary">
                 <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse-soft" /> Activo
               </span>
               <span className="w-1 h-1 rounded-full bg-surface-border" />
-              <span className="text-xs text-content-tertiary">{agent.tools.length} herramientas</span>
+              <span className="text-xs text-content-secondary">{agent.tools.length} herramientas</span>
             </div>
           </div>
         </div>
@@ -143,7 +143,7 @@ export function AgentDetailPage() {
         <div className="flex items-center gap-2">
           <Terminal size={16} className="text-primary-400" />
           <h3 className="text-sm font-semibold">Ejecutar tarea</h3>
-          {running && <span className="text-xs text-content-tertiary ml-auto">Procesando…</span>}
+          {running && <span className="text-xs text-content-secondary ml-auto">Procesando…</span>}
         </div>
 
         <div className="relative">
@@ -200,11 +200,11 @@ export function AgentDetailPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-success" />
-                <span className="text-xs font-semibold text-content-tertiary uppercase tracking-widest">Ejecución OK</span>
+                <span className="text-xs font-semibold text-content-secondary uppercase tracking-widest">Ejecución OK</span>
               </div>
               <div className="flex items-center gap-3">
                 <Badge variant="olive" size="xs">{Math.round(result.confidence * 100)}% confianza</Badge>
-                <span className="text-[10px] text-content-tertiary">{new Date(result.timestamp).toLocaleTimeString()}</span>
+                <span className="text-[10px] text-content-secondary">{new Date(result.timestamp).toLocaleTimeString()}</span>
               </div>
             </div>
 
@@ -214,7 +214,7 @@ export function AgentDetailPage() {
 
             {result.recommendations.length > 0 && (
               <div className="space-y-2">
-                <h4 className="text-xs font-semibold text-content-tertiary uppercase tracking-widest">Recomendaciones</h4>
+                <h4 className="text-xs font-semibold text-content-secondary uppercase tracking-widest">Recomendaciones</h4>
                 <ul className="space-y-1">
                   {result.recommendations.map((r, i) => (
                     <li key={i} className="text-sm text-content-secondary flex items-start gap-2">
@@ -249,9 +249,9 @@ export function AgentDetailPage() {
       {history.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <Clock size={16} className="text-content-tertiary" />
+            <Clock size={16} className="text-content-secondary" />
             <h3 className="text-sm font-semibold">Historial de ejecuciones</h3>
-            <span className="text-xs text-content-tertiary ml-auto">{history.length}</span>
+            <span className="text-xs text-content-secondary ml-auto">{history.length}</span>
           </div>
           <div className="space-y-2">
             {history.map((h, i) => (
@@ -265,7 +265,7 @@ export function AgentDetailPage() {
                 <div className="flex items-center justify-between">
                   <div className="min-w-0">
                     <p className="text-sm font-medium truncate">{h.task}</p>
-                    <p className="text-xs text-content-tertiary">{new Date(h.timestamp).toLocaleTimeString()}</p>
+                    <p className="text-xs text-content-secondary">{new Date(h.timestamp).toLocaleTimeString()}</p>
                   </div>
                   <Badge variant="olive" size="xs">{Math.round(h.confidence * 100)}%</Badge>
                 </div>

@@ -20,7 +20,7 @@ export function AgentsPage() {
       {loading && (
         <div className="py-24 flex flex-col items-center gap-3">
           <Spinner size="lg" />
-          <p className="text-xs text-content-tertiary">Sincronizando con el orquestador…</p>
+          <p className="text-xs text-content-secondary">Sincronizando con el orquestador…</p>
         </div>
       )}
 

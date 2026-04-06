@@ -20,8 +20,8 @@ export function HistoryList({ analyses, limit }: { analyses: Analysis[]; limit?:
   if (!items.length) {
     return (
       <div className="flex flex-col items-center justify-center py-12 gap-2">
-        <History size={28} className="text-content-tertiary/40" />
-        <p className="text-xs text-content-tertiary/60">Sin registros</p>
+        <History size={28} className="text-content-secondary/40" />
+        <p className="text-xs text-content-secondary/60">Sin registros</p>
       </div>
     );
   }
@@ -41,7 +41,7 @@ export function HistoryList({ analyses, limit }: { analyses: Analysis[]; limit?:
             className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 transition-all"
             style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
           >
-            <History size={16} className="text-content-tertiary/60 group-hover:text-primary-500 transition-colors" />
+            <History size={16} className="text-content-secondary/60 group-hover:text-primary-500 transition-colors" />
           </div>
 
           {/* Content */}
@@ -50,11 +50,11 @@ export function HistoryList({ analyses, limit }: { analyses: Analysis[]; limit?:
               {a.task}
             </p>
             <div className="flex items-center gap-2 mt-0.5">
-              <span className="text-[9px] text-content-tertiary/50 tabular-nums">
+              <span className="text-[9px] text-content-secondary/50 tabular-nums">
                 {timeAgo(a.created_at)}
               </span>
               <span className="w-1 h-1 rounded-full" style={{ background: 'rgba(255,255,255,0.10)' }} />
-              <span className="text-[9px] text-content-tertiary/50 truncate max-w-[80px]">
+              <span className="text-[9px] text-content-secondary/50 truncate max-w-[80px]">
                 {a.client?.name || 'Consulta Directa'}
               </span>
             </div>

@@ -96,16 +96,14 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-60 h-screen bg-eva-white border-r border-eva-sand/40 flex flex-col fixed left-0 top-0 z-[var(--z-sidebar)]">
+    <aside className="w-60 h-screen bg-[#0D0D0F] border-r border-[#1C1C1E] flex flex-col fixed left-0 top-0 z-[var(--z-sidebar)]">
       {/* Brand */}
-      <div className="px-5 py-4 border-b border-eva-sand/30">
+      <div className="px-5 py-4 border-b border-[#1C1C1E]">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-eva-olive flex items-center justify-center shadow-sm">
-            <span className="text-white text-sm font-semibold font-serif italic">E</span>
-          </div>
+          <img src="/logoEvangelistaCo.png" alt="Evangelista & Co." className="w-8 h-8 object-contain invert brightness-0 dark:brightness-200" />
           <div>
-            <p className="text-sm font-medium text-eva-charcoal tracking-tight">Evangelista & Co.</p>
-            <p className="text-[11px] text-eva-stone">War Room</p>
+            <p className="text-sm font-medium text-[#F5F5F7] tracking-tight">Evangelista & Co.</p>
+            <p className="text-[11px] text-[#A1A1A6]">War Room</p>
           </div>
         </div>
       </div>
@@ -116,7 +114,7 @@ export default function Sidebar() {
           <div key={section.id}>
             <button
               onClick={() => toggle(section.id)}
-              className="w-full flex items-center justify-between px-2 py-1.5 text-[11px] font-medium text-eva-stone uppercase tracking-widest hover:text-eva-charcoal transition-colors"
+              className="w-full flex items-center justify-between px-2 py-1.5 text-[11px] font-medium text-[#A1A1A6] uppercase tracking-widest hover:text-[#F5F5F7] transition-colors"
             >
               <span>{section.label}</span>
               <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${collapsed[section.id] ? '-rotate-90' : ''}`} />
@@ -130,8 +128,8 @@ export default function Sidebar() {
                     className={({ isActive }) =>
                       `group flex items-center gap-2.5 px-3 py-[7px] rounded-button text-[13px] transition-all duration-150 ${
                         isActive
-                          ? 'bg-eva-olive/10 text-eva-olive font-medium'
-                          : `text-eva-graphite hover:bg-eva-cream/60 ${accentClass(item.accent)}`
+                          ? 'bg-[#95B877]/15 text-[#95B877] font-medium'
+                          : `text-[#A1A1A6] hover:bg-white/[0.05] hover:text-[#F5F5F7] ${accentClass(item.accent)}`
                       }`
                     }
                   >
@@ -146,18 +144,18 @@ export default function Sidebar() {
       </nav>
 
       {/* User */}
-      <div className="px-4 py-3 border-t border-eva-sand/30">
+      <div className="px-4 py-3 border-t border-[#1C1C1E]">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-full bg-eva-olive/15 flex items-center justify-center flex-shrink-0">
-            <span className="text-[11px] font-medium text-eva-olive">
+          <div className="w-7 h-7 rounded-full bg-[#95B877]/15 flex items-center justify-center flex-shrink-0">
+            <span className="text-[11px] font-medium text-[#95B877]">
               {teamMember?.full_name?.charAt(0) || '?'}
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[13px] font-medium text-eva-charcoal truncate">{teamMember?.full_name || 'Sin perfil'}</p>
-            <p className="text-[11px] text-eva-stone">{teamMember?.role?.toUpperCase()}</p>
+            <p className="text-[13px] font-medium text-[#F5F5F7] truncate">{teamMember?.full_name || 'Sin perfil'}</p>
+            <p className="text-[11px] text-[#A1A1A6]">{teamMember?.role?.toUpperCase()}</p>
           </div>
-          <button onClick={signOut} className="p-1 text-eva-stone hover:text-eva-danger transition-colors" title="Salir">
+          <button onClick={signOut} className="p-1 text-[#A1A1A6] hover:text-[#FF453A] transition-colors" title="Salir">
             <LogOut className="w-3.5 h-3.5" />
           </button>
         </div>

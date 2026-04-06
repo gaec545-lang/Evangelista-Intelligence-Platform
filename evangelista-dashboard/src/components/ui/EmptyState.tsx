@@ -34,7 +34,7 @@ export function EmptyState({ icon, title, description, action, className = '' }:
       )}
       <h3 className="text-base font-semibold text-content-primary mb-1.5 tracking-tight">{title}</h3>
       {description && (
-        <p className="text-sm text-content-tertiary/70 mb-6 max-w-sm leading-relaxed">
+        <p className="text-sm text-content-secondary/70 mb-6 max-w-sm leading-relaxed">
           {description}
         </p>
       )}

@@ -29,7 +29,7 @@ export function AgentCard({ agent, index = 0 }: { agent: AgentInfo, index?: numb
             </h3>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="w-1.5 h-1.5 rounded-full bg-success/80 animate-pulse-soft" />
-              <span className="text-[9px] font-semibold text-content-tertiary/60 uppercase tracking-widest">
+              <span className="text-[9px] font-semibold text-content-secondary/60 uppercase tracking-widest">
                 Activo
               </span>
             </div>
@@ -37,7 +37,7 @@ export function AgentCard({ agent, index = 0 }: { agent: AgentInfo, index?: numb
         </div>
         <div className="flex items-center gap-1.5">
           <Badge variant="neutral" size="sm">v1.2</Badge>
-          <ChevronRight size={14} className="text-content-tertiary/40 group-hover:text-primary-500 transition-colors" />
+          <ChevronRight size={14} className="text-content-secondary/40 group-hover:text-primary-500 transition-colors" />
         </div>
       </div>
 
@@ -60,7 +60,7 @@ export function AgentCard({ agent, index = 0 }: { agent: AgentInfo, index?: numb
 
       {/* Footer hint */}
       <div
-        className="mt-auto pt-4 text-xs text-content-tertiary flex items-center gap-1"
+        className="mt-auto pt-4 text-xs text-content-secondary flex items-center gap-1"
         style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}
       >
         <span className="w-1 h-1 rounded-full bg-primary-500/50" />

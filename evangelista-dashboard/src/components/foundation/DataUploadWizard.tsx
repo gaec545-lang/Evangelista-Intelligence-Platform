@@ -77,10 +77,10 @@ export default function DataUploadWizard({ clientId, engagementId, onDetected, o
     const color = pct >= 80 ? 'bg-green-500' : pct >= 60 ? 'bg-yellow-500' : 'bg-red-400';
     return (
       <div className="flex items-center gap-2">
-        <div className="flex-1 h-1.5 bg-[#0D0D0F] rounded-full overflow-hidden">
+        <div className="flex-1 h-1.5 bg-canvas rounded-full overflow-hidden">
           <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
         </div>
-        <span className="text-xs font-mono text-[#A1A1A6] w-8 text-right">{pct}%</span>
+        <span className="text-xs font-mono text-content-secondary w-8 text-right">{pct}%</span>
       </div>
     );
   };
@@ -93,11 +93,11 @@ export default function DataUploadWizard({ clientId, engagementId, onDetected, o
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[rgba(255,255,255,0.08)]">
-          <h2 className="text-lg font-semibold text-[#F5F5F7] flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-content-primary flex items-center gap-2">
             <FileSpreadsheet size={18} className="text-[#95B877]" />
             Auto-detectar Scoping
           </h2>
-          <button onClick={onClose} className="p-1 rounded hover:bg-[#0D0D0F] text-[#A1A1A6]">
+          <button onClick={onClose} className="p-1 rounded hover:bg-canvas text-content-secondary">
             <X size={18} />
           </button>
         </div>
@@ -116,11 +116,11 @@ export default function DataUploadWizard({ clientId, engagementId, onDetected, o
                 onDragLeave={() => setDragging(false)}
                 onDrop={handleDrop}
               >
-                <Upload size={32} className="mx-auto mb-3 text-[#A1A1A6]" />
-                <p className="text-sm font-medium text-[#F5F5F7] mb-1">
+                <Upload size={32} className="mx-auto mb-3 text-content-secondary" />
+                <p className="text-sm font-medium text-content-primary mb-1">
                   Arrastra un archivo CSV o Excel
                 </p>
-                <p className="text-xs text-[#A1A1A6] mb-4">
+                <p className="text-xs text-content-secondary mb-4">
                   CSV, TSV, XLSX, XLS (se analizará hasta 100k filas)
                 </p>
                 <label className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#95B877] text-white text-sm font-medium cursor-pointer hover:bg-[#95B877]/90 transition-colors">
@@ -143,7 +143,7 @@ export default function DataUploadWizard({ clientId, engagementId, onDetected, o
               )}
 
               <div className="flex justify-end gap-3">
-                <button onClick={onClose} className="px-4 py-2 text-sm rounded-lg text-[#A1A1A6] hover:bg-[#0D0D0F] transition-colors">
+                <button onClick={onClose} className="px-4 py-2 text-sm rounded-lg text-content-secondary hover:bg-canvas transition-colors">
                   Cancelar
                 </button>
                 <button
@@ -168,7 +168,7 @@ export default function DataUploadWizard({ clientId, engagementId, onDetected, o
           {result && (
             <>
               <div className="space-y-4">
-                <div className="flex items-center gap-2 text-sm text-[#F5F5F7]">
+                <div className="flex items-center gap-2 text-sm text-content-primary">
                   <CheckCircle size={16} className="text-green-500" />
                   Analisis completado — {result.row_count.toLocaleString()} filas, {result.column_count} columnas
                 </div>
@@ -187,32 +187,32 @@ export default function DataUploadWizard({ clientId, engagementId, onDetected, o
                 {/* Column Preview */}
                 {result.column_profile.length > 0 && (
                   <details className="rounded-lg border border-[rgba(255,255,255,0.08)] overflow-hidden">
-                    <summary className="px-3 py-2 text-xs font-medium text-[#A1A1A6] cursor-pointer hover:bg-[#0D0D0F] transition-colors">
+                    <summary className="px-3 py-2 text-xs font-medium text-content-secondary cursor-pointer hover:bg-canvas transition-colors">
                       Columnas detectadas ({result.column_profile.length})
                     </summary>
                     <div className="max-h-40 overflow-y-auto border-t border-[rgba(255,255,255,0.08)]">
                       <table className="w-full text-xs">
-                        <thead className="bg-[#0D0D0F]">
+                        <thead className="bg-canvas">
                           <tr>
-                            <th className="text-left px-3 py-1.5 font-semibold text-[#A1A1A6]">Columna</th>
-                            <th className="text-left px-3 py-1.5 font-semibold text-[#A1A1A6]">Tipo</th>
-                            <th className="text-right px-3 py-1.5 font-semibold text-[#A1A1A6]">Nulls</th>
-                            <th className="text-right px-3 py-1.5 font-semibold text-[#A1A1A6]">Unicos</th>
+                            <th className="text-left px-3 py-1.5 font-semibold text-content-secondary">Columna</th>
+                            <th className="text-left px-3 py-1.5 font-semibold text-content-secondary">Tipo</th>
+                            <th className="text-right px-3 py-1.5 font-semibold text-content-secondary">Nulls</th>
+                            <th className="text-right px-3 py-1.5 font-semibold text-content-secondary">Unicos</th>
                           </tr>
                         </thead>
                         <tbody>
                           {result.column_profile.slice(0, 30).map((col) => (
-                            <tr key={col.name} className="border-t border-[rgba(255,255,255,0.08)] hover:bg-[#0D0D0F]/50">
-                              <td className="px-3 py-1 font-mono text-[#F5F5F7] truncate max-w-[200px]">{col.name}</td>
-                              <td className="px-3 py-1 text-[#A1A1A6]">{col.dtype}</td>
-                              <td className="px-3 py-1 text-right text-[#A1A1A6]">{col.null_pct}%</td>
-                              <td className="px-3 py-1 text-right text-[#A1A1A6]">{col.unique_count}</td>
+                            <tr key={col.name} className="border-t border-[rgba(255,255,255,0.08)] hover:bg-canvas/50">
+                              <td className="px-3 py-1 font-mono text-content-primary truncate max-w-[200px]">{col.name}</td>
+                              <td className="px-3 py-1 text-content-secondary">{col.dtype}</td>
+                              <td className="px-3 py-1 text-right text-content-secondary">{col.null_pct}%</td>
+                              <td className="px-3 py-1 text-right text-content-secondary">{col.unique_count}</td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                       {result.column_profile.length > 30 && (
-                        <p className="text-xs text-[#A1A1A6] px-3 py-1.5 text-center">
+                        <p className="text-xs text-content-secondary px-3 py-1.5 text-center">
                           ...y {result.column_profile.length - 30} columnas mas
                         </p>
                       )}
@@ -224,7 +224,7 @@ export default function DataUploadWizard({ clientId, engagementId, onDetected, o
               <div className="flex justify-end gap-3 pt-2 border-t border-[rgba(255,255,255,0.08)]">
                 <button
                   onClick={onClose}
-                  className="px-4 py-2 text-sm rounded-lg text-[#A1A1A6] hover:bg-[#0D0D0F] transition-colors"
+                  className="px-4 py-2 text-sm rounded-lg text-content-secondary hover:bg-canvas transition-colors"
                 >
                   Descartar
                 </button>
@@ -256,8 +256,8 @@ function ParamField({
 }) {
   return (
     <div className="rounded-lg border border-[rgba(255,255,255,0.08)] p-3 space-y-1.5">
-      <div className="text-xs font-semibold uppercase tracking-wider text-[#A1A1A6]">{label}</div>
-      <div className="text-base font-mono font-bold text-[#F5F5F7]">{value}</div>
+      <div className="text-xs font-semibold uppercase tracking-wider text-content-secondary">{label}</div>
+      <div className="text-base font-mono font-bold text-content-primary">{value}</div>
       {bar(confidence)}
     </div>
   );

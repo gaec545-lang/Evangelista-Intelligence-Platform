@@ -50,11 +50,11 @@ export function Modal({ open, onClose, title, children, maxWidth = 'max-w-lg' }:
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-white/[0.08]">
-              <h2 className="text-lg font-semibold text-content-primary tracking-tight">{title}</h2>
+              <h2 className="text-lg font-semibold text-[#F5F5F7] tracking-tight">{title}</h2>
               <motion.button
                 onClick={onClose}
                 whileTap={{ scale: 0.92 }}
-                className="text-content-tertiary hover:text-content-primary transition-colors duration-200 rounded-lg p-1 hover:bg-white/[0.05]"
+                className="text-[#A1A1A6] hover:text-[#F5F5F7] transition-colors duration-200 rounded-lg p-1 hover:bg-white/[0.05]"
               >
                 <X size={18} />
               </motion.button>

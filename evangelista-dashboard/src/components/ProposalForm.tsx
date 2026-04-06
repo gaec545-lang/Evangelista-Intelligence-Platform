@@ -65,7 +65,7 @@ export function ProposalForm({ initialData, onGenerate, loading }: Props) {
       <div className="space-y-5">
         <div className="flex items-center gap-2 px-1">
           <Building2 size={14} className="text-primary-500" />
-          <h3 className="text-xs font-semibold text-content-tertiary uppercase tracking-widest">Datos Maestros</h3>
+          <h3 className="text-xs font-semibold text-content-secondary uppercase tracking-widest">Datos Maestros</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -95,7 +95,7 @@ export function ProposalForm({ initialData, onGenerate, loading }: Props) {
       <div className="space-y-5">
         <div className="flex items-center gap-2 px-1">
           <Calculator size={14} className="text-primary-500" />
-          <h3 className="text-xs font-semibold text-content-tertiary uppercase tracking-widest">Parámetros Técnicos</h3>
+          <h3 className="text-xs font-semibold text-content-secondary uppercase tracking-widest">Parámetros Técnicos</h3>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
@@ -141,7 +141,7 @@ export function ProposalForm({ initialData, onGenerate, loading }: Props) {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-[9px] font-semibold text-content-tertiary/60 uppercase tracking-widest mb-1">Estrategia</p>
+            <p className="text-[9px] font-semibold text-content-secondary/60 uppercase tracking-widest mb-1">Estrategia</p>
             <p className="text-sm font-semibold text-content-primary capitalize">{form.type}</p>
           </div>
         </div>

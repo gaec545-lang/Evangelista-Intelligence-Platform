@@ -178,6 +178,7 @@ def _compute_statistics(outcomes, samples: dict) -> dict:
         "p99": round(float(np.percentile(sorted_outcomes, 99)), 2),
         "min": round(float(np.min(outcomes)), 2),
         "max": round(float(np.max(outcomes)), 2),
+        "prob_loss": float(np.mean(outcomes < 0)),
         "probability_of_loss": round(
             float(np.mean(outcomes < 0) * 100), 2
         ),
@@ -278,50 +279,22 @@ def _evaluate_triggers(outcomes, sorted_outcomes):
 # ─── Recommendations Engine (Rule-Based) ───
 
 
-def _generate_recommendations(stats: dict) -> list[dict]:
-    """Genera recomendaciones basadas en reglas ( fallback si AI no disponible)."""
-    recs = []
-    triggers = stats.get("triggers", [])
+def _generate_recommendations(stats: dict) -> dict:
+    """Genera recomendaciones basadas en Decision Intelligence con LLM."""
+    from src.engines.decision_intelligence_engine import DecisionIntelligenceEngine
+    
+    class MockConfig:
+        def get(self, key, default=None):
+            if key == "client.name": return "Sentinel Client"
+            if key == "client.industry": return "General"
+            return default
+            
+    engine = DecisionIntelligenceEngine(MockConfig())
+    import pandas as pd
     sensitivity = stats.get("sensitivity", {})
-
-    for trigger in triggers:
-        if trigger["type"] == "probabilidad_perdida":
-            recs.append({
-                "priority": 1,
-                "responsible": "Director Financiero",
-                "action": "Revisar estructura de costos y margen de contribucion por unidad.",
-                "deadline": "15 dias habiles",
-                "impact": f"Reducir probabilidad de perdida de {trigger['actual']}% a menos del 15%.",
-            })
-        elif trigger["type"] == "volatilidad_operativa":
-            recs.append({
-                "priority": 2,
-                "responsible": "Director de Operaciones",
-                "action": "Diversificar fuentes de ingresos para reducir dependencia de variables criticas.",
-                "deadline": "30 dias habiles",
-                "impact": "Estabilizar flujo de caja y reducir coeficiente de variacion.",
-            })
-        elif trigger["type"] == "riesgo_bajada":
-            recs.append({
-                "priority": 3,
-                "responsible": "Consultor Asignado",
-                "action": "Establecer stop-loss operativo y planes de contingencia para escenario P10.",
-                "deadline": "7 dias habiles",
-                "impact": f"Proteger margen minimo ante el peor escenario del {stats.get('p10', 'N/A')}.",
-            })
-
-    # Top sensitivity recommendation
-    if sensitivity:
-        top_var = list(sensitivity.keys())[0]
-        recs.append({
-            "priority": 4,
-            "responsible": "Equipo de Analisis",
-            "action": f"Monitorear de cerca la variable '{top_var}' — es la que mas impacto tiene en los resultados (importancia: {sensitivity[top_var]:.2%}).",
-            "deadline": "Continuo",
-            "impact": "Reducir incertidumbre en la variable de mayor sensibilidad.",
-        })
-
-    return recs
+    df_sens = pd.DataFrame([{"variable": k, "importance": v} for k, v in sensitivity.items()])
+    
+    return engine.generate_recommendations(stats, df_sens)
 
 
 # ─── Endpoints ───
@@ -387,7 +360,9 @@ async def simulate_monte_carlo(
         )
 
     # --- Generate recommendations ---
-    recommendations = _generate_recommendations(stats)
+    recommendations_data = _generate_recommendations(stats)
+    recommendations = recommendations_data.get("recommendations", [])
+    executive_summary = recommendations_data.get("executive_summary", "")
 
     # --- Store simulation record ---
     sim_id = str(uuid.uuid4())
@@ -425,6 +400,7 @@ async def simulate_monte_carlo(
         "histogram": stats.get("histogram", []),
         "triggers": stats.get("triggers", []),
         "recommendations": recommendations,
+        "executive_summary": executive_summary,
     }
 
 

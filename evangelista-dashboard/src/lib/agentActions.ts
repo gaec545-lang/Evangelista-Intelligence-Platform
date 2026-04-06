@@ -172,20 +172,17 @@ Formato: Resumen ejecutivo, KPIs vs meta con análisis, tendencias, alertas, rec
   },
 
   async ejecutarMonteCarlo(datos: {
-    client_id: string;
-    variables: Record<string, number>;
-    escenarios: number;
+    subscription_id: string;
+    variables: Array<{ nombre: string; distribucion: 'normal' | 'triangular' | 'uniform'; parametros: Record<string, number | string> }>;
+    iterations?: number;
+    modelo_negocio?: string | null;
   }) {
     // Llama al endpoint de Monte Carlo del backend
-    const res = await fetch(((import.meta as any).env?.VITE_API_URL || 'http://localhost:8000') + '/api/v1/monte-carlo/simulate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        client_id: datos.client_id,
-        variables: datos.variables,
-        num_scenarios: datos.escenarios,
-      })
+    return api.post(`/api/v1/sentinel/${datos.subscription_id}/simulate`, {
+      subscription_id: datos.subscription_id,
+      variables: datos.variables,
+      iterations: datos.iterations || 10000,
+      modelo_negocio: datos.modelo_negocio,
     });
-    return res.json();
   },
 };

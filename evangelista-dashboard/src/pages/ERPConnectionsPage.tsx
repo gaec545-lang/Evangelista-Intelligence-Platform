@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { api } from '../lib/api';
 import { clientsDB } from '../lib/supabase';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
@@ -67,7 +68,7 @@ const CONNECTION_METHOD_ICONS: Record<string, React.ComponentType<any>> = {
   webhook: Cloud,
 };
 
-const API_BASE = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8001';
+// API_BASE removed — handled by api.ts centrally
 
 interface ErpConnection {
   id: string;
@@ -150,9 +151,7 @@ export default function ERPConnectionsPage() {
 
   async function fetchConnections(): Promise<ErpConnection[]> {
     try {
-      const res = await fetch(`${API_BASE}/api/v1/erp-connections`);
-      if (!res.ok) throw new Error('Failed');
-      return res.json();
+      return api.get<ErpConnection[]>('/api/v1/erp-connections');
     } catch {
       return [];
     }
@@ -194,12 +193,7 @@ export default function ERPConnectionsPage() {
       connection_config: getConnectionConfigValues(form, form.connection_method),
     };
     try {
-      const res = await fetch(`${API_BASE}/api/v1/erp-connections`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error('Failed to create');
+      await api.post('/api/v1/erp-connections', payload);
       setConnections(await fetchConnections());
       resetForm();
     } catch (err) {
@@ -210,12 +204,8 @@ export default function ERPConnectionsPage() {
   async function handleTest(id: string) {
     setTestingId(id);
     try {
-      const res = await fetch(`${API_BASE}/api/v1/erp-connections/${id}/test`, { method: 'POST' });
-      if (res.ok) {
-        setConnections(prev => prev.map(c => c.id === id ? { ...c, status: 'active' as const, last_test: new Date().toISOString() } : c));
-      } else {
-        setConnections(prev => prev.map(c => c.id === id ? { ...c, status: 'error' as const, last_test: new Date().toISOString() } : c));
-      }
+      await api.post(`/api/v1/erp-connections/${id}/test`, {});
+      setConnections(prev => prev.map(c => c.id === id ? { ...c, status: 'active' as const, last_test: new Date().toISOString() } : c));
     } catch {
       setConnections(prev => prev.map(c => c.id === id ? { ...c, status: 'error' as const, last_test: new Date().toISOString() } : c));
     } finally {
@@ -238,7 +228,7 @@ export default function ERPConnectionsPage() {
   async function handleRevoke(id: string) {
     if (!confirm('¿Revocar esta conexión ERP? Esto eliminará las credenciales cifradas.')) return;
     try {
-      await fetch(`${API_BASE}/api/v1/erp-connections/${id}`, { method: 'DELETE' });
+      await api.delete(`/api/v1/erp-connections/${id}`);
       setConnections(prev => prev.filter(c => c.id !== id));
     } catch (err) {
       alert('Error: ' + (err as Error).message);

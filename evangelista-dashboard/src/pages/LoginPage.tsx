@@ -56,15 +56,15 @@ export function LoginPage() {
       <div className="w-full max-w-sm relative z-10">
         {/* Brand */}
         <div className="text-center mb-8">
-          <div className="w-12 h-12 mx-auto rounded-xl bg-primary-500/20 olive-glow flex items-center justify-center mb-4 border border-primary-500/20">
-            <span className="text-primary-600 text-lg font-semibold">E</span>
+          <div className="w-12 h-12 mx-auto rounded-xl bg-[#95B877]/20 flex items-center justify-center mb-4 border border-[#95B877]/20 shadow-[0_0_20px_rgba(149,184,119,0.1)]">
+            <span className="text-[#95B877] text-lg font-semibold">E</span>
           </div>
           <p className="text-sm text-content-primary">Evangelista</p>
-          <p className="text-xs text-content-tertiary mt-0.5">Intelligence Platform</p>
+          <p className="text-xs text-content-secondary mt-0.5">Intelligence Platform</p>
         </div>
 
         {/* Login card */}
-        <div className="glass-strong rounded-card p-6 space-y-4">
+        <div className="bg-[#151518] border border-[rgba(255,255,255,0.06)] rounded-card p-6 space-y-4 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               label="Email"
@@ -85,11 +85,11 @@ export function LoginPage() {
             />
             {error && <p className="text-xs text-[#FF453A]">{error}</p>}
             {isLocked && (
-              <p className="text-xs text-content-tertiary">
+              <p className="text-xs text-content-secondary">
                 Disponible en {secondsLeft}s
               </p>
             )}
-            <Button type="submit" loading={loading} className="w-full" disabled={isLocked}>
+            <Button type="submit" isLoading={loading} className="w-full" disabled={isLocked}>
               Ingresar
             </Button>
           </form>

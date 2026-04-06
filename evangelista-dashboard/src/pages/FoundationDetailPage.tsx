@@ -208,7 +208,7 @@ export default function FoundationDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-[#A1A1A6]">Cargando engagement...</p>
+        <p className="text-content-secondary">Cargando engagement...</p>
       </div>
     );
   }
@@ -216,7 +216,7 @@ export default function FoundationDetailPage() {
   if (!engagement) {
     return (
       <div className="text-center py-16">
-        <p className="text-[#A1A1A6] text-lg">Engagement no encontrado</p>
+        <p className="text-content-secondary text-lg">Engagement no encontrado</p>
         <button
           onClick={() => navigate('/foundation')}
           className="mt-4 text-[#95B877] hover:underline text-sm"
@@ -231,11 +231,11 @@ export default function FoundationDetailPage() {
   const result = vettingResult();
 
   return (
-    <div className="flex min-h-screen bg-[#0D0D0F]">
+    <div className="flex min-h-screen bg-canvas">
       {/* Main Content */}
       <div className="flex-1 mr-[320px]">
         {/* Header */}
-        <header className="sticky top-0 z-10 bg-[#0D0D0F]/95 backdrop-blur-sm border-b border-[rgba(255,255,255,0.06)] px-6 py-4">
+        <header className="sticky top-0 z-10 bg-canvas/95 backdrop-blur-sm border-b border-[rgba(255,255,255,0.06)] px-6 py-4">
           <div className="flex items-center gap-4 mb-2">
             <button
               onClick={() => navigate(-1)}
@@ -243,14 +243,14 @@ export default function FoundationDetailPage() {
             >
               <ArrowLeft size={18} />
             </button>
-            <h1 className="text-xl font-semibold text-[#F5F5F7]">
+            <h1 className="text-xl font-semibold text-content-primary">
               Foundation — {clientName}
             </h1>
             <Badge variant={getStatusBadgeVariant(engagement.status)} size="sm">
               {engagement.status}
             </Badge>
           </div>
-          <div className="flex items-center gap-4 text-sm text-[#A1A1A6] ml-12">
+          <div className="flex items-center gap-4 text-sm text-content-secondary ml-12">
             {engagement.clients?.sector && (
               <span>Sector: {engagement.clients.sector}</span>
             )}
@@ -270,7 +270,7 @@ export default function FoundationDetailPage() {
         </header>
 
         {/* Tabs */}
-        <div className="border-b border-[rgba(255,255,255,0.06)] bg-[#0D0D0F] px-6">
+        <div className="border-b border-[rgba(255,255,255,0.06)] bg-canvas px-6">
           <nav className="flex gap-1" role="tablist">
             {TABS.map(({ key, label, icon: Icon }) => (
               <button
@@ -280,8 +280,8 @@ export default function FoundationDetailPage() {
                 onClick={() => setActiveTab(key)}
                 className={`flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-t-lg transition-colors ${
                   activeTab === key
-                    ? 'bg-[#0D0D0F] border-t-2 border-[#95B877] text-[#F5F5F7]'
-                    : 'text-[#A1A1A6] hover:text-[#F5F5F7] hover:bg-[#95B877]/5'
+                    ? 'bg-canvas border-t-2 border-[#95B877] text-content-primary'
+                    : 'text-content-secondary hover:text-content-primary hover:bg-[#95B877]/5'
                 }`}
               >
                 <Icon size={16} />
@@ -347,18 +347,18 @@ export default function FoundationDetailPage() {
                   <p className="text-sm font-semibold uppercase tracking-wider text-[#95B877] mb-1">
                     Impacto Anual Total Detectado
                   </p>
-                  <p className="text-4xl font-bold text-[#F5F5F7]">
+                  <p className="text-4xl font-bold text-content-primary">
                     ${(engagement.dictamen_total_impacto ?? 0).toLocaleString('es-MX')}
                   </p>
-                  <p className="text-xs text-[#A1A1A6] mt-1">MXN</p>
+                  <p className="text-xs text-content-secondary mt-1">MXN</p>
                 </div>
               )}
 
               {/* Dictamen Generado */}
               <div className="flex justify-between items-center bg-[#151518] p-5 rounded-xl border border-[rgba(255,255,255,0.08)] mb-6">
                 <div>
-                  <h3 className="text-sm font-semibold text-[#F5F5F7]">Dictamen Forense con IA</h3>
-                  <p className="text-xs text-[#A1A1A6]">Análisis automatizado del nodo crítico</p>
+                  <h3 className="text-sm font-semibold text-content-primary">Dictamen Forense con IA</h3>
+                  <p className="text-xs text-content-secondary">Análisis automatizado del nodo crítico</p>
                 </div>
                 <Button size="sm" disabled={saving} onClick={async () => {
                   setSaving(true);
@@ -381,18 +381,18 @@ export default function FoundationDetailPage() {
               {!showForm ? (
                 <button
                   onClick={() => setShowForm(true)}
-                  className="w-full p-4 rounded-xl border-2 border-dashed border-[rgba(255,255,255,0.06)] text-[#A1A1A6] hover:border-[#95B877] hover:text-[#95B877] transition-all flex items-center justify-center gap-2"
+                  className="w-full p-4 rounded-xl border-2 border-dashed border-[rgba(255,255,255,0.06)] text-content-secondary hover:border-[#95B877] hover:text-[#95B877] transition-all flex items-center justify-center gap-2"
                 >
                   <Plus size={16} />
                   Agregar hallazgo
                 </button>
               ) : (
                 <div className="rounded-xl border border-[rgba(255,255,255,0.06)] bg-[#151518] p-5 space-y-4 shadow-sm">
-                  <h3 className="text-sm font-semibold text-[#F5F5F7]">
+                  <h3 className="text-sm font-semibold text-content-primary">
                     Nuevo Hallazgo — {nextHallazgoId()}
                   </h3>
                   <div>
-                    <label className="block text-xs font-semibold text-[#A1A1A6] mb-1">
+                    <label className="block text-xs font-semibold text-content-secondary mb-1">
                       Nombre
                     </label>
                     <input
@@ -401,12 +401,12 @@ export default function FoundationDetailPage() {
                       onChange={(e) =>
                         setHallazgoForm((p) => ({ ...p, nombre: e.target.value }))
                       }
-                      className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#1C1C1E] px-3 py-2 text-sm text-[#F5F5F7] focus:outline-none focus:ring-1 focus:ring-[#95B877]"
+                      className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#1C1C1E] px-3 py-2 text-sm text-content-primary focus:outline-none focus:ring-1 focus:ring-[#95B877]"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-semibold text-[#A1A1A6] mb-1">
+                      <label className="block text-xs font-semibold text-content-secondary mb-1">
                         Costo Anual
                       </label>
                       <input
@@ -415,11 +415,11 @@ export default function FoundationDetailPage() {
                         onChange={(e) =>
                           setHallazgoForm((p) => ({ ...p, costo_anual: e.target.value }))
                         }
-                        className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#1C1C1E] px-3 py-2 text-sm text-[#F5F5F7] focus:outline-none focus:ring-1 focus:ring-[#95B877]"
+                        className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#1C1C1E] px-3 py-2 text-sm text-content-primary focus:outline-none focus:ring-1 focus:ring-[#95B877]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-[#A1A1A6] mb-1">
+                      <label className="block text-xs font-semibold text-content-secondary mb-1">
                         Criticidad
                       </label>
                       <select
@@ -430,7 +430,7 @@ export default function FoundationDetailPage() {
                             criticidad: e.target.value as Hallazgo['criticidad'],
                           }))
                         }
-                        className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#1C1C1E] px-3 py-2 text-sm text-[#F5F5F7] focus:outline-none focus:ring-1 focus:ring-[#95B877]"
+                        className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#1C1C1E] px-3 py-2 text-sm text-content-primary focus:outline-none focus:ring-1 focus:ring-[#95B877]"
                       >
                         <option value="critico">Crítico</option>
                         <option value="alto">Alto</option>
@@ -440,7 +440,7 @@ export default function FoundationDetailPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#A1A1A6] mb-1">
+                    <label className="block text-xs font-semibold text-content-secondary mb-1">
                       Método de Detección
                     </label>
                     <select
@@ -451,7 +451,7 @@ export default function FoundationDetailPage() {
                           metodo_deteccion: e.target.value as Hallazgo['metodo_deteccion'],
                         }))
                       }
-                      className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#1C1C1E] px-3 py-2 text-sm text-[#F5F5F7] focus:outline-none focus:ring-1 focus:ring-[#95B877]"
+                      className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#1C1C1E] px-3 py-2 text-sm text-content-primary focus:outline-none focus:ring-1 focus:ring-[#95B877]"
                     >
                       <option value="benford">Benford</option>
                       <option value="integridad_referencial">Integridad Referencial</option>
@@ -461,7 +461,7 @@ export default function FoundationDetailPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#A1A1A6] mb-1">
+                    <label className="block text-xs font-semibold text-content-secondary mb-1">
                       Descripción
                     </label>
                     <textarea
@@ -470,7 +470,7 @@ export default function FoundationDetailPage() {
                       onChange={(e) =>
                         setHallazgoForm((p) => ({ ...p, descripcion: e.target.value }))
                       }
-                      className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#1C1C1E] px-3 py-2 text-sm text-[#F5F5F7] focus:outline-none focus:ring-1 focus:ring-[#95B877] resize-none"
+                      className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#1C1C1E] px-3 py-2 text-sm text-content-primary focus:outline-none focus:ring-1 focus:ring-[#95B877] resize-none"
                     />
                   </div>
                   <div className="flex items-center gap-3">
@@ -486,7 +486,7 @@ export default function FoundationDetailPage() {
                         }
                         className="w-4 h-4 rounded accent-[#95B877] cursor-pointer"
                       />
-                      <span className="text-sm font-medium text-[#F5F5F7]">
+                      <span className="text-sm font-medium text-content-primary">
                         Atendible con Architecture?
                       </span>
                     </label>
@@ -505,7 +505,7 @@ export default function FoundationDetailPage() {
                           atendible_architecture: false,
                         });
                       }}
-                      className="px-4 py-2 text-sm rounded-lg text-[#A1A1A6] hover:bg-[#0D0D0F] transition-colors"
+                      className="px-4 py-2 text-sm rounded-lg text-content-secondary hover:bg-canvas transition-colors"
                     >
                       Cancelar
                     </button>
@@ -522,7 +522,7 @@ export default function FoundationDetailPage() {
               {/* Hallazgos List */}
               {engagement.hallazgos && engagement.hallazgos.length > 0 && (
                 <div className="space-y-3">
-                  <h3 className="text-sm font-semibold text-[#A1A1A6] uppercase tracking-wider">
+                  <h3 className="text-sm font-semibold text-content-secondary uppercase tracking-wider">
                     Hallazgos ({engagement.hallazgos.length})
                   </h3>
                   {engagement.hallazgos.map((h: Hallazgo) => (
@@ -597,13 +597,13 @@ export default function FoundationDetailPage() {
 
               {/* Auto-evaluate Beta and Alpha based on factors */}
               {engagement.factor_beta != null && engagement.vetting_beta_ok == null && (
-                <div className="text-xs text-[#A1A1A6] bg-[#0D0D0F] rounded-lg p-3 border border-[rgba(255,255,255,0.06)]">
+                <div className="text-xs text-content-secondary bg-canvas rounded-lg p-3 border border-[rgba(255,255,255,0.06)]">
                   Beta actual: {engagement.factor_beta.toFixed(3)} — umbral {'<'} 0.7:
                   {' '}<strong>{engagement.factor_beta < 0.7 ? 'CUMPLE automaticamente' : 'No cumple, revise manualmente'}</strong>
                 </div>
               )}
               {engagement.factor_alpha != null && engagement.vetting_alpha_ok == null && (
-                <div className="text-xs text-[#A1A1A6] bg-[#0D0D0F] rounded-lg p-3 border border-[rgba(255,255,255,0.06)]">
+                <div className="text-xs text-content-secondary bg-canvas rounded-lg p-3 border border-[rgba(255,255,255,0.06)]">
                   Alpha actual: {engagement.factor_alpha.toFixed(3)} — umbral {'>='} 1.0:
                   {' '}<strong>{engagement.factor_alpha >= 1.0 ? 'CUMPLE automaticamente' : 'No cumple, revise manualmente'}</strong>
                 </div>
@@ -611,7 +611,7 @@ export default function FoundationDetailPage() {
 
               {/* Overall Result */}
               <div className="rounded-xl border border-[rgba(255,255,255,0.06)] bg-white p-6 text-center">
-                <p className="text-sm font-semibold uppercase tracking-wider text-[#A1A1A6] mb-2">
+                <p className="text-sm font-semibold uppercase tracking-wider text-content-secondary mb-2">
                   Resultado de Vetting
                 </p>
                 <Badge variant={result.variant} size="lg">
@@ -640,7 +640,7 @@ export default function FoundationDetailPage() {
                       </button>
                     </>
                   ) : (
-                    <div className="w-full text-center py-3 rounded-xl border-2 border-dashed border-[rgba(255,255,255,0.06)] text-[#A1A1A6] text-sm">
+                    <div className="w-full text-center py-3 rounded-xl border-2 border-dashed border-[rgba(255,255,255,0.06)] text-content-secondary text-sm">
                       Se requiere rol CEO o CTO para tomar la decision de vetting
                     </div>
                   )}
@@ -651,7 +651,7 @@ export default function FoundationDetailPage() {
 
           {/* Documentos War Room */}
           <div className="mt-8 bg-[#1C1C1E] rounded-xl border border-[rgba(255,255,255,0.06)] p-5">
-            <h3 className="font-serif text-lg text-[#F5F5F7] mb-4">Documentos</h3>
+            <h3 className="font-serif text-lg text-content-primary mb-4">Documentos</h3>
             <div className="grid grid-cols-2 gap-3">
               <DocumentDownloader
                 template="propuesta_foundation"
@@ -728,10 +728,10 @@ export default function FoundationDetailPage() {
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Save size={14} className="text-[#95B877]" />
-              <h3 className="text-sm font-semibold text-[#F5F5F7]">
+              <h3 className="text-sm font-semibold text-content-primary">
                 Notas Internas
               </h3>
-              <span className="text-[10px] text-[#A1A1A6]">autoguardado</span>
+              <span className="text-[10px] text-content-secondary">autoguardado</span>
             </div>
             <textarea
               value={notasInternas}
@@ -739,19 +739,19 @@ export default function FoundationDetailPage() {
               onBlur={saveNotasDebounced}
               placeholder="Escriba notas internas, observaciones, recordatorios..."
               rows={8}
-              className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-[#0D0D0F] px-3 py-2.5 text-sm text-[#F5F5F7] focus:outline-none focus:ring-1 focus:ring-[#95B877]/50 resize-none placeholder-[#A1A1A6]/50"
+              className="w-full rounded-lg border border-[rgba(255,255,255,0.06)] bg-canvas px-3 py-2.5 text-sm text-content-primary focus:outline-none focus:ring-1 focus:ring-[#95B877]/50 resize-none placeholder-[#A1A1A6]/50"
             />
           </div>
 
           {/* Historial de Analisis */}
           <div>
-            <h3 className="text-sm font-semibold text-[#F5F5F7] flex items-center gap-2 mb-3">
+            <h3 className="text-sm font-semibold text-content-primary flex items-center gap-2 mb-3">
               <FileText size={14} className="text-[#95B877]" />
               Historial de Analisis
             </h3>
-            <div className="rounded-xl border border-[rgba(255,255,255,0.06)] bg-[#0D0D0F] p-4 text-center">
-              <p className="text-sm text-[#A1A1A6]">Coming soon</p>
-              <p className="text-xs text-[#A1A1A6] mt-1">
+            <div className="rounded-xl border border-[rgba(255,255,255,0.06)] bg-canvas p-4 text-center">
+              <p className="text-sm text-content-secondary">Coming soon</p>
+              <p className="text-xs text-content-secondary mt-1">
                 Historial de analisis del cliente
               </p>
             </div>
