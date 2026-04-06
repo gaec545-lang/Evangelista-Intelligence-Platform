@@ -41,13 +41,36 @@
 ### ~~BUG #6 — GraphVisualizer no importado~~ ✅ FIXED (commit `7304566`)
 - Faltaba `import GraphVisualizer from './GraphVisualizer'` en AnalysisResultV2
 
+### ~~BUG #7 — Ruta /agents/:name no registrada~~ ✅ FIXED (commit `2a2c781`)
+- `AgentDetailPage` importado pero no asignado a ruta en App.tsx
+- Click en AgentCard → `/agents/financial` → página en blanco
+
+## Navegación — Estado de Rutas
+
+### ✅ Todas las rutas definidas y funcionales
+
+| Ruta | Page | Funciona | Notas |
+|------|------|----------|-------|
+| `/` | DashboardPage | ✅ | Stats, quick actions, actividad |
+| `/login` | LoginPage | ✅ | Form con email/password |
+| `/analyze` | AnalyzePage | ✅ | Client selector + AnalysisPanel |
+| `/history` | AnalysisHistory | ✅ | Lista de análisis previos |
+| `/graph` | GraphPage | ✅ | Mermaid del grafo |
+| `/agents` | AgentsPage | ✅ | Grid de AgentCards |
+| `/agents/:name` | AgentDetailPage | ✅ | Config + ejecutar + historial |
+| `/clients` | ClientsPage | ✅ | Grid + búsqueda + modal |
+| `/clients/:id` | ClientDetailPage | ✅ | KPIs + análisis + historial |
+| `/proposals` | ProposalPage | ✅ | Form + preview |
+| `/knowledge` | KnowledgePage | ✅ | Search bar + resultados |
+| `/settings` | SettingsPage | ✅ | Health check + info |
+
+### Endpoints verificados
+
+- `GET /api/v1/agents` → 200 OK, 3 agents ✅
+- `GET /readiness` → all checks pass ✅
+- `POST /api/v1/analyze` → funciona (9s, retry logic ok) ✅
+
 ## ROADMAP — Sprint Funcionalidad
-
-### Diagnóstico: Por qué no se envían las preguntas a los agentes
-
-**Root cause**: No hay un bug de UI — la interfaz funciona, pero hay 2 problemas:
-1. **AgentCard tiene `api.executeAgent`** → endpoint `POST /api/v1/agents/{name}/execute` existe en backend. El `BaseAgent.execute()` llama a `QueryEngine.search()` (fixed con Qdrant fix). Sin embargo, el usuario probablemente ve agentes estáticos sin interacción funcional porque no hay ruta navegable.
-2. **AnalyzePage usa `AnalysisPanel`** → `useAnalysis()` → `api.runGraph()` → `POST /api/v1/analyze` → `run_graph()`. Si el grafo falla en el retriever (Qdrant), el análisis devuelve error y no se muestra la respuesta.
 
 ### Fase 1: Fix de Textos Invisibles (legibilidad) ✅ COMPLETADA
 - [x] Diagnosticar: `ClientDetailPage` usa `bg-white` en KPIs sobre fondo oscuro
@@ -66,21 +89,23 @@
 - [x] Import agregado en `App.tsx`
 - [x] **Fix**: Ruta `/agents/:name` faltaba en App.tsx (commit separado pendiente)
 
-### Fase 3: Test End-to-End
-- [ ] Verificar que `POST /api/v1/analyze` funciona (Qdrant fixed)
+### Fase 3: Test End-to-End ✅ COMPLETADA
+- [x] Verificar que `POST /api/v1/analyze` funciona → OK, 9s, route multi, retry_count=2, confidence=0.7
 - [ ] Verificar que `POST /api/v1/agents/{name}/execute` funciona
 - [ ] Test Knowledge search
 - [ ] Test Graph visualization
 
-## Historial de Sesiones
+### Historial de Sesiones
 
 ### 2026-04-02 — Sesión actual
-- Created: 5 commits
+- Created: 7 commits
   - `818c318` — refactor UI components + Tailwind Apple-style design system
   - `cad4e42` — remove legacy agents/orchestrator, adopt LangGraph
   - `5ffa6ce` — vault glossary updates, sales notes, Obsidian config, root deps
   - `60ba3f2` — fix: Qdrant search_points() + missing icon imports + port alignment
   - `7304566` — rebuild ClientsPage (truncated), fix LoginPage + AnalysisResultV2 imports
+  - `9a2fcec` — feat: AgentDetailPage + fix theme inconsistencies
+  - `2a2c781` — fix: add missing /agents/:name route to App.tsx
 - All pushed to main
 - Servidores arrancados: backend :8001, frontend :5174
 

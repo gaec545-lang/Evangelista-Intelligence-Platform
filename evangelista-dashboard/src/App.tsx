@@ -15,6 +15,16 @@ import { ProposalPage } from './pages/ProposalPage'
 import { KnowledgePage } from './pages/KnowledgePage'
 import { SettingsPage } from './pages/SettingsPage'
 import { Spinner } from './components/ui/Spinner'
+// War room pages (Part 2/3)
+import FoundationPipelinePage from './pages/FoundationPipelinePage'
+import FoundationDetailPage from './pages/FoundationDetailPage'
+import ArchitectureListPage from './pages/ArchitectureListPage'
+import ArchitectureDetailPage from './pages/ArchitectureDetailPage'
+import SentinelListPage from './pages/SentinelListPage'
+import SentinelDetailPage from './pages/SentinelDetailPage'
+import MonteCarloPage from './pages/MonteCarloPage'
+import TeamPage from './pages/TeamPage'
+import ERPConnectionsPage from './pages/ERPConnectionsPage'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuthStore()
@@ -43,6 +53,23 @@ export default function App() {
           <Route path="proposals" element={<ProposalPage />} />
           <Route path="knowledge" element={<KnowledgePage />} />
           <Route path="settings" element={<SettingsPage />} />
+
+          {/* === WAR ROOM: FOUNDATION === */}
+          <Route path="foundation" element={<FoundationPipelinePage />} />
+          <Route path="foundation/:id" element={<FoundationDetailPage />} />
+
+          {/* === WAR ROOM: ARCHITECTURE === */}
+          <Route path="architecture" element={<ArchitectureListPage />} />
+          <Route path="architecture/:id" element={<ArchitectureDetailPage />} />
+
+          {/* === WAR ROOM: SENTINEL === */}
+          <Route path="sentinel" element={<SentinelListPage />} />
+          <Route path="sentinel/:id" element={<SentinelDetailPage />} />
+          <Route path="sentinel/:id/montecarlo" element={<MonteCarloPage />} />
+
+          {/* === WAR ROOM: ADMIN === */}
+          <Route path="team" element={<TeamPage />} />
+          <Route path="erp-connections" element={<ERPConnectionsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

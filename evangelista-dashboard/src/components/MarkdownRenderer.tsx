@@ -16,60 +16,60 @@ export default function MarkdownRenderer({ content, className }: MarkdownRendere
         components={{
           // Headers con estilo Evangelista
           h1: ({ children }) => (
-            <h1 className="text-xl font-serif font-medium text-[var(--eva-charcoal)] mt-6 mb-3 pb-2 border-b border-[var(--eva-border)]">
+            <h1 className="text-xl font-serif font-medium text-[#F5F5F7] mt-6 mb-3 pb-2 border-b border-[rgba(255,255,255,0.08)]">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-lg font-serif font-medium text-[var(--eva-charcoal)] mt-5 mb-2">
+            <h2 className="text-lg font-serif font-medium text-[#F5F5F7] mt-5 mb-2">
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="text-base font-medium text-[var(--eva-charcoal)] mt-4 mb-2">
+            <h3 className="text-base font-medium text-[#F5F5F7] mt-4 mb-2">
               {children}
             </h3>
           ),
           
           // Párrafos con espaciado correcto
           p: ({ children }) => (
-            <p className="text-sm leading-relaxed text-[var(--eva-charcoal)] mb-3">
+            <p className="text-sm leading-relaxed text-[#F5F5F7] mb-3">
               {children}
             </p>
           ),
           
           // Tablas con estilo profesional
           table: ({ children }) => (
-            <div className="overflow-x-auto my-4 rounded-lg border border-[var(--eva-border)]">
+            <div className="overflow-x-auto my-4 rounded-lg border border-[rgba(255,255,255,0.08)]">
               <table className="w-full text-sm border-collapse">
                 {children}
               </table>
             </div>
           ),
           thead: ({ children }) => (
-            <thead className="bg-[var(--eva-olive)]/5 border-b border-[var(--eva-border)]">
+            <thead className="bg-[#95B877]/5 border-b border-[rgba(255,255,255,0.08)]">
               {children}
             </thead>
           ),
           th: ({ children }) => (
-            <th className="px-4 py-2.5 text-left text-xs font-bold text-[var(--eva-olive)] uppercase tracking-wider">
+            <th className="px-4 py-2.5 text-left text-xs font-bold text-[#95B877] uppercase tracking-wider">
               {children}
             </th>
           ),
           td: ({ children }) => (
-            <td className="px-4 py-2.5 text-sm text-[var(--eva-charcoal)] border-t border-[var(--eva-border)]/50">
+            <td className="px-4 py-2.5 text-sm text-[#F5F5F7] border-t border-[rgba(255,255,255,0.08)]/50">
               {children}
             </td>
           ),
           
           // Listas
           ul: ({ children }) => (
-            <ul className="list-disc list-outside ml-5 mb-3 space-y-1 text-sm text-[var(--eva-charcoal)]">
+            <ul className="list-disc list-outside ml-5 mb-3 space-y-1 text-sm text-[#F5F5F7]">
               {children}
             </ul>
           ),
           ol: ({ children }) => (
-            <ol className="list-decimal list-outside ml-5 mb-3 space-y-1 text-sm text-[var(--eva-charcoal)]">
+            <ol className="list-decimal list-outside ml-5 mb-3 space-y-1 text-sm text-[#F5F5F7]">
               {children}
             </ol>
           ),
@@ -79,7 +79,7 @@ export default function MarkdownRenderer({ content, className }: MarkdownRendere
           
           // Bloques de código
           pre: ({ children }) => (
-            <pre className="my-3 rounded-lg bg-[var(--eva-charcoal)] text-[var(--eva-cream)] p-4 overflow-x-auto text-xs leading-relaxed">
+            <pre className="my-3 rounded-lg bg-[#F5F5F7] text-[#0D0D0F] p-4 overflow-x-auto text-xs leading-relaxed">
               {children}
             </pre>
           ),
@@ -87,7 +87,7 @@ export default function MarkdownRenderer({ content, className }: MarkdownRendere
             const isInline = !className;
             if (isInline) {
               return (
-                <code className="px-1.5 py-0.5 rounded bg-[var(--eva-olive)]/10 text-[var(--eva-olive)] text-xs font-mono" {...props}>
+                <code className="px-1.5 py-0.5 rounded bg-[#95B877]/10 text-[#95B877] text-xs font-mono" {...props}>
                   {children}
                 </code>
               );
@@ -97,27 +97,27 @@ export default function MarkdownRenderer({ content, className }: MarkdownRendere
           
           // Blockquotes como callouts
           blockquote: ({ children }) => (
-            <blockquote className="my-3 pl-4 border-l-3 border-[var(--eva-olive)] bg-[var(--eva-olive)]/5 rounded-r-lg py-2 pr-3 text-sm text-[var(--eva-charcoal)]">
+            <blockquote className="my-3 pl-4 border-l-3 border-[#95B877] bg-[#95B877]/5 rounded-r-lg py-2 pr-3 text-sm text-[#F5F5F7]">
               {children}
             </blockquote>
           ),
           
           // Separadores
           hr: () => (
-            <hr className="my-5 border-t border-[var(--eva-border)]" />
+            <hr className="my-5 border-t border-[rgba(255,255,255,0.08)]" />
           ),
           
           // Negritas y cursivas
           strong: ({ children }) => (
-            <strong className="font-bold text-[var(--eva-charcoal)]">{children}</strong>
+            <strong className="font-bold text-[#F5F5F7]">{children}</strong>
           ),
           em: ({ children }) => (
-            <em className="italic text-[var(--eva-warm-gray)]">{children}</em>
+            <em className="italic text-[#A1A1A6]">{children}</em>
           ),
           
           // Links
           a: ({ href, children }) => (
-            <a href={href} className="text-[var(--eva-olive)] underline underline-offset-2 hover:text-[var(--eva-olive-light)] transition-colors" target="_blank" rel="noopener noreferrer">
+            <a href={href} className="text-[#95B877] underline underline-offset-2 hover:text-[#A8C88A] transition-colors" target="_blank" rel="noopener noreferrer">
               {children}
             </a>
           ),

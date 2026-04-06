@@ -4,5 +4,6 @@ from . import (
     agents,
     knowledge,
     graph_viz,
-    proposals
+    proposals,
+    monte_carlo,
 )

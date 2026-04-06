@@ -48,6 +48,10 @@ class Settings(BaseSettings):
     RETRIEVAL_FINAL_K: int = 5
     RERANKER_ENABLED: bool = False
 
+    # Supabase (para team management desde backend)
+    SUPABASE_URL: str = ""
+    SUPABASE_SERVICE_KEY: str = ""
+
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
 

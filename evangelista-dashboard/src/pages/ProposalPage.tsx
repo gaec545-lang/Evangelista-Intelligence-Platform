@@ -7,6 +7,7 @@ import { ProposalForm } from '../components/ProposalForm'
 import { api } from '../lib/api'
 import { clientsDB } from '../lib/supabase'
 import { motion, AnimatePresence } from 'framer-motion'
+import { agentActions } from '../lib/agentActions'
 
 export function ProposalPage() {
   const [searchParams] = useSearchParams()
@@ -39,17 +40,29 @@ export function ProposalPage() {
     }
   }, [clientId])
 
-  const handleGenerate = async (data: Record<string, string | number>) => {
+  const handleGenerate = async (data: any) => {
     setLoading(true)
     setError(null)
     try {
       const payload = { ...data, client_id: clientId }
       const result =
         data.type === 'foundation'
-          ? await api.generateFoundation(payload)
-          : await api.generateArchitecture(payload, [])
-      setProposal(result.proposal)
-      setProposalType(result.type)
+          ? await agentActions.generarPropuestaFoundation({
+              cliente_nombre: data.client_name as string,
+              sector: data.sector as string,
+              nodo_critico: 'Generico',
+              factor_gamma: 1.5,
+              foundation_fee: 150000,
+            })
+          : await agentActions.generarPropuestaArchitecture({
+              cliente_nombre: data.client_name as string,
+              factor_gamma: 1.5,
+              setup_fee: 350000,
+              hallazgos_resumen: 'Ver dictamen previo',
+              total_ahorro: 500000,
+            })
+      setProposal(result.response)
+      setProposalType(data.type as string)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Error generando propuesta')
     } finally {

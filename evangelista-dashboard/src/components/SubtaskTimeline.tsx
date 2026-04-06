@@ -24,7 +24,7 @@ export function SubtaskTimeline({ subtasks }: { subtasks: Subtask[] }) {
         <div key={st.id} className="flex items-start gap-3">
           <div className="flex flex-col items-center">
             <StatusIcon status={st.status} />
-            {i < subtasks.length - 1 && <div className="w-px h-6 bg-[var(--eva-border)] mt-1" />}
+            {i < subtasks.length - 1 && <div className="w-px h-6 bg-[rgba(255,255,255,0.08)] mt-1" />}
           </div>
           <div className="flex-1 pb-2">
             <div className="flex items-center gap-2 flex-wrap">

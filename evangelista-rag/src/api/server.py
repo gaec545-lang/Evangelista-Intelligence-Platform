@@ -16,7 +16,7 @@ async def lifespan(app: FastAPI):
 
     # Importar especialistas para disparar auto-registro
     from src.agents import registry  # noqa: F401
-    
+
     # Asegurar que los agentes se carguen
     import src.agents.financial      # noqa: F401
     import src.agents.process        # noqa: F401
@@ -39,26 +39,43 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# ━━━ CORS estricto — sin wildcards ━━━
+ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    # Agregar dominio de produccion aqui:
+    # "https://dashboard.evangelistaco.com",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5174"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "DELETE", "PATCH", "PUT"],
+    allow_headers=["Content-Type", "Authorization"],
+    max_age=600,
 )
 
-# Middleware de logging
+# ━━━ Rate Limiting ━━━
+from src.api.middleware.rate_limiting import RateLimitingMiddleware
+app.add_middleware(RateLimitingMiddleware)
+
+# ━━━ Request Logging ━━━
 from src.api.middleware.logging import RequestLoggingMiddleware
 app.add_middleware(RequestLoggingMiddleware)
 
-# Routes
+# ━━━ Routes ━━━
 from src.api.routes import (
     analyze,
     agents,
     knowledge,
     health,
     graph_viz,
-    proposals
+    proposals,
+    erp_connections,
+    team_management,
+    monte_carlo,
+    foundation_analysis,
 )
 
 app.include_router(health.router, tags=["Health"])
@@ -67,4 +84,8 @@ app.include_router(graph_viz.router, prefix="/api/v1", tags=["Graph Visualizatio
 app.include_router(agents.router, prefix="/api/v1", tags=["Agents"])
 app.include_router(knowledge.router, prefix="/api/v1", tags=["Knowledge"])
 app.include_router(proposals.router, prefix="/api/v1", tags=["Proposals"])
+app.include_router(erp_connections.router, tags=["ERP Connections"])
+app.include_router(team_management.router, tags=["Team"])
+app.include_router(monte_carlo.router, tags=["Sentinel Monte Carlo"])
+app.include_router(foundation_analysis.router, tags=["Foundation Analysis"])
 
