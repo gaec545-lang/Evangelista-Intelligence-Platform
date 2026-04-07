@@ -1,29 +1,61 @@
-export interface Client {
+// === STAR SCHEMA: DIMENSIONS ===
+
+export interface DimClient {
   id: string
   name: string
-  sector: string
-  contact_name?: string
-  contact_email?: string
-  contact_phone?: string
-  city: string
-  sucursales: number
-  sistemas_erp: number
-  erp_type?: string
+  sector?: string
   factor_gamma?: number
-  factor_alpha?: number
-  factor_beta?: number
-  vetting_status: 'pending' | 'go' | 'no_go'
   status: 'prospect' | 'active' | 'completed' | 'archived'
-  notes?: string
   created_at: string
   updated_at: string
 }
 
-export interface Analysis {
+export interface DimQuery {
   id: string
-  client_id?: string
-  client?: { name: string } // Joined from clients table
-  task: string
+  client_id: string
+  query_type: string
+  parameters?: Record<string, any>
+  created_at: string
+}
+
+export interface DimAgent {
+  id: string
+  name: string
+  version?: string
+  created_at: string
+}
+
+// === STAR SCHEMA: FACTS ===
+
+export interface FactAnalysisResult {
+  id: string
+  client_id: string
+  query_id: string
+  agent_id?: string
+  confidence_score?: number
+  output_text?: string
+  latency_ms?: number
+  created_at: string
+}
+
+// === LEGACY TYPES (Mapped) ===
+// Kept for backward compatibility across the frontend during migration phase
+export type Client = DimClient & {
+  contact_name?: string
+  contact_email?: string
+  contact_phone?: string
+  city?: string
+  sucursales?: number
+  sistemas_erp?: number
+  erp_type?: string
+  factor_alpha?: number
+  factor_beta?: number
+  vetting_status?: 'pending' | 'go' | 'no_go'
+  notes?: string
+}
+
+export interface Analysis extends FactAnalysisResult {
+  task?: string
   execution_plan?: string
   final_response?: string
   confidence?: number
@@ -32,7 +64,6 @@ export interface Analysis {
   errors?: string[]
   execution_time_ms?: number
   status: 'running' | 'completed' | 'failed'
-  created_at: string
 }
 
 export interface SubtaskSummary {
