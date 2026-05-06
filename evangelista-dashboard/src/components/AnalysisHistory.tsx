@@ -232,7 +232,7 @@ export default function AnalysisHistory() {
 function StatItem({
   icon: Icon, label, value, sub, accent = 'default',
 }: {
-  icon: React.ComponentType<{ size: number; className?: string }>;
+  icon: React.ComponentType<{ size?: number | string; className?: string }>;
   label: string;
   value: string;
   sub?: string;

@@ -1,5 +1,5 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8001'
-const REQUEST_TIMEOUT_MS = 60_000 // 60s — evita cuelgues indefinidos
+const REQUEST_TIMEOUT_MS = 90_000 // 90s — necesario para reintentos de IA en saturación
 
 export interface AnalyzeRequest {
   task: string

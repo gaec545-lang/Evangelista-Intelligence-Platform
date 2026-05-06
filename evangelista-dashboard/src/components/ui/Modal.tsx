@@ -3,25 +3,28 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { X } from 'lucide-react'
 
 interface ModalProps {
-  open: boolean
+  open?: boolean
+  isOpen?: boolean // Alias for backward compatibility
   onClose: () => void
   title: string
   children: React.ReactNode
   maxWidth?: string
 }
 
-export function Modal({ open, onClose, title, children, maxWidth = 'max-w-lg' }: ModalProps) {
+export function Modal({ open, isOpen, onClose, title, children, maxWidth = 'max-w-lg' }: ModalProps) {
+  const isCurrentlyOpen = open || isOpen
+  
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }
-    if (open) document.addEventListener('keydown', h)
+    if (isCurrentlyOpen) document.addEventListener('keydown', h)
     return () => document.removeEventListener('keydown', h)
-  }, [open, onClose])
+  }, [isCurrentlyOpen, onClose])
 
   return (
     <AnimatePresence>
-      {open && (
+      {isCurrentlyOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Overlay — fade in */}
           <motion.div
@@ -37,12 +40,11 @@ export function Modal({ open, onClose, title, children, maxWidth = 'max-w-lg' }:
           <motion.div
             className={`relative w-full ${maxWidth} max-h-[90vh] overflow-y-auto rounded-2xl`}
             style={{
-              background: 'rgba(255,255,255,0.08)',
-              backdropFilter: 'blur(24px)',
-              WebkitBackdropFilter: 'blur(24px)',
+              background: '#000000',
               border: '1px solid rgba(255,255,255,0.12)',
-              boxShadow: '0 16px 48px rgba(0,0,0,0.48)',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.6)',
             }}
+
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.96 }}
@@ -60,7 +62,7 @@ export function Modal({ open, onClose, title, children, maxWidth = 'max-w-lg' }:
               </motion.button>
             </div>
             {/* Body */}
-            <div className="p-6">{children}</div>
+            <div className="p-6 text-[#F5F5F7]">{children}</div>
           </motion.div>
         </div>
       )}

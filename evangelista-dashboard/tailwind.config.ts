@@ -5,50 +5,78 @@ const config: Config = {
   darkMode: 'class',
   theme: {
     extend: {
-      fontFamily: {
-        // Serif para headers ejecutivos, sans para body denso
-        serif: ['"Instrument Serif"', '"Playfair Display"', 'Georgia', 'serif'],
-        sans: ['"Inter"', '"SF Pro Display"', 'system-ui', 'sans-serif'],
-        mono: ['"JetBrains Mono"', '"Fira Code"', 'monospace'],
-      },
       colors: {
         eva: {
-          // Paleta principal — inspirada en consulting firms premium
-          charcoal: '#1a1a1a',
-          ink: '#2d2d2d',
-          graphite: '#404040',
-          warm: '#6b6b5e',
-          stone: '#8a8a7a',
-          sand: '#b8b4a4',
-          cream: '#f5f0e8',
-          parchment: '#faf8f4',
-          white: '#fefdfb',
-          
-          // Accent — olive profesional
-          olive: '#4a5c3a',
-          'olive-light': '#6b7d5a',
-          'olive-muted': '#8a9c7a',
-          
-          // Servicios
-          foundation: '#c05538',
-          'foundation-light': '#f0997b',
-          'foundation-bg': '#faf0ec',
-          architecture: '#534ab7',
-          'architecture-light': '#afa9ec',
-          'architecture-bg': '#f0eff8',
-          sentinel: '#0f6e56',
-          'sentinel-light': '#5dcaa5',
-          'sentinel-bg': '#e8f5ee',
-          
-          // Status
-          success: '#3b6d11',
-          warning: '#ba7517',
-          danger: '#a32d2d',
-          info: '#185fa5',
+          black: 'rgb(var(--eva-black) / <alpha-value>)',
+          'black-2': 'rgb(var(--eva-black-2) / <alpha-value>)',
+          'black-3': 'rgb(var(--eva-black-3) / <alpha-value>)',
+          olive: 'rgb(var(--eva-olive) / <alpha-value>)',
+          'olive-2': 'rgb(var(--eva-olive-2) / <alpha-value>)',
+          'olive-3': 'rgb(var(--eva-olive-3) / <alpha-value>)',
+          'olive-light': 'rgb(var(--eva-olive-light) / <alpha-value>)',
+          beige: 'rgb(var(--eva-beige) / <alpha-value>)',
+          'beige-2': 'rgb(var(--eva-beige-2) / <alpha-value>)',
+          'beige-3': 'rgb(var(--eva-beige-3) / <alpha-value>)',
+          gold: 'rgb(var(--eva-gold) / <alpha-value>)',
+          'gold-2': 'rgb(var(--eva-gold-2) / <alpha-value>)',
+          'gold-light': 'rgb(var(--eva-gold-light) / <alpha-value>)',
+          border: 'var(--eva-border)',
+          'border-2': 'var(--eva-border-2)',
+          'txt-dark': 'var(--eva-txt-dark)',
+          'txt-mid': 'var(--eva-txt-mid)',
+          'txt-muted': 'var(--eva-txt-muted)',
+          'txt-faint': 'var(--eva-txt-faint)',
         },
+        cream: '#F5F5F7',
+        foundation: '#b04a30',
+        architecture: '#4a42a3',
+        sentinel: '#0d614d',
+        service: {
+          foundation: '#b04a30',
+          architecture: '#4a42a3',
+          sentinel: '#0d614d',
+        },
+        primary: {
+          50: '#f0f4ec',
+          100: '#e1ead9',
+          200: '#c3d5b3',
+          300: '#a5c08d',
+          400: '#87ab67',
+          500: '#3e4d32', // eva-olive
+          600: '#323e29',
+          700: '#252f1f',
+          800: '#191f15',
+          900: '#0c100a',
+        },
+        secondary: {
+          50: '#fefaf0',
+          100: '#fdf5e1',
+          200: '#fbebc3',
+          300: '#fae1a5',
+          400: '#f8d787',
+          500: '#b89a42', // eva-gold
+        },
+        content: {
+          primary: '#12120f',
+          secondary: '#707060',
+          tertiary: '#a8a898',
+        },
+        surface: {
+          canvas: '#f9f7f2',
+          card: '#ffffff',
+          border: '#e1ddd1',
+        }
+      },
+      fontFamily: {
+        brand: ['Lora', 'serif'],
+        ui: ['Inter', 'sans-serif'],
+        mono: ['"DM Mono"', 'monospace'],
       },
       borderRadius: {
         'card': '12px',
+        'card-lg': '24px',
+        'card-xl': '32px',
+        'card-2xl': '40px',
         'button': '8px',
         'badge': '6px',
         'pill': '999px',
@@ -74,7 +102,9 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
 };
 
 export default config;

@@ -6,9 +6,9 @@ export default defineConfig({
   server: {
     port: 5174,
     proxy: {
-      '/api': { target: 'http://localhost:8001', changeOrigin: true },
-      '/readiness': { target: 'http://localhost:8001', changeOrigin: true },
-      '/health': { target: 'http://localhost:8001', changeOrigin: true },
+      '/api': { target: 'http://localhost:8000', changeOrigin: true },
+      '/readiness': { target: 'http://localhost:8000', changeOrigin: true },
+      '/health': { target: 'http://localhost:8000', changeOrigin: true },
     },
     headers: {
       // Previene Clickjacking
@@ -26,7 +26,7 @@ export default defineConfig({
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com",
         "img-src 'self' data: https:",
-        "connect-src 'self' https://*.supabase.co wss://*.supabase.co http://localhost:8001 https://esm.sh",
+        "connect-src 'self' https://*.supabase.co wss://*.supabase.co http://localhost:8000 http://localhost:8001 https://esm.sh",
         "frame-ancestors 'none'",
       ].join('; '),
     },

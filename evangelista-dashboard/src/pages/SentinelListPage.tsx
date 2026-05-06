@@ -134,7 +134,7 @@ export default function SentinelListPage() {
             <SentinelCard
               key={sub.id}
               sub={sub}
-              onClick={() => navigate(`/sentinel/${sub.id}`)}
+              onClick={() => navigate(`/dashboard/sentinel/${sub.id}`)}
             />
           ))}
         </div>
@@ -164,7 +164,7 @@ export default function SentinelListPage() {
           <CreateSubscriptionModal
             currentSubs={subs}
             onClose={() => setShowModal(false)}
-            onCreated={(id) => navigate(`/sentinel/${id}`)}
+            onCreated={(id) => navigate(`/dashboard/sentinel/${id}`)}
           />
         )}
       </AnimatePresence>

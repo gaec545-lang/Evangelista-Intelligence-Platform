@@ -14,6 +14,7 @@ interface ProposalFormData {
   registros: number;
   contact_name: string;
   type: 'foundation' | 'architecture';
+  tone: 'profesional' | 'agresivo' | 'conservador' | 'conciliador';
 }
 
 interface Props {
@@ -33,10 +34,18 @@ export function ProposalForm({ initialData, onGenerate, loading }: Props) {
     registros: initialData?.registros ?? 100000,
     contact_name: initialData?.contact_name ?? '',
     type: initialData?.type ?? 'foundation',
+    tone: initialData?.tone ?? 'profesional',
   });
 
   const gamma = 1 + 0.5 * form.sucursales + 0.2 * form.sistemas_erp;
   const set = <K extends keyof ProposalFormData>(k: K, v: ProposalFormData[K]) => setForm(p => ({ ...p, [k]: v }));
+
+  const tones = [
+    { id: 'profesional', label: 'Profesional', desc: 'Equilibrado y técnico' },
+    { id: 'agresivo', label: 'Agresivo', desc: 'Enfoque en ROI rápido' },
+    { id: 'conservador', label: 'Conservador', desc: 'Riesgo bajo y solidez' },
+    { id: 'conciliador', label: 'Conciliador', desc: 'Acompañamiento y equipo' },
+  ];
 
   return (
     <form onSubmit={e => { e.preventDefault(); onGenerate(form); }} className="space-y-7">
@@ -88,6 +97,31 @@ export function ProposalForm({ initialData, onGenerate, loading }: Props) {
             value={form.city}
             onChange={e => set('city', e.target.value)}
           />
+        </div>
+      </div>
+
+      {/* Tono Narrativo */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 px-1">
+          <Sparkles size={14} className="text-accent-gold" />
+          <h3 className="text-xs font-semibold text-content-secondary uppercase tracking-widest">Tono Narrativo (IA)</h3>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          {tones.map(t => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => set('tone', t.id as any)}
+              className={`p-3 rounded-lg border text-left transition-all ${
+                form.tone === t.id 
+                  ? 'bg-eva-olive/10 border-eva-olive text-eva-olive' 
+                  : 'bg-white/5 border-eva-border text-eva-txt-muted'
+              }`}
+            >
+              <p className="text-[10px] font-bold uppercase">{t.label}</p>
+              <p className="text-[9px] opacity-70 leading-tight mt-1">{t.desc}</p>
+            </button>
+          ))}
         </div>
       </div>
 

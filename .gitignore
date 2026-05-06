@@ -1,4 +1,14 @@
-# Python
+# ============================================================
+# EVANGELISTA & CO. — .gitignore
+# Repositorio público: se excluye TODO el contenido sensible
+# ============================================================
+
+# ── Credenciales y Secretos ─────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Python ──────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
@@ -6,26 +16,64 @@ __pycache__/
 env/
 venv/
 ENV/
-# .env (repo privado — trackeado)
 
-# Node
+# ── Node / Vite ─────────────────────────────────────────────
 node_modules/
 dist/
 .vite/
 
-# Obsidian
-.obsidian/workspace
-.obsidian/workspace.json
-.obsidian/notifications.json
+# ── Contenido Propietario (NO publicar) ──────────────────────
+# Vault de Obsidian — frameworks y metodologías propietarias
+Evangelista-Obsidian/
 
-# Logs
+# Contexto interno del negocio
+Contexto/
+
+# Instrucciones internas y prompts de IA
+Instrucciones/
+
+# RAG engine con datos propietarios
+evangelista-rag/
+
+# Información interna de la firma
+Evangelista-info/
+
+# Knowledge base y skills internos
+Skills Evangelista/
+
+# Configuración interna de AI assistant
+.claude/
+CLAUDE.md
+
+# Herramienta interna de desarrollo
+gstack/
+comandos_gstack.md
+
+# Archivos de debug y errores de compilación
 *.txt
+!README*.txt
 *.log
+*_errors.txt
+*_errors_*.txt
 
-# Databases
+# ── macOS Resource Forks (basura del sistema) ─────────────────
+._*
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# ── Bases de datos ───────────────────────────────────────────
 qdrant_storage/
 qdrant_storage_v2/
 
-# OS
-.DS_Store
-Thumbs.db
+# ── Logs ─────────────────────────────────────────────────────
+logs/
+*.log
+
+# ── Archivos temporales de build/dev ─────────────────────────
+base64_*.txt
+*_base64.txt
+tsc_errors*.txt
+fresh_tsc_errors.txt
+final_tsc_errors.txt

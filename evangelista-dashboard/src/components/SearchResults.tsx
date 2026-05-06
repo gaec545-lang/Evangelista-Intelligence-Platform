@@ -67,7 +67,7 @@ export function SearchResults({ results }: { results: SearchResult[] }) {
               </p>
             </div>
 
-            {r.metadata?.type && (
+            {!!r.metadata?.type && (
               <div className="mt-3 flex items-center gap-2">
                 <span className="text-[9px] font-semibold text-content-secondary/50 uppercase tracking-widest">Metadata:</span>
                 <Badge variant="info" size="sm">{String(r.metadata.type)}</Badge>

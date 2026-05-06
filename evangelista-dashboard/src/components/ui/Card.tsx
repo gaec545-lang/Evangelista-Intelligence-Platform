@@ -10,7 +10,7 @@ interface CardProps {
   index?: number; // For staggered animations
 }
 
-export default function Card({ children, className = '', hover = true, padding = true, onClick, index = 0 }: CardProps) {
+export function Card({ children, className = '', hover = true, padding = true, onClick, index = 0 }: CardProps) {
   const isClickable = !!onClick;
   
   return (
@@ -36,3 +36,5 @@ export default function Card({ children, className = '', hover = true, padding =
     </motion.div>
   );
 }
+
+export default Card;

@@ -44,16 +44,18 @@ export function ClientForm({ initial, onSubmit, onCancel }: ClientFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {/* Information Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-5 md:col-span-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="md:col-span-2">
           <Input
             label="Razón Social / Empresa *"
             placeholder="Ej. Textiles del Centro S.A."
             value={form.name}
             onChange={e => set('name', e.target.value)}
             required
+            autoFocus
+            variant="dark"
           />
         </div>
 
@@ -63,6 +65,7 @@ export function ClientForm({ initial, onSubmit, onCancel }: ClientFormProps) {
           value={form.sector}
           onChange={v => set('sector', v)}
           options={SECTORS.map(s => ({ value: s, label: s.charAt(0).toUpperCase() + s.slice(1) }))}
+          variant="dark"
         />
 
         <Input
@@ -72,31 +75,27 @@ export function ClientForm({ initial, onSubmit, onCancel }: ClientFormProps) {
           onChange={e => set('city', e.target.value)}
           icon={MapPin}
           iconTrailing
+          variant="dark"
         />
       </div>
 
-      {/* Operative Metrics */}
-      <div
-        className="rounded-[12px] p-6 space-y-5"
-        style={{
-          background: 'rgba(255,255,255,0.03)',
-          border: '1px dashed rgba(255,255,255,0.08)',
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <Calculator size={16} className="text-[#95B877]" />
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-[#A1A1A6]">
+      {/* Operative Metrics - Boxed */}
+      <div className="bg-[#0a0a0a] border border-white/[0.08] rounded-2xl p-5 space-y-5">
+        <div className="flex items-center gap-2 mb-1">
+          <Calculator size={14} className="text-eva-gold" />
+          <h3 className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/40 font-bold">
             Métricas Operativas
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             label="Nº Sucursales"
             type="number"
             min={1}
             value={form.sucursales}
             onChange={e => set('sucursales', Number(e.target.value))}
+            variant="dark"
           />
           <Input
             label="Sistemas RAG/ERP"
@@ -104,105 +103,101 @@ export function ClientForm({ initial, onSubmit, onCancel }: ClientFormProps) {
             min={0}
             value={form.sistemas_erp}
             onChange={e => set('sistemas_erp', Number(e.target.value))}
+            variant="dark"
           />
 
-          <SelectField
-            label="Plataforma ERP Principal"
-            icon={Globe}
-            value={form.erp_type ?? ''}
-            onChange={v => set('erp_type', v)}
-            options={ERP_TYPES.map(t => ({ value: t, label: t }))}
-          />
+          <div className="md:col-span-2">
+            <SelectField
+              label="Plataforma ERP Principal"
+              icon={Globe}
+              value={form.erp_type ?? ''}
+              onChange={v => set('erp_type', v)}
+              options={ERP_TYPES.map(t => ({ value: t, label: t }))}
+              variant="dark"
+            />
+          </div>
         </div>
 
-        {/* Γ Factor */}
-        <div
-          className="rounded-[12px] p-4 flex items-center justify-between"
-          style={{
-            background: 'rgba(149,184,119,0.06)',
-            border: '1px solid rgba(149,184,119,0.15)',
-          }}
-        >
+        {/* Γ Factor Result */}
+        <div className="bg-eva-gold/[0.03] border border-eva-gold/20 rounded-xl p-4 flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-semibold text-[#95B877] uppercase tracking-widest">
+            <p className="font-mono text-[9px] font-bold text-eva-gold uppercase tracking-[0.15em]">
               Evangelista Factor Γ
             </p>
-            <p className="text-[11px] text-[#A1A1A6] mt-0.5">
-              Coeficiente de complejidad logística proyectado
+            <p className="font-ui text-[11px] text-white/50 mt-0.5">
+              Complejidad logística estimada
             </p>
           </div>
           <div className="text-right">
-            <span className="text-2xl font-semibold text-[#95B877]">{gamma.toFixed(2)}</span>
-            <p className="text-[9px] font-semibold uppercase tracking-widest text-[#A1A1A6]/80">INDEX</p>
+            <span className="font-brand text-2xl font-bold text-eva-gold tracking-tighter">{gamma.toFixed(2)}</span>
+            <p className="font-mono text-[8px] font-bold text-eva-gold/40">INDEX</p>
           </div>
         </div>
       </div>
 
       {/* Contact Section */}
-      <div className="space-y-5">
+      <div className="space-y-4">
         <div className="flex items-center gap-2 px-1">
-          <User size={16} className="text-[#95B877]" />
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-[#A1A1A6]">
-            Información de Contacto
+          <User size={14} className="text-eva-gold" />
+          <h3 className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/40 font-bold">
+            Representante Legal
           </h3>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
-            label="Representante"
-            placeholder="Nombre completo"
+            label="Nombre Completo"
+            placeholder="Ej. Juan Pérez"
             value={form.contact_name}
             onChange={e => set('contact_name', e.target.value)}
+            variant="dark"
           />
           <Input
-            label="Correo Electrónico"
+            label="Email Directo"
             type="email"
             placeholder="correo@empresa.com"
             value={form.contact_email}
             onChange={e => set('contact_email', e.target.value)}
             icon={Mail}
-          />
-          <Input
-            label="Teléfono Directo"
-            placeholder="+52 (...) ..."
-            value={form.contact_phone}
-            onChange={e => set('contact_phone', e.target.value)}
-            icon={Phone}
+            variant="dark"
           />
         </div>
       </div>
 
       {/* Notes */}
-      <div className="space-y-4">
+      <div className="space-y-2">
         <div className="flex items-center gap-2 px-1">
-          <FileEdit size={16} className="text-[#95B877]" />
-          <h3 className="text-xs font-semibold uppercase tracking-widest text-[#A1A1A6]">
-            Notas y Observaciones
+          <FileEdit size={14} className="text-eva-gold" />
+          <h3 className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/40 font-bold">
+            Observaciones Internas
           </h3>
         </div>
         <textarea
           value={form.notes}
-          placeholder="Detalles adicionales sobre el cliente o el proceso de venta..."
+          placeholder="Anotaciones extra sobre el perfil del cliente..."
           onChange={e => set('notes', e.target.value)}
           rows={3}
-          className="input-glass w-full px-4 py-3 text-sm resize-none rounded-card"
+          className="w-full bg-[#0a0a0a] border border-white/[0.08] rounded-xl px-4 py-3 text-[13px] font-ui text-white placeholder:text-white/20 focus:outline-none focus:border-eva-gold/50 focus:ring-2 focus:ring-eva-gold/5 transition-all resize-none"
         />
       </div>
 
-      {/* Actions */}
-      <div className="flex gap-3 justify-end pt-4 pt-5" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-        <Button variant="ghost" onClick={onCancel}>Cancelar</Button>
-        <Button type="submit" isLoading={loading}>
-          {initial ? 'Actualizar Archivo' : 'Finalizar Registro'}
+
+      {/* Footer Actions */}
+      <div className="flex gap-3 justify-end pt-6 border-t border-white/[0.08]">
+        <Button variant="outline" onClick={onCancel} size="md" className="text-white/60 hover:text-white border-white/10 hover:bg-white/5">
+          Cancelar
+        </Button>
+        <Button type="submit" isLoading={loading} size="md" variant="primary" className="bg-eva-gold text-eva-black hover:bg-eva-gold/90 border-none">
+          {initial ? 'Guardar Cambios' : 'Confirmar Registro'}
         </Button>
       </div>
     </form>
   );
 }
 
-/* ─── Select Field ─── */
+/* ─── Private Components ─── */
 
 function SelectField({
-  label, icon: Icon, value, onChange, options, iconTrailing = false,
+  label, icon: Icon, value, onChange, options, iconTrailing = false, variant = 'light',
 }: {
   label: string;
   icon?: React.ComponentType<{ size?: number | string; className?: string }>;
@@ -210,28 +205,40 @@ function SelectField({
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
   iconTrailing?: boolean;
+  variant?: 'light' | 'dark';
 }) {
+  const isDark = variant === 'dark';
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-[10px] font-semibold text-[#A1A1A6] uppercase tracking-widest px-1">
+      <label className={`font-ui text-[12px] font-semibold px-0.5 ${isDark ? 'text-white/60' : 'text-eva-txt-mid'}`}>
         {label}
       </label>
       <div className="relative group">
         {Icon && !iconTrailing && (
-          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 text-[#A1A1A6]/80 size-4 pointer-events-none group-focus-within:text-[#95B877] transition-colors" size={14} />
+          <Icon className={`absolute left-3 top-1/2 -translate-y-1/2 size-4 pointer-events-none transition-colors ${isDark ? 'text-white/30 group-focus-within:text-eva-gold' : 'text-eva-txt-muted group-focus-within:text-eva-olive'}`} />
         )}
         <select
           value={value}
           onChange={e => onChange(e.target.value)}
-          className="input-glass w-full appearance-none"
+          className={`
+            w-full h-[41px] rounded-lg font-ui text-[13px] transition-all appearance-none pr-8
+            ${isDark 
+              ? 'bg-black border-white/[0.1] text-white focus:border-eva-gold/50 focus:ring-2 focus:ring-eva-gold/5 select-dark' 
+              : 'bg-eva-beige border border-eva-border-2 text-eva-black focus:border-eva-olive focus:ring-2 focus:ring-eva-olive/8'
+            }
+          `}
+
           style={{ paddingLeft: Icon && !iconTrailing ? '2.5rem' : '1rem' }}
         >
-          {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+          {options.map(o => <option key={o.value} value={o.value} className={isDark ? 'bg-[#1a1a1a] text-white' : ''}>{o.label}</option>)}
         </select>
-        {Icon && iconTrailing && (
-          <Icon className="absolute right-3 top-1/2 -translate-y-1/2 text-[#A1A1A6]/60 size-4 pointer-events-none" size={14} />
-        )}
+        <div className={`absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${isDark ? 'text-white/30' : 'text-eva-txt-faint'}`}>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
       </div>
     </div>
   );
 }
+

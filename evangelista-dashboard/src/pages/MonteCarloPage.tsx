@@ -111,7 +111,7 @@ export default function MonteCarloPage() {
           <ArrowLeft size={18} className="text-[#A1A1A6]" />
         </button>
         <div>
-          <h1 className="text-2xl font-serif font-medium text-[#F5F5F7]">Motor Monte Carlo — {sub.clients?.name}</h1>
+          <h1 className="text-2xl font-serif font-medium text-[#F5F5F7]">Motor Monte Carlo — {sub.clients?.name || 'Cliente'}</h1>
           <p className="text-sm text-[#A1A1A6]">Análisis estocástico y simulación de riesgos financieros</p>
         </div>
       </div>

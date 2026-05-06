@@ -1,6 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Cpu, Map } from 'lucide-react'
 import GraphVisualizer from '../components/GraphVisualizer'
+import ProjectIntelMap from '../components/ProjectIntelMap'
+import { projectsDB } from '../lib/supabase'
+import type { Project } from '../lib/types'
+import { Spinner } from '../components/ui/Spinner'
 
+// ─── EIP Architecture definition (unchanged) ──────────────────────────
 const EIP_ARCHITECTURE_MERMAID = [
   "flowchart TD",
   "",
@@ -12,11 +19,9 @@ const EIP_ARCHITECTURE_MERMAID = [
   "    Process[\"Process Agent\"]",
   "    DataEng[\"Data Engineer\"]",
   "",
-  "    %% Debate multi-agente",
   "    Process -.->|\"Friccion Operativa\"| Financial",
   "    DataEng -.->|\"Viabilidad de Datos\"| Financial",
   "",
-  "    %% Consenso: convergencia de los 3 agentes",
   "    Consenso{\"Consenso<br/>del Enjambre\"}",
   "    Financial --> Consenso",
   "    Process --> Consenso",
@@ -39,11 +44,9 @@ const EIP_ARCHITECTURE_MERMAID = [
   "  Synthesizer[\"Synthesizer\"]",
   "  Final([\"Dictamen Forense\"])",
   "",
-  "  %% Flujo principal",
   "  Start --> Router",
   "  Router --> Agentes",
   "",
-  "  %% Agentes consultan herramientas como tools iterativas",
   "  Financial -.-> RAG",
   "  Financial -.-> Sandbox",
   "  Process -.-> RAG",
@@ -51,10 +54,7 @@ const EIP_ARCHITECTURE_MERMAID = [
   "  DataEng -.-> RAG",
   "  DataEng -.-> Sandbox",
   "",
-  "  %% Del consenso al evaluador",
   "  Consenso --> Grader",
-  "",
-  "  %% Ciclo de rechazo",
   "  Grader -->|\"Rechazo\"| Agentes",
   "  Grader -->|\"Validado\"| Synthesizer",
   "  Synthesizer --> Final",
@@ -79,147 +79,193 @@ const EIP_ARCHITECTURE_MERMAID = [
 ].join("\n")
 
 const FLOW_STEPS = [
-  {
-    step: "01",
-    title: "Input Consultor",
-    detail: "El SCQA define el problema real del negocio. Nunca se aceptan datos pre-masticados — el árbol de hipótesis MECE nace aquí y todo el flujo arranca desde este punto.",
-    tag: "Cognición Humana",
-  },
-  {
-    step: "02",
-    title: "Enrutador Determinista",
-    detail: "Asigna el trabajo al Enjambre de Agentes. Ya no bifurca entre RAG y Sandbox — los agentes son los que deciden cuándo consultar cada herramienta.",
-    tag: "Asignación",
-  },
-  {
-    step: "03",
-    title: "Enjambre de Agentes",
-    detail: "Financial, Process y Data Engineer trabajan en paralelo. Consultan iterativamente al Motor RAG para metodología y al Sandbox para cálculos. Flechas punteadas cruzadas = debate interno entre agentes.",
-    tag: "LangGraph",
-  },
-  {
-    step: "04",
-    title: "Debate Multi-Agente",
-    detail: "Process Agent envía 'Fricción Operativa' al Financial. Data Engineer envía 'Viabilidad de Datos'. Esto asegura que el análisis financiero integre restricciones reales de datos y operación.",
-    tag: "Debate Interno",
-  },
-  {
-    step: "05",
-    title: "Consenso del Enjambre",
-    detail: "Nodo de convergencia: unifica los resultados de los 3 agentes en una sola salida coherente. Solo este dictamen unificado va al Grader — nunca un agente suelto.",
-    tag: "Convergencia",
-  },
-  {
-    step: "06",
-    title: "Grader (Self-RAG)",
-    detail: "Si detecta alucinación o datos insuficientes, rechaza todo el Consenso (no solo un agente) y devuelve al Enjambre para re-análisis. Solo si valida, pasa al Synthesizer.",
-    tag: "Anti-Alucinación",
-  },
-  {
-    step: "07",
-    title: "Synthesizer",
-    detail: "Genera JSON determinista con hallazgos, confianza y fuentes. Estructura los datos para inyección directa en la plantilla corporativa via PyMuPDF.",
-    tag: "PDF",
-  },
-  {
-    step: "08",
-    title: "Dictamen Forense",
-    detail: "Entregable final: declaración de impacto con datos matemáticos validados. El Socio Director ejecuta la presentación de choque y expone el Costo de Inacción real.",
-    tag: "Choque",
-  },
+  { step: "01", title: "Input Consultor",       tag: "Cognición",      color: "#5a6b48", detail: "El SCQA define el problema real del negocio. El árbol de hipótesis MECE nace aquí. Todo el flujo arranca desde este punto." },
+  { step: "02", title: "Enrutador Determinista", tag: "Asignación",     color: "#4a3220", detail: "Asigna el trabajo al Enjambre de Agentes. Los agentes deciden cuándo consultar cada herramienta." },
+  { step: "03", title: "Enjambre de Agentes",   tag: "LangGraph",      color: "#3e5e82", detail: "Financial, Process y Data Engineer trabajan en paralelo. Consultan al Motor RAG y al Sandbox de forma iterativa." },
+  { step: "04", title: "Debate Multi-Agente",   tag: "Debate",         color: "#3e5e82", detail: "Process envía 'Fricción Operativa' al Financial. DataEng envía 'Viabilidad de Datos'. El análisis integra restricciones reales." },
+  { step: "05", title: "Consenso del Enjambre", tag: "Convergencia",   color: "#4a4a48", detail: "Nodo de convergencia: unifica los 3 agentes. Solo este dictamen unificado va al Grader." },
+  { step: "06", title: "Grader (Self-RAG)",     tag: "Anti-Alucinación", color: "#4a4a48", detail: "Detecta alucinaciones o datos insuficientes. Rechaza el Consenso completo y devuelve al Enjambre." },
+  { step: "07", title: "Synthesizer",           tag: "Estructuración", color: "#6b42c6", detail: "Genera JSON determinista con hallazgos, confianza y fuentes. Estructura los datos para el dictamen corporativo." },
+  { step: "08", title: "Dictamen Forense",      tag: "Choque",         color: "#1e5237", detail: "Entregable final con datos matemáticamente validados. El Socio Director presenta el Costo de Inacción real." },
 ]
 
-const COLORS = {
-  input: "#5a6b48",
-  router: "#4a3220",
-  sandbox: "#a1442f",
-  agent: "#3e5e82",
-  grader: "#4a4a48",
-  synth: "#6b42c6",
-  final: "#1e5237",
-}
-
-const TAG_COLORS: Record<string, string> = {
-  "Cognición Humana": COLORS.input,
-  "Asignación": COLORS.router,
-  "Mandato PED": COLORS.sandbox,
-  "LangGraph": COLORS.agent,
-  "Debate Interno": COLORS.agent,
-  "Convergencia": COLORS.grader,
-  "Anti-Alucinación": COLORS.grader,
-  "PDF": COLORS.synth,
-  "Choque": COLORS.final,
-}
+type Mode = 'arquitectura' | 'proyecto'
 
 export default function GraphPage() {
+  const [mode, setMode] = useState<Mode>('arquitectura')
   const [activeStep, setActiveStep] = useState(0)
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loadingProjects, setLoadingProjects] = useState(false)
+
+  useEffect(() => {
+    if (mode === 'proyecto' && projects.length === 0) {
+      setLoadingProjects(true)
+      projectsDB.list()
+        .then(data => setProjects(data as Project[]))
+        .catch(console.error)
+        .finally(() => setLoadingProjects(false))
+    }
+  }, [mode])
 
   return (
-    <div className="space-y-10">
-      {/* Header */}
-      <section className="space-y-1">
-        <h1>Arquitectura EIP</h1>
-        <p className="max-w-xl">
-          Protocolo de Ejecución Determinista — Máquina de estados con ciclos de evaluación estocástica.
-        </p>
-      </section>
+    <div className="space-y-6 animate-fade-in">
 
-      {/* Graph + Side panel */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Graph (2/3) */}
-        <div className="lg:col-span-2 glass-strong rounded-card border border-white/[0.10] p-8">
-          <div className="min-h-[500px]">
-            <GraphVisualizer mermaid={EIP_ARCHITECTURE_MERMAID} />
+      {/* ── Page Header ── */}
+      <section className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Cpu size={13} className="text-eva-olive" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-eva-txt-muted">
+              Intelligence Graph
+            </span>
           </div>
+          <h1 className="font-brand text-3xl font-medium text-eva-black leading-tight">
+            {mode === 'arquitectura' ? 'Arquitectura EIP' : 'Mapa de Proyecto'}
+          </h1>
+          <p className="font-ui text-sm text-eva-txt-muted mt-1">
+            {mode === 'arquitectura'
+              ? 'Protocolo de Ejecución Determinista — Máquina de estados con ciclos de evaluación estocástica.'
+              : 'Visualización de dependencias entre hallazgos e hipótesis de un proyecto activo.'}
+          </p>
         </div>
 
-        {/* Side panel (1/3) */}
-        <div className="lg:col-span-1 space-y-4">
-          {FLOW_STEPS.map((step, i) => {
-            const active = i === activeStep
-            const tagColor = TAG_COLORS[step.tag] || ""
+        {/* Mode Toggle */}
+        <div className="flex items-center bg-eva-beige-2 p-1 rounded-xl border border-eva-border gap-1 self-start md:self-auto">
+          {([
+            { key: 'arquitectura', label: 'Arquitectura EIP', icon: Cpu },
+            { key: 'proyecto',     label: 'Mapa de Proyecto', icon: Map },
+          ] as { key: Mode; label: string; icon: any }[]).map(item => {
+            const isActive = mode === item.key
             return (
               <button
-                key={step.step}
-                onClick={() => setActiveStep(i)}
-                className={`w-full text-left rounded-card p-4 transition-all border cursor-pointer ${
-                  active
-                    ? "bg-white/[0.10] border-white/[0.25] ring-1 ring-white/10"
-                    : "bg-white/[0.03] border-transparent hover:bg-white/[0.06]"
+                key={item.key}
+                onClick={() => setMode(item.key)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[12px] font-ui font-semibold transition-all duration-200 ${
+                  isActive
+                    ? 'bg-white text-eva-black shadow-sm border border-eva-border'
+                    : 'text-eva-txt-muted hover:text-eva-black'
                 }`}
               >
-                <div className="flex items-start gap-3">
-                  <div
-                    className="mt-0.5 h-8 w-8 rounded-lg flex items-center justify-center text-xs font-bold text-white shrink-0"
-                    style={{ backgroundColor: tagColor }}
-                  >
-                    {step.step}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-content-primary font-medium">{step.title}</span>
-                      <span
-                        className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 rounded font-medium"
-                        style={{
-                          backgroundColor: tagColor + "22",
-                          color: tagColor,
-                        }}
-                      >
-                        {step.tag}
-                      </span>
-                    </div>
-                    {active && (
-                      <p className="text-xs text-content-tertiary mt-2 leading-relaxed">
-                        {step.detail}
-                      </p>
-                    )}
-                  </div>
-                </div>
+                <item.icon size={13} className={isActive ? 'text-eva-olive' : ''} />
+                {item.label}
               </button>
             )
           })}
         </div>
-      </div>
+      </section>
+
+      {/* ── Content ── */}
+      <AnimatePresence mode="wait">
+
+        {/* MODO 1: Arquitectura EIP */}
+        {mode === 'arquitectura' && (
+          <motion.div
+            key="arquitectura"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-6"
+          >
+            {/* Graph — 2/3 */}
+            <div className="lg:col-span-2 bg-white rounded-2xl border border-eva-border shadow-sm overflow-hidden">
+              <div className="flex items-center justify-between px-5 py-3 border-b border-eva-border">
+                <div className="flex items-center gap-2">
+                  <Cpu size={13} className="text-eva-olive" />
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-eva-txt-faint">
+                    EIP · LangGraph Architecture
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                  <span className="text-[10px] font-mono text-eva-txt-faint">Live</span>
+                </div>
+              </div>
+              <div className="min-h-[500px]">
+                <GraphVisualizer mermaid={EIP_ARCHITECTURE_MERMAID} />
+              </div>
+            </div>
+
+            {/* Side panel — 1/3 */}
+            <div className="lg:col-span-1 space-y-2">
+              <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-eva-txt-faint px-1 mb-3">
+                Flujo de Ejecución · 8 Etapas
+              </p>
+              {FLOW_STEPS.map((step, i) => {
+                const active = i === activeStep
+                return (
+                  <button
+                    key={step.step}
+                    onClick={() => setActiveStep(i)}
+                    className={`w-full text-left rounded-xl p-4 transition-all duration-200 border ${
+                      active
+                        ? 'bg-white border-eva-border shadow-sm'
+                        : 'bg-eva-beige-2/40 border-transparent hover:bg-white hover:border-eva-border'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div
+                        className="mt-0.5 h-7 w-7 rounded-lg flex items-center justify-center text-[10px] font-black text-white shrink-0"
+                        style={{ backgroundColor: step.color }}
+                      >
+                        {step.step}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[13px] font-ui font-semibold text-eva-black">{step.title}</span>
+                          <span
+                            className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded font-bold"
+                            style={{ backgroundColor: step.color + '18', color: step.color }}
+                          >
+                            {step.tag}
+                          </span>
+                        </div>
+                        <AnimatePresence>
+                          {active && (
+                            <motion.p
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="text-[11px] font-ui text-eva-txt-mid mt-2 leading-relaxed overflow-hidden"
+                            >
+                              {step.detail}
+                            </motion.p>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          </motion.div>
+        )}
+
+        {/* MODO 2: Mapa de Proyecto */}
+        {mode === 'proyecto' && (
+          <motion.div
+            key="proyecto"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2 }}
+            className="bg-white rounded-2xl border border-eva-border shadow-sm p-5"
+          >
+            {loadingProjects ? (
+              <div className="py-24 flex items-center justify-center">
+                <Spinner size="lg" />
+              </div>
+            ) : projects.length === 0 ? (
+              <div className="py-24 text-center text-eva-txt-muted text-sm">
+                No hay proyectos activos. Crea un proyecto desde la Cartera Fiducia.
+              </div>
+            ) : (
+              <ProjectIntelMap projects={projects} />
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

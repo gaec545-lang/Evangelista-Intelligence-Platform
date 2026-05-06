@@ -45,24 +45,16 @@ export function ProposalPage() {
     setError(null)
     try {
       const payload = { ...data, client_id: clientId }
-      const result =
-        data.type === 'foundation'
-          ? await agentActions.generarPropuestaFoundation({
-              cliente_nombre: data.client_name as string,
-              sector: data.sector as string,
-              nodo_critico: 'Generico',
-              factor_gamma: 1.5,
-              foundation_fee: 150000,
-            })
-          : await agentActions.generarPropuestaArchitecture({
-              cliente_nombre: data.client_name as string,
-              factor_gamma: 1.5,
-              setup_fee: 350000,
-              hallazgos_resumen: 'Ver dictamen previo',
-              total_ahorro: 500000,
-            })
-      setProposal(result.response)
-      setProposalType(data.type as string)
+      
+      const result = data.type === 'foundation' 
+        ? await api.generateFoundation({
+            ...payload,
+            name: data.client_name, // Mapping frontend field to backend expected field
+          })
+        : await api.generateArchitecture(payload, []) // For now empty hallazgos
+
+      setProposal(result.proposal)
+      setProposalType(result.type)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Error generando propuesta')
     } finally {

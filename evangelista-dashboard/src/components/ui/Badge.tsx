@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 
-type BadgeVariant = 'success' | 'info' | 'warning' | 'danger' | 'neutral' | 'primary' | 'custom';
-type BadgeSize = 'sm' | 'md' | 'lg';
+type BadgeVariant = 'success' | 'info' | 'warning' | 'danger' | 'neutral' | 'primary' | 'olive' | 'red' | 'gray' | 'custom';
+type BadgeSize = 'xs' | 'sm' | 'md' | 'lg';
 
 interface BadgeProps {
   children: ReactNode;
@@ -19,6 +19,9 @@ const cssClassMap: Record<Exclude<BadgeVariant, 'custom'>, string> = {
   info: 'badge-info',
   neutral: 'badge-neutral',
   primary: 'badge-olive',
+  olive: 'badge-olive',
+  red: 'badge-danger',
+  gray: 'badge-neutral',
 };
 
 // Dot color tokens per variant — use utility bg colors with opacity-80
@@ -29,15 +32,19 @@ const dotColorMap: Record<Exclude<BadgeVariant, 'custom'>, string> = {
   info: 'bg-sky-400',
   neutral: 'bg-[#A1A1A6]',
   primary: 'bg-[#95B877]',
+  olive: 'bg-[#95B877]',
+  red: 'bg-red-400',
+  gray: 'bg-[#A1A1A6]',
 };
 
 const sizeMap: Record<BadgeSize, string> = {
+  xs: 'px-1 py-[4px] text-[8px]',
   sm: 'px-1.5 py-[6px] text-[9px]',
   md: 'px-2 py-[8px] text-[11px]',
   lg: 'px-3 py-[12px] text-[12px]',
 };
 
-export default function Badge({
+export function Badge({
   children,
   variant = 'neutral',
   size = 'md',
@@ -65,3 +72,5 @@ export default function Badge({
     </span>
   );
 }
+
+export default Badge;

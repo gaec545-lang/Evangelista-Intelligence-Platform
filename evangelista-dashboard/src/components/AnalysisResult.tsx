@@ -1,7 +1,7 @@
 import ReactMarkdown from 'react-markdown'
 import { ConfidenceBadge } from './ConfidenceBadge'
-import { Card } from './ui/Card'
-import { Badge } from './ui/Badge'
+import Card from './ui/Card'
+import Badge from './ui/Badge'
 
 interface Props {
   response: string
