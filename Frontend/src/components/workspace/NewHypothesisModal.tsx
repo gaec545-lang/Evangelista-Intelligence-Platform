@@ -39,7 +39,7 @@ export function NewHypothesisModal({ open, onClose, projectId, projectArea, onSa
   useEffect(() => {
     if (initialData) {
       setForm({
-        statement: initialData.statement,
+        statement: initialData.statement || '',
         hypothesis_type: initialData.hypothesis_type || 'problema',
         framework_used: initialData.framework_used || 'MECE',
         area: initialData.area || projectArea,
