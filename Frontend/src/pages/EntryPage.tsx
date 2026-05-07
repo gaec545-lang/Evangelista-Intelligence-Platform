@@ -58,7 +58,7 @@ export function EntryPage() {
                 transition={{ duration: 1, delay: 0.2 }}
                 className="flex justify-center mb-8"
               >
-                <img src="/logoEvangelistaCo.png" alt="Evangelista & Co" className="h-20 w-auto" />
+                <img src="/platform/logoEvangelistaCo.png" alt="Evangelista & Co" className="h-20 w-auto" />
               </motion.div>
               <motion.h1 
                 initial={{ opacity: 0, y: 10 }}
@@ -178,7 +178,7 @@ export function EntryPage() {
             animate={{ scale: 1.05, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <img src="/logoEvangelistaCo.png" alt="Loading..." className="h-28 w-auto grayscale opacity-10" />
+            <img src="/platform/logoEvangelistaCo.png" alt="Loading..." className="h-28 w-auto grayscale opacity-10" />
           </motion.div>
         </motion.div>
       )}

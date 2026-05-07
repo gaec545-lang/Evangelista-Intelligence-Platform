@@ -98,7 +98,7 @@ export function LoginPage() {
               </span>
             </div>
             <div className="flex items-center gap-4">
-              <img src="/logoEvangelistaCo.png" alt="Logo" className="h-12 w-auto" />
+              <img src="/platform/logoEvangelistaCo.png" alt="Logo" className="h-12 w-auto" />
               <h3 className="font-brand text-[28px] font-medium text-eva-black leading-tight">
                 Evangelista <br /> Intelligence Platform
               </h3>

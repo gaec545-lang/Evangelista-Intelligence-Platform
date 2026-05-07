@@ -13,6 +13,8 @@ import {
   Bot
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/authStore';
+import logoFull from '../../assets/logoEvangelistaCo.png';
+
 
 const NavItem = ({ to, icon: Icon, label, badge }: { to: string; icon: any; label: string; badge?: string }) => {
   const baseStyle = "flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-transparent transition-all duration-200 group mb-0.5";
@@ -53,7 +55,7 @@ const Sidebar = () => {
       <div className="py-5 px-[18px] border-b border-eva-black-3">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center">
-            <img src="/logo-white.png" alt="Logo" className="w-8 h-8 object-contain" />
+            <img src="/platform/logo-white.png" alt="Logo" className="w-8 h-8 object-contain" />
           </div>
           <div>
             <h1 className="font-brand text-[15px] font-medium text-[#f0ece2] leading-none mb-1">
