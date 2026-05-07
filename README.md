@@ -1,4 +1,4 @@
-# Evangelista Intelligence Platform (EIP)
+# Evangelista Intelligence Platform (EIP).
 
 Proyecto de consultoría estratégica asistida por IA para PyMEs mexicanas.
 
