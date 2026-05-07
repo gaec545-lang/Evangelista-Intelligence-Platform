@@ -554,7 +554,7 @@ export interface ProjectClosure {
   what_worked?: string;
   what_failed?: string;
   next_time?: string;
-
+}
 
 // === INNOVATION H1-A: TIME TRACKER (Plan de Innovación v1.0) ===
 
