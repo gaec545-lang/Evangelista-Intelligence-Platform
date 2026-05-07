@@ -116,7 +116,7 @@ export default function GenerateReportModal({ project, onClose, onSuccess }: Gen
       };
 
       // Call python backend
-      const response = await fetch('http://localhost:8001/api/v1/documents/generate-report', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/v1/documents/generate-report`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

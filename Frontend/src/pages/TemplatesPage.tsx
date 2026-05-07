@@ -100,7 +100,7 @@ export function TemplatesPage() {
 
   const fetchTemplates = async () => {
     try {
-      const res = await fetch('http://localhost:8001/api/templates/');
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/templates/`);
       const data = await res.json();
       setTemplates(data.templates || []);
     } catch {
@@ -131,7 +131,7 @@ export function TemplatesPage() {
     setGenerating(true);
     setResult(null);
     try {
-      const res = await fetch(`http://localhost:8001/api/templates/${selected.id}/generate`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/templates/${selected.id}/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ variables: form, format }),
