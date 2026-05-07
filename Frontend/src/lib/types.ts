@@ -531,6 +531,7 @@ export interface PhaseTransition {
   project_id: string;
   from_phase: string;
   to_phase: string;
+  confirmed_by?: string;
   confirmed_by_name: string;
   justification?: string;
   conditions_met: Array<{ label: string; met: boolean }>;
