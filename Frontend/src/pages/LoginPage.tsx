@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { Hexagon, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import loginImage from '../assets/image-login.jpg';
 
 export function LoginPage() {
   const { user, signIn } = useAuthStore();
@@ -44,7 +45,7 @@ export function LoginPage() {
         <div className="relative w-full h-full overflow-hidden rounded-[2.5rem] shadow-2xl">
           <div 
             className="w-full h-full bg-cover bg-[position:80%_50%] transition-transform duration-[20000ms] hover:scale-110"
-            style={{ backgroundImage: 'url("/image-login.jpg?v=final")' }}
+            style={{ backgroundImage: `url(${loginImage})` }}
           />
           {/* Subtle overlay for the image to maintain brand feel */}
           <div className="absolute inset-0 bg-gradient-to-t from-eva-black/20 to-transparent pointer-events-none" />
