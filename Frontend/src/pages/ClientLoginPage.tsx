@@ -57,7 +57,7 @@ export function ClientLoginPage() {
             {/* Logo */}
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 flex items-center justify-center">
-                <img src="/platform/logo-white.png" alt="Logo" className="w-full h-full object-contain drop-shadow-lg" />
+                <img src={`${import.meta.env.BASE_URL}logo-white.png`} alt="Logo" className="w-full h-full object-contain drop-shadow-lg" />
               </div>
               <div>
                 <h2 className="font-brand text-[18px] font-medium text-white">Evangelista & Co.</h2>
