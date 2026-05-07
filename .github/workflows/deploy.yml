@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'evangelista-dashboard/**'
+      - 'Frontend/**'
       - '.github/workflows/deploy.yml'
   workflow_dispatch:
 
@@ -32,14 +32,14 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: evangelista-dashboard/package-lock.json
+          cache-dependency-path: Frontend/package-lock.json
 
       - name: Install dependencies
-        working-directory: evangelista-dashboard
+        working-directory: Frontend
         run: npm ci
 
       - name: Build
-        working-directory: evangelista-dashboard
+        working-directory: Frontend
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
@@ -52,7 +52,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: evangelista-dashboard/dist
+          path: Frontend/dist
 
   deploy:
     name: Deploy to GitHub Pages
