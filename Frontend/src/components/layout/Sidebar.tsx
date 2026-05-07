@@ -55,7 +55,7 @@ const Sidebar = () => {
       <div className="py-5 px-[18px] border-b border-eva-black-3">
         <div className="flex items-center gap-3">
           <div className="flex items-center justify-center">
-            <img src="/platform/logo-white.png" alt="Logo" className="w-8 h-8 object-contain" />
+            <img src={`${import.meta.env.BASE_URL}logo-white.png`} alt="Logo" className="w-8 h-8 object-contain" />
           </div>
           <div>
             <h1 className="font-brand text-[15px] font-medium text-[#f0ece2] leading-none mb-1">
