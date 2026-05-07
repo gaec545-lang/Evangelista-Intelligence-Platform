@@ -35,7 +35,7 @@ export function AgentsPage() {
         <EmptyState
           icon={<Brain size={32} />}
           title="Inteligencia no inicializada"
-          description="El orquestador no ha reportado agentes activos. Verifica el backend en localhost:8001."
+          description="El orquestador no ha reportado agentes activos. Verifica el estado del backend."
         />
       )}
 

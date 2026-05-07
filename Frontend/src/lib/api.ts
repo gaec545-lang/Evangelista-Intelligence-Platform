@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8001'
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const REQUEST_TIMEOUT_MS = 90_000 // 90s — necesario para reintentos de IA en saturación
 
 export interface AnalyzeRequest {
@@ -33,7 +33,7 @@ async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
       ...options,
     })
     if (!res.ok) {
-      // No exponer mensajes internos del backend al usuario final
+      // El orquestador no ha reportado agentes activos. Verifica el estado del backend.
       const status = res.status
       if (status >= 500) throw new Error('El servicio no está disponible. Intenta más tarde.')
       if (status === 401 || status === 403) throw new Error('No tienes permisos para realizar esta acción.')

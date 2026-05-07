@@ -5,7 +5,7 @@ import Button from '../components/ui/Button';
 import { Plus, Shield, CheckCircle, XCircle, UserPlus, Users, X } from 'lucide-react';
 import type { TeamMember } from '../lib/types';
 
-const API_BASE = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8001';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const ROLE_CONFIG = [
   { key: 'ceo', label: 'Admin', permissions: { operations: true, architecture_rag: true, erp_connections: true, team_management: true } },

@@ -51,7 +51,7 @@ export function SettingsPage() {
           <div className="space-y-3">
             <p className="text-xs text-content-tertiary">Endpoint</p>
             <code className="code-block block text-xs">
-              {import.meta.env.VITE_API_URL || 'http://localhost:8001'}
+              {import.meta.env.VITE_API_URL || 'http://localhost:8000'}
             </code>
           </div>
 

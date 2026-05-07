@@ -7,7 +7,7 @@ interface UploadedFile {
   uploaded_at: string
 }
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8001'
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 export default function ClientDataUpload({ clientId }: { clientId: string }) {
   const [files, setFiles] = useState<UploadedFile[]>([])
