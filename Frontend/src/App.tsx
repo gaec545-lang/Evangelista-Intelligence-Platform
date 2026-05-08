@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from './stores/authStore'
 import AppLayout from './components/layout/AppLayout'
 import { LoginPage } from './pages/LoginPage'
@@ -42,7 +42,7 @@ export default function App() {
   useEffect(() => { initialize() }, [initialize])
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<EntryPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -81,6 +81,6 @@ export default function App() {
         {/* Catch-all redirect to / if not matched */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
