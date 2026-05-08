@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  /* Evangelista Intelligence Platform - UI Core */
+:root {
     /* Fondo y estructura */
     --eva-black:      18 18 15;
     --eva-black-2:    26 26 22;
@@ -30,8 +31,6 @@
     --eva-txt-mid:    #404035;
     --eva-txt-muted:  #707060;
     --eva-txt-faint:  #a8a898;
- 
-    /* Bordes */
     --eva-border:     #e1ddd1;
     --eva-border-2:   #d1cdc0;
 

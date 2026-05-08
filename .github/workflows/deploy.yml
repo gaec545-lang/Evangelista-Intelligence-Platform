@@ -7,6 +7,8 @@ on:
     paths:
       - 'Frontend/**'
       - '.github/workflows/deploy.yml'
+      - '.gitmodules'
+      - 'Backend'
   workflow_dispatch:
 
 permissions:
