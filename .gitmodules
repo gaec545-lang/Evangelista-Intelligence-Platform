@@ -1,3 +1,6 @@
 [submodule "Backend"]
 	path = Backend
 	url = https://github.com/gaec545-lang/evangelista-rag-private.git
+[submodule "Evangelista-Obsidian/evangelista-vault"]
+	path = Evangelista-Obsidian/evangelista-vault
+	url = https://github.com/gaec545-lang/evangelista-know.git
