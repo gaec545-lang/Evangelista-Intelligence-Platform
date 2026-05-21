@@ -27,7 +27,7 @@ export default defineConfig({
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com",
         "img-src 'self' data: https:",
-        "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://evangelista-backend.onrender.com https://esm.sh",
+        "connect-src 'self' https://evangelista-backend.onrender.com https://evangelista-rag-private.azurewebsites.net https://esm.sh",
         "frame-ancestors 'none'",
       ].join('; '),
     },
