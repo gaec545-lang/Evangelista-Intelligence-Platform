@@ -1,0 +1,153 @@
+name: Deploy Supabase to Azure Container Apps
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Acción a ejecutar'
+        required: true
+        default: 'deploy'
+        type: choice
+        options:
+          - deploy
+          - update
+          - rollback
+
+env:
+  RESOURCE_GROUP: rg-evangelista-prod
+  ACA_ENV: cae-evangelista
+  LOCATION: southcentralus
+  POSTGRES_HOST: pg-evangelista-prod.postgres.database.azure.com
+  AZURE_STORAGE_ACCOUNT: stevangelistadocs
+
+jobs:
+  deploy-supabase:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v1
+        with:
+          creds: |
+            {
+              "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
+              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
+              "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
+              "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
+            }
+
+      # ── Gotrue (Auth) ──────────────────────────────────────
+      - name: Deploy GoTrue (Auth)
+        run: |
+          az containerapp create \
+            --name ca-gotrue \
+            --resource-group $RESOURCE_GROUP \
+            --environment $ACA_ENV \
+            --image supabase/gotrue:v2.164.0 \
+            --target-port 9999 \
+            --ingress internal \
+            --min-replicas 1 \
+            --max-replicas 2 \
+            --cpu 0.25 --memory 0.5Gi \
+            --secrets "supabase-jwt-secret=${{ secrets.SUPABASE_JWT_SECRET }}" \
+            --env-vars \
+              "GOTRUE_API_HOST=0.0.0.0" \
+              "GOTRUE_API_PORT=9999" \
+              "API_EXTERNAL_URL=https://supabase-api.evangelistaco.com" \
+              "GOTRUE_DB_DRIVER=postgres" \
+              "GOTRUE_DB_DATABASE_URL=postgres://supabase_auth_admin:${{ secrets.DB_PASSWORD }}@${POSTGRES_HOST}:5432/postgres?sslmode=require" \
+              "GOTRUE_SITE_URL=https://plataforma.evangelistaco.com" \
+              "GOTRUE_URI_ALLOW_LIST=https://plataforma.evangelistaco.com" \
+              "GOTRUE_DISABLE_SIGNUP=false" \
+              "GOTRUE_JWT_ADMIN_ROLES=service_role" \
+              "GOTRUE_JWT_AUD=authenticated" \
+              "GOTRUE_JWT_DEFAULT_GROUP_NAME=authenticated" \
+              "GOTRUE_JWT_EXP=3600" \
+              "GOTRUE_JWT_SECRET=secretref:supabase-jwt-secret" \
+              "GOTRUE_EXTERNAL_EMAIL_ENABLED=true" \
+              "GOTRUE_MAILER_AUTOCONFIRM=false"
+
+      # ── PostgREST (REST API) ───────────────────────────────
+      - name: Deploy PostgREST
+        run: |
+          az containerapp create \
+            --name ca-postgrest \
+            --resource-group $RESOURCE_GROUP \
+            --environment $ACA_ENV \
+            --image postgrest/postgrest:v12.2.3 \
+            --target-port 3000 \
+            --ingress internal \
+            --min-replicas 1 \
+            --max-replicas 3 \
+            --cpu 0.25 --memory 0.5Gi \
+            --secrets "supabase-jwt-secret=${{ secrets.SUPABASE_JWT_SECRET }}" \
+            --env-vars \
+              "PGRST_DB_URI=postgres://authenticator:${{ secrets.DB_PASSWORD }}@${POSTGRES_HOST}:5432/postgres?sslmode=require" \
+              "PGRST_DB_SCHEMAS=public,storage,graphql_public" \
+              "PGRST_DB_ANON_ROLE=anon" \
+              "PGRST_JWT_SECRET=secretref:supabase-jwt-secret" \
+              "PGRST_DB_USE_LEGACY_GUCS=false"
+
+      # ── Supabase Storage ───────────────────────────────────
+      - name: Deploy Storage
+        run: |
+          az containerapp create \
+            --name ca-storage \
+            --resource-group $RESOURCE_GROUP \
+            --environment $ACA_ENV \
+            --image supabase/storage-api:v1.11.13 \
+            --target-port 5000 \
+            --ingress internal \
+            --min-replicas 1 \
+            --max-replicas 2 \
+            --cpu 0.25 --memory 0.5Gi \
+            --secrets "supabase-jwt-secret=${{ secrets.SUPABASE_JWT_SECRET }}" \
+            --env-vars \
+              "ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" \
+              "SERVICE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+              "POSTGREST_URL=http://ca-postgrest" \
+              "PGRST_JWT_SECRET=secretref:supabase-jwt-secret" \
+              "DATABASE_URL=postgres://supabase_storage_admin:${{ secrets.DB_PASSWORD }}@${POSTGRES_HOST}:5432/postgres?sslmode=require" \
+              "FILE_SIZE_LIMIT=52428800" \
+              "STORAGE_BACKEND=s3" \
+              "GLOBAL_S3_BUCKET=evangelista-vault" \
+              "GLOBAL_S3_ENDPOINT=https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net" \
+              "GLOBAL_S3_FORCE_PATH_STYLE=false" \
+              "GLOBAL_S3_PROTOCOL=https" \
+              "AWS_ACCESS_KEY_ID=${{ secrets.AZURE_STORAGE_ACCOUNT }}" \
+              "AWS_SECRET_ACCESS_KEY=${{ secrets.AZURE_STORAGE_KEY }}" \
+              "AUTH_JWT_SECRET=secretref:supabase-jwt-secret" \
+              "REGION=auto" \
+              "TENANT_ID=stub"
+
+      # ── Kong (API Gateway) – Ingress Externo ───────────────
+      - name: Deploy Kong Gateway
+        run: |
+          az containerapp create \
+            --name ca-kong \
+            --resource-group $RESOURCE_GROUP \
+            --environment $ACA_ENV \
+            --image kong:2.8.1 \
+            --target-port 8000 \
+            --ingress external \
+            --min-replicas 1 \
+            --max-replicas 3 \
+            --cpu 0.5 --memory 1Gi \
+            --env-vars \
+              "KONG_DATABASE=off" \
+              "KONG_DECLARATIVE_CONFIG=/home/kong/kong.yml" \
+              "KONG_DNS_ORDER=LAST,A,CNAME" \
+              "KONG_PLUGINS=request-transformer,cors,key-auth,acl,basic-auth" \
+              "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" \
+              "SUPABASE_SERVICE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}"
+
+      - name: Show Kong URL
+        run: |
+          echo "Kong URL:"
+          az containerapp show \
+            --name ca-kong \
+            --resource-group $RESOURCE_GROUP \
+            --query "properties.configuration.ingress.fqdn" -o tsv
