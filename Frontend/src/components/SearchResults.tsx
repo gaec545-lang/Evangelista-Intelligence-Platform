@@ -2,6 +2,7 @@ import Card from './ui/Card';
 import Badge from './ui/Badge';
 import { motion } from 'framer-motion';
 import { FileText, ChevronRight, Hash } from 'lucide-react';
+import MarkdownRenderer from './MarkdownRenderer';
 
 interface SearchResult {
   chunk_id?: string;
@@ -62,9 +63,9 @@ export function SearchResults({ results }: { results: SearchResult[] }) {
                 border: '1px solid rgba(255,255,255,0.04)',
               }}
             >
-              <p className="text-sm text-content-secondary/80 leading-relaxed italic">
-                "...{r.content?.slice(0, 350)}..."
-              </p>
+              <div className="max-h-64 overflow-y-auto custom-scrollbar">
+                <MarkdownRenderer content={r.content || ''} />
+              </div>
             </div>
 
             {!!r.metadata?.type && (
