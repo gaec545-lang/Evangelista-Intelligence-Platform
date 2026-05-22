@@ -1,15 +1,43 @@
+_format_version: "1.1"
+
 plugins:
   - name: cors
     config:
       origins:
-        - "https://plataforma.evangelistaco.com"
+        - https://plataforma.evangelistaco.com
       methods:
-        - "GET"
-        - "POST"
-        - "OPTIONS"
+        - GET
+        - POST
+        - OPTIONS
       headers:
-        - "Authorization"
-        - "Content-Type"
-        - "Accept"
+        - Authorization
+        - Content-Type
+        - Accept
+        - x-supabase-api-version
+        - x-client-info
+        - apikey
+        - Prefer
+        - Range
+      exposed_headers:
+        - Content-Range
+        - X-Total-Count
       credentials: true
       max_age: 3600
+
+services:
+  - name: auth
+    url: http://ca-gotrue/
+    routes:
+      - name: auth
+        paths:
+          - /auth/v1/
+          - /auth/v1
+        strip_path: true
+  - name: rest
+    url: http://ca-postgrest/
+    routes:
+      - name: rest
+        paths:
+          - /rest/v1/
+          - /rest/v1
+        strip_path: true
