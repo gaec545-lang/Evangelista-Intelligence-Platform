@@ -8,7 +8,11 @@ plugins:
       methods:
         - GET
         - POST
+        - PUT
+        - PATCH
+        - DELETE
         - OPTIONS
+        - HEAD
       headers:
         - Authorization
         - Content-Type
@@ -18,11 +22,15 @@ plugins:
         - apikey
         - Prefer
         - Range
+        - accept-profile
+        - content-profile
+        - x-upsert
       exposed_headers:
         - Content-Range
         - X-Total-Count
+        - X-PostgREST-Version
       credentials: true
-      max_age: 3600
+      max_age: 86400
 
 services:
   - name: auth
