@@ -1,0 +1,15 @@
+plugins:
+  - name: cors
+    config:
+      origins:
+        - "https://plataforma.evangelistaco.com"
+      methods:
+        - "GET"
+        - "POST"
+        - "OPTIONS"
+      headers:
+        - "Authorization"
+        - "Content-Type"
+        - "Accept"
+      credentials: true
+      max_age: 3600

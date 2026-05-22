@@ -10,15 +10,10 @@ RUN npm ci --frozen-lockfile
 # Copiar el código fuente
 COPY . .
 
-# Variables de entorno inyectadas en build-time
-ARG VITE_SUPABASE_URL
-ARG VITE_SUPABASE_ANON_KEY
-ARG VITE_API_URL=http://localhost:8000
-
-RUN VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
-    VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY \
-    VITE_API_URL=$VITE_API_URL \
-    npm run build
+# Use environment variables from .env during build
+# Vite automatically reads .env files, so no ARGs are needed.
+# Ensure the .env file is present in the build context.
+RUN if [ ! -f .env ]; then cp .env.example .env; fi && npm run build
 
 # ── Stage 2: Servir con Nginx ────────────────────────────────────────────────
 FROM nginx:alpine
