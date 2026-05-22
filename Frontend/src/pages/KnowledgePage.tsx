@@ -6,6 +6,7 @@ import { SearchResults } from '../components/SearchResults'
 import { EmptyState } from '../components/ui/EmptyState'
 import Badge from '../components/ui/Badge'
 import { motion, AnimatePresence } from 'framer-motion'
+import { LibraryBrowser } from '../components/LibraryBrowser'
 
 const CATEGORIES = [
   { id: 'all', label: 'Todo', icon: <Globe size={14} /> },
@@ -21,6 +22,7 @@ export function KnowledgePage() {
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
   const [activeCategory, setActiveCategory] = useState('all')
+  const [viewMode, setViewMode] = useState<'search' | 'library'>('search')
 
   const handleSearch = async (query: string, agent: string) => {
     setLoading(true)
@@ -107,7 +109,25 @@ export function KnowledgePage() {
 
         {/* Área Principal */}
         <div className="lg:col-span-3 space-y-6">
-          {/* Search Bar Container */}
+          {/* Tabs */}
+          <div className="flex gap-6 border-b border-eva-border">
+            <button 
+              onClick={() => setViewMode('search')}
+              className={`pb-3 text-sm font-medium transition-colors border-b-2 ${viewMode === 'search' ? 'border-eva-olive text-eva-olive' : 'border-transparent text-eva-txt-mid hover:text-eva-txt-high'}`}
+            >
+              RAG Search
+            </button>
+            <button 
+              onClick={() => setViewMode('library')}
+              className={`pb-3 text-sm font-medium transition-colors border-b-2 ${viewMode === 'library' ? 'border-eva-olive text-eva-olive' : 'border-transparent text-eva-txt-mid hover:text-eva-txt-high'}`}
+            >
+              Library Browser
+            </button>
+          </div>
+
+          {viewMode === 'search' ? (
+            <>
+              {/* Search Bar Container */}
           <div className="bg-white p-2 rounded-2xl shadow-sm border border-eva-border ring-4 ring-eva-beige-2">
             <SearchBar onSearch={handleSearch} loading={loading} />
           </div>
@@ -173,6 +193,15 @@ export function KnowledgePage() {
               </motion.div>
             )}
           </AnimatePresence>
+            </>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+            >
+              <LibraryBrowser />
+            </motion.div>
+          )}
         </div>
       </div>
     </div>

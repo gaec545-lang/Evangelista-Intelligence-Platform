@@ -64,6 +64,9 @@ export const api = {
   async searchKnowledge(query: string, agent = 'all', top_k = 5): Promise<{ results: Array<Record<string, unknown>>; total: number }> {
     return fetchAPI('/api/v1/search', { method: 'POST', body: JSON.stringify({ query, agent, top_k }) })
   },
+  async getKnowledgeLibrary(): Promise<any[]> {
+    return fetchAPI('/api/v1/library', { method: 'GET' })
+  },
   async generateFoundation(data: Record<string, unknown>): Promise<{ proposal: string; type: string }> {
     return fetchAPI('/api/v1/proposals/foundation', { method: 'POST', body: JSON.stringify(data) })
   },
