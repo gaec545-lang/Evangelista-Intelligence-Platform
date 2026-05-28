@@ -1,4 +1,4 @@
-name: Deploy Backend to Azure
+name: Deploy Backend to Azure App Service
 
 on:
   push:
@@ -10,17 +10,12 @@ on:
   workflow_dispatch:
 
 env:
-  RESOURCE_GROUP: rg-evangelista-platform
-  CONTAINER_APP_NAME: ca-backend
-  CONTAINER_APP_ENV: cae-evangelista
-  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/evangelista-backend
+  AZURE_WEBAPP_NAME: app-evangelista-backend-19863
+  PYTHON_VERSION: '3.11'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Checkout repository
@@ -30,53 +25,26 @@ jobs:
           token: ${{ secrets.GH_PAT }}
 
       - name: Copy Vault into Backend Build Directory
-        run: cp -r Evangelista-Obsidian/evangelista-vault Backend/evangelista-vault
+        run: cp -r Evangelista-Obsidian/evangelista-vault Backend/vault
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+      - name: Set up Python version
+        uses: actions/setup-python@v5
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./Backend
-          push: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
-
-      - name: Log in to Azure
-        uses: azure/login@v1
-        with:
-          creds: |
-            {
-              "clientId": "${{ secrets.AZURE_CLIENT_ID }}",
-              "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}",
-              "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}",
-              "tenantId": "${{ secrets.AZURE_TENANT_ID }}"
-            }
-
-      - name: Deploy to Azure Container Apps
+      - name: Install dependencies
+        working-directory: Backend
         run: |
-          az containerapp up \
-            --name ${{ env.CONTAINER_APP_NAME }} \
-            --resource-group ${{ env.RESOURCE_GROUP }} \
-            --environment ${{ env.CONTAINER_APP_ENV }} \
-            --image ${{ env.IMAGE_NAME }}:${{ github.sha }} \
-            --target-port 8000 \
-            --ingress external \
-            --env-vars \
-              "DATABASE_URL=secretref:database-url" \
-              "SUPABASE_JWT_SECRET=secretref:supabase-jwt-secret" \
-              "GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}" \
-              "QDRANT_HOST=ca-qdrant" \
-              "QDRANT_PORT=6333" \
-              "QDRANT_MODE=server" \
-              "LLM_PROVIDER=groq" \
-              "GROQ_MODEL=llama-3.3-70b-versatile" \
-              "EMBED_PROVIDER=fastembed" \
-              "EMBED_MODEL=BAAI/bge-small-en-v1.5" \
-              "EMBED_DIMENSIONS=384"
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Zip artifact for deployment
+        working-directory: Backend
+        run: zip -r ../release.zip ./* -x ".git/*" -x ".venv/*" -x "__pycache__/*"
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./release.zip
