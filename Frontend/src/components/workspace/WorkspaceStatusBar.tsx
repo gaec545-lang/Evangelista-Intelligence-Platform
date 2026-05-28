@@ -102,7 +102,7 @@ export default function WorkspaceStatusBar({ project, phases, onUpdate }: Worksp
         confirmed_by_name: user?.user_metadata?.full_name || user?.email || 'Consultor',
         justification: 'Avance de fase validado por sistema',
         conditions_met: conditions.map(c => ({ label: c.label, met: c.met }))
-      });
+      } as any);
 
       await projectActivityLogDB.log({
         project_id: project.id,

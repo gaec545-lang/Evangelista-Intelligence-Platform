@@ -25,7 +25,16 @@ const FRAMEWORKS = [
 export function NewHypothesisModal({ open, onClose, projectId, projectArea, onSave, initialData, parentOptions }: NewHypothesisModalProps) {
   const [loading, setLoading] = useState(false);
   const { user } = useAuthStore();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    statement: string;
+    hypothesis_type: string;
+    framework_used: string;
+    area: string;
+    priority: string;
+    impact_score: string;
+    evidence: string;
+    parent_hypothesis_id: string;
+  }>({
     statement: '',
     hypothesis_type: 'problema',
     framework_used: 'MECE',
