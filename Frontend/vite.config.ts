@@ -1,9 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   base: '/',
   plugins: [react()],
+  define: {
+    'import.meta.env.VITE_API_URL': JSON.stringify(command === 'build' ? '' : 'http://localhost:8001')
+  },
   server: {
     port: 5174,
     proxy: {
