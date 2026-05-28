@@ -1,0 +1,24 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+	longpaths = true
+[branch "main"]
+	vscode-merge-base = origin/main
+	remote = origin
+	merge = refs/heads/main
+[user]
+	email = gaec545@lang.com
+	name = Evangelista & Co
+[remote "origin"]
+	url = https://github.com/gaec545-lang/Evangelista-Intelligence-Platform.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[submodule "Backend"]
+	url = https://github.com/gaec545-lang/evangelista-rag-private.git
+	active = true
+[submodule "Evangelista-Obsidian/evangelista-vault"]
+	url = https://github.com/gaec545-lang/evangelista-know.git
+	active = true
