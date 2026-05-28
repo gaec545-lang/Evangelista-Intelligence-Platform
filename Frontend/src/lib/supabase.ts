@@ -22,8 +22,14 @@ let _supabase: SupabaseClient | null = null;
 
 export const getSupabase = () => {
   if (!_supabase) {
+    // En desarrollo local (Vite server), usamos el proxy para evitar problemas de CORS.
+    // Usamos window.location.origin para construir una URL absoluta válida y evitar excepciones en createClient.
+    const finalUrl = import.meta.env.DEV 
+      ? (typeof window !== 'undefined' ? window.location.origin + '/supabase-proxy' : '/supabase-proxy')
+      : (supabaseUrl || 'https://placeholder.supabase.co')
+
     _supabase = createClient(
-      supabaseUrl || 'https://placeholder.supabase.co',
+      finalUrl,
       supabaseAnonKey || 'placeholder_key_not_real',
       {
         auth: {

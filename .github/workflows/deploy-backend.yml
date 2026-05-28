@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  RESOURCE_GROUP: rg-evangelista-prod
+  RESOURCE_GROUP: rg-evangelista-platform
   CONTAINER_APP_NAME: ca-backend
   CONTAINER_APP_ENV: cae-evangelista
   IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/evangelista-backend
@@ -28,6 +28,9 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.GH_PAT }}
+
+      - name: Copy Vault into Backend Build Directory
+        run: cp -r Evangelista-Obsidian/evangelista-vault Backend/evangelista-vault
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3

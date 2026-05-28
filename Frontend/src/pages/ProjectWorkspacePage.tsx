@@ -1,137 +1,141 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, FolderX, Zap, ArrowRight, FileCheck, ShieldCheck } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useProject } from '../hooks/useProjects';
-import { clientsDB } from '../lib/supabase';
-import WorkspaceHeader from '../components/workspace/WorkspaceHeader';
-import WorkspaceTabNav, { WorkspaceTab } from '../components/workspace/WorkspaceTabNav';
-import WorkspaceStatusBar from '../components/workspace/WorkspaceStatusBar';
 import { Spinner } from '../components/ui/Spinner';
-import Button from '../components/ui/Button';
+import { ArrowLeft, Lock } from 'lucide-react';
 
-// Tabs
-import ProposalTab from '../components/workspace/tabs/ProposalTab';
-import ScopingTab from '../components/workspace/tabs/ScopingTab';
-import WorkstreamTab from '../components/workspace/WorkstreamTab';
-import DataTab from '../components/workspace/tabs/DataTab';
-import AnalysisTab from '../components/workspace/tabs/AnalysisTab';
-import DeliverablesTab from '../components/workspace/tabs/DeliverablesTab';
-import ReportsTab from '../components/workspace/ReportsTab';
-import AITab from '../components/workspace/tabs/AITab';
-import ContractTab from '../components/workspace/tabs/ContractTab';
-import ClosureTab from '../components/workspace/tabs/ClosureTab';
+import { ScopingTab } from '../components/workspace/tabs/ScopingTab';
+import { PropuestaTab } from '../components/workspace/tabs/PropuestaTab';
+import { ContratoTab } from '../components/workspace/tabs/ContratoTab';
+import { DisenoTab } from '../components/workspace/tabs/DisenoTab';
+import { WorkstreamsTab } from '../components/workspace/tabs/WorkstreamsTab';
+import { DatosTab } from '../components/workspace/tabs/DatosTab';
+import { AnalisisTab } from '../components/workspace/tabs/AnalisisTab';
+import { VerificacionTab } from '../components/workspace/tabs/VerificacionTab';
+import { CierreTab } from '../components/workspace/tabs/CierreTab';
 
-const ProjectWorkspacePage: React.FC = () => {
-  const { projectId } = useParams<{ projectId: string }>();
+const PHASES = [
+  'Scoping', 'Propuesta', 'Contrato', 'Diseño', 
+  'Workstreams', 'Datos', 'Análisis', 'Verificación', 'Cierre'
+];
+
+export const ProjectWorkspacePage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { project, phases, loading, reload } = useProject(projectId);
-  const [client, setClient] = useState<any>(null);
+  const { project, phases, loading, error } = useProject(id);
+  const [activeTab, setActiveTab] = useState(0);
 
-  const activeTab = (searchParams.get('tab') as WorkspaceTab) || 'scoping';
-
-  useEffect(() => {
-    async function fetchClient() {
-      if (project) {
-        const data = await clientsDB.get(project.client_id);
-        if (data) setClient(data);
-      }
-    }
-    fetchClient();
-  }, [project]);
+  // Default unlocked phases logic (Scoping, Propuesta, Contrato are unlocked by default)
+  // Design and beyond can unlock dynamically or we allow active progression
+  const [unlockedPhases, setUnlockedPhases] = useState(8); // Fully unlocked for staff browse as per brief
 
   useEffect(() => {
     if (project?.name) {
-      document.title = `${project.name} | EIP`;
+      document.title = `${project.name} | Workspace EIP`;
     }
-  }, [project?.name]);
+  }, [project]);
 
-  if (loading) return (
-    <div className="min-h-screen bg-eva-beige flex items-center justify-center">
-      <Spinner size="lg" />
-    </div>
-  );
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-3 bg-[var(--eva-black)]">
+        <Spinner size="lg" />
+        <p className="text-xs text-[var(--eva-txt-muted)] uppercase tracking-widest">Sincronizando Workspace...</p>
+      </div>
+    );
+  }
 
-  if (!project) return (
-    <div className="min-h-screen bg-eva-beige flex flex-col items-center justify-center p-6 text-center">
-      <FolderX className="w-16 h-16 text-eva-txt-faint mb-6" />
-      <h2 className="text-2xl font-serif text-eva-black mb-2">Proyecto no encontrado</h2>
-      <p className="text-eva-txt-muted max-w-sm mb-8">El proyecto que buscas no existe o no tienes los permisos necesarios para acceder.</p>
-      <Button variant="outline" onClick={() => navigate('/dashboard/projects')}>Volver a Proyectos</Button>
-    </div>
-  );
+  if (error || !project) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-[var(--eva-black)] text-[var(--eva-txt-primary)]">
+        <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-center max-w-md">
+          <h3 className="font-brand text-lg font-bold mb-2">Error de Workspace</h3>
+          <p className="text-sm opacity-80">{error || 'No se pudo cargar el espacio de trabajo de este proyecto.'}</p>
+        </div>
+        <button 
+          onClick={() => navigate('/dashboard/proyectos')} 
+          className="px-4 py-2 border border-[var(--eva-border)] text-sm rounded-lg hover:bg-[var(--eva-surface-2)] transition-all"
+        >
+          Volver a Proyectos
+        </button>
+      </div>
+    );
+  }
 
-  const handleTabChange = (tab: WorkspaceTab) => {
-    setSearchParams({ tab });
-  };
-
-  const tabContent: Record<WorkspaceTab, React.ReactNode> = {
-    propuesta: <ProposalTab project={project} />,
-    scoping: <ScopingTab project={project} />,
-    workstreams: <WorkstreamTab project={project} />,
-    datos: <DataTab project={project} />,
-    analisis: <AnalysisTab project={project} />,
-    reportes: <ReportsTab project={project} />,
-    entregables: <DeliverablesTab project={project} />,
-    ia: <AITab project={project} />,
-    contrato: <ContractTab project={project} />,
-    cierre: <ClosureTab project={project} />,
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 0: return <ScopingTab />;
+      case 1: return <PropuestaTab />;
+      case 2: return <ContratoTab />;
+      case 3: return <DisenoTab />;
+      case 4: return <WorkstreamsTab />;
+      case 5: return <DatosTab />;
+      case 6: return <AnalisisTab />;
+      case 7: return <VerificacionTab />;
+      case 8: return <CierreTab />;
+      default: return <ScopingTab />;
+    }
   };
 
   return (
-    <div className="min-h-screen bg-eva-beige text-eva-txt-dark pb-20">
-      {/* Breadcrumb */}
-      <div className="px-6 py-4 flex items-center gap-2 text-[11px] uppercase tracking-widest font-bold text-eva-txt-faint border-b border-eva-border bg-white/50 backdrop-blur-sm">
-        <button onClick={() => navigate('/dashboard/clients')} className="hover:text-eva-olive transition-colors">Clientes</button>
-        <ChevronRight className="w-3 h-3" />
-        <button onClick={() => navigate(`/dashboard/clients/${project.client_id}`)} className="hover:text-eva-olive transition-colors truncate max-w-[200px]">{client?.name || '...'}</button>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-eva-txt-muted truncate max-w-[200px]">{project.name}</span>
+    <div className="flex flex-col min-h-screen bg-[var(--eva-black)] text-[var(--eva-txt-primary)] animate-fade-in">
+      {/* Breadcrumb Header */}
+      <div className="p-4 border-b border-[var(--eva-border)] bg-[var(--eva-surface)] text-xs flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => navigate('/dashboard/proyectos')}
+            className="p-1 hover:bg-[var(--eva-surface-2)] rounded transition-all text-[var(--eva-txt-muted)] hover:text-white"
+          >
+            <ArrowLeft size={14} />
+          </button>
+          <span 
+            className="text-[var(--eva-txt-muted)] cursor-pointer hover:text-[var(--eva-olive)]"
+            onClick={() => navigate('/dashboard/clientes')}
+          >
+            Clientes
+          </span>
+          <span className="text-[var(--eva-txt-muted)]">/</span>
+          <span className="text-[var(--eva-txt-secondary)]">{project.clients?.name || 'Cliente'}</span>
+          <span className="text-[var(--eva-txt-muted)]">/</span>
+          <span className="font-semibold text-white">{project.name}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono text-[var(--eva-txt-muted)] uppercase">Status:</span>
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            {project.status.replace('_', ' ')}
+          </span>
+        </div>
       </div>
 
-      {/* Header */}
-      <WorkspaceHeader project={project} onProjectUpdate={reload} />
+      {/* 9-Phase Status Bar */}
+      <div className="flex bg-[var(--eva-surface)] p-3 overflow-x-auto border-b border-[var(--eva-border)] gap-2 select-none scrollbar-hide">
+        {PHASES.map((phase, index) => {
+          const isUnlocked = index <= unlockedPhases;
+          const isActive = index === activeTab;
+          return (
+            <button
+              key={phase}
+              disabled={!isUnlocked}
+              onClick={() => setActiveTab(index)}
+              className={`
+                flex-1 min-w-[120px] px-4 py-2.5 rounded-xl transition-all text-xs font-semibold flex items-center justify-center gap-2 border
+                ${isActive 
+                  ? 'bg-[var(--eva-olive)] text-white border-transparent shadow-lg shadow-[var(--eva-olive)]/15 scale-[1.02]' 
+                  : isUnlocked 
+                    ? 'bg-[var(--eva-surface-2)] hover:bg-[var(--eva-surface)] border-[var(--eva-border)] text-[var(--eva-txt-secondary)] hover:text-white' 
+                    : 'bg-transparent border-dashed border-[var(--eva-border)] text-[var(--eva-txt-muted)] cursor-not-allowed opacity-40'}
+              `}
+            >
+              {!isUnlocked && <Lock size={12} className="opacity-60" />}
+              {phase}
+            </button>
+          );
+        })}
+      </div>
 
-      {/* Status Bar */}
-      <WorkspaceStatusBar project={project} phases={phases} onUpdate={reload} />
-
-      {/* Navigation */}
-      <WorkspaceTabNav activeTab={activeTab} onTabChange={handleTabChange} />
-
-      {/* Content */}
-      <main className="max-w-[1600px] mx-auto">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="p-6 md:p-10"
-          >
-            {tabContent[activeTab]}
-          </motion.div>
-        </AnimatePresence>
-      </main>
-
-      {/* ALCOA+ Persistent Status Bar */}
-      <footer className="fixed bottom-0 left-0 right-0 h-12 bg-white/80 backdrop-blur-xl border-t border-eva-border z-30 flex items-center px-6 justify-between text-[10px] text-eva-txt-muted uppercase tracking-[0.2em] font-bold shadow-[0_-4px_12px_rgba(0,0,0,0.03)]">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2 text-service-sentinel">
-             <div className="w-1.5 h-1.5 rounded-full bg-service-sentinel shadow-[0_0_8px_rgba(13,97,77,0.3)] animate-pulse" />
-             ALCOA+ Integrity: Verified
-          </div>
-          <div className="w-px h-3 bg-eva-border" />
-          <div className="font-mono opacity-60">UUID: {project.id.toUpperCase()}</div>
-        </div>
-        <div className="hidden md:flex items-center gap-4">
-           <span className="opacity-60">Vault Sync: Active</span>
-           <div className="w-2 h-2 rounded-full bg-eva-olive/40" />
-        </div>
-      </footer>
+      {/* Tab Content */}
+      <div className="flex-1 p-6 max-w-7xl mx-auto w-full">
+        {renderTabContent()}
+      </div>
     </div>
   );
 };
-
-export default ProjectWorkspacePage;

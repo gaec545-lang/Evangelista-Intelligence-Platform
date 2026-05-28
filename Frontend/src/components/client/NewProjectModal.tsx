@@ -100,7 +100,7 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ open, onClose,
       }
 
       console.log('🏁 Proceso completado. Navegando al workspace...');
-      navigate(`/dashboard/projects/${project.id}`);
+      navigate(`/dashboard/proyectos/${project.id}`);
       onClose();
     } catch (err: any) {
       console.error('💥 Error crítico en handleCreate:', err);

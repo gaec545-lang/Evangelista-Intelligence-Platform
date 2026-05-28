@@ -1,14 +1,12 @@
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import Topbar from './Topbar';
 
 const AppLayout = () => {
   return (
-    <div className="flex h-screen bg-eva-beige overflow-hidden">
+    <div className="flex h-screen bg-eva-black overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Topbar />
-        <main className="flex-1 overflow-y-auto p-6 scroll-smooth">
+        <main className="flex-1 overflow-y-auto p-6 scroll-smooth bg-eva-black">
           <Outlet />
         </main>
       </div>

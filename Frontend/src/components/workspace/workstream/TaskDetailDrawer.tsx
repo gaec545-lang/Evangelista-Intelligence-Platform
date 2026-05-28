@@ -65,32 +65,32 @@ export default function TaskDetailDrawer({ isOpen, onClose, task, color, onUpdat
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl z-50 border-l border-eva-border flex flex-col"
+            className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-[var(--eva-surface)] shadow-2xl z-50 border-l border-[var(--eva-border)] flex flex-col"
           >
             {/* Header */}
             <div 
-              className="p-6 border-b border-eva-border relative"
+              className="p-6 border-b border-[var(--eva-border)] relative"
               style={{ borderTop: `6px solid ${color}` }}
             >
               <button 
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 text-eva-txt-muted hover:text-eva-black hover:bg-eva-beige-2 rounded-full transition-colors"
+                className="absolute top-4 right-4 p-2 text-[var(--eva-txt-muted)] hover:text-[var(--eva-txt-primary)] hover:bg-[var(--eva-surface-2)] rounded-full transition-colors"
               >
                 <X size={20} />
               </button>
               
               <div className="flex gap-2 items-center mb-3">
-                <span className="text-[10px] text-eva-txt-mid uppercase tracking-widest font-bold bg-eva-beige-2 px-2 py-1 rounded">
+                <span className="text-[10px] text-[var(--eva-txt-secondary)] uppercase tracking-widest font-bold bg-[var(--eva-surface-2)] border border-[var(--eva-border)] px-2 py-1 rounded">
                   {task.task_type}
                 </span>
                 {task.priority === 'critica' && (
-                  <span className="text-[10px] text-red-700 uppercase tracking-widest font-bold bg-red-100 px-2 py-1 rounded">
+                  <span className="text-[10px] text-red-400 uppercase tracking-widest font-bold bg-red-500/10 border border-red-500/20 px-2 py-1 rounded">
                     Crítica
                   </span>
                 )}
               </div>
               
-              <h2 className="text-2xl font-brand text-eva-black leading-tight pr-8">
+              <h2 className="text-2xl font-brand text-[var(--eva-txt-primary)] leading-tight pr-8">
                 {task.name}
               </h2>
             </div>
@@ -100,51 +100,51 @@ export default function TaskDetailDrawer({ isOpen, onClose, task, color, onUpdat
               
               <div className="space-y-4">
                 <div className="flex justify-between items-end mb-1">
-                  <span className="text-sm font-medium text-eva-txt-mid">Progreso</span>
-                  <span className="text-lg font-mono text-eva-black">{progress}%</span>
+                  <span className="text-sm font-medium text-[var(--eva-txt-secondary)]">Progreso</span>
+                  <span className="text-lg font-mono text-[var(--eva-txt-primary)]">{progress}%</span>
                 </div>
                 <input 
                   type="range" 
                   min="0" max="100" 
                   value={progress}
                   onChange={(e) => setProgress(parseInt(e.target.value))}
-                  className="w-full accent-eva-olive h-2 bg-eva-beige-2 rounded-lg appearance-none cursor-pointer"
+                  className="w-full accent-[var(--eva-olive)] h-2 bg-[var(--eva-surface-2)] rounded-lg appearance-none cursor-pointer"
                 />
               </div>
 
               <div className="space-y-3">
-                <h3 className="text-xs uppercase tracking-widest text-eva-txt-muted font-bold">Detalles</h3>
+                <h3 className="text-xs uppercase tracking-widest text-[var(--eva-txt-muted)] font-bold">Detalles</h3>
                 
-                <div className="bg-eva-beige/30 border border-eva-border rounded-lg p-4 space-y-3">
+                <div className="bg-[var(--eva-surface-2)] border border-[var(--eva-border)] rounded-lg p-4 space-y-3">
                   <div className="flex gap-3 text-sm">
-                    <User size={16} className="text-eva-txt-muted mt-0.5" />
+                    <User size={16} className="text-[var(--eva-txt-muted)] mt-0.5" />
                     <div>
-                      <p className="text-eva-txt-faint text-xs">Responsable</p>
-                      <p className="text-eva-black">{task.responsible_name || 'No asignado'}</p>
+                      <p className="text-[var(--eva-txt-muted)] text-xs opacity-75">Responsable</p>
+                      <p className="text-[var(--eva-txt-primary)]">{task.responsible_name || 'No asignado'}</p>
                     </div>
                   </div>
                   
                   <div className="flex gap-3 text-sm">
-                    <Calendar size={16} className="text-eva-txt-muted mt-0.5" />
+                    <Calendar size={16} className="text-[var(--eva-txt-muted)] mt-0.5" />
                     <div className="grid grid-cols-2 gap-4 w-full">
                       <div>
-                        <p className="text-eva-txt-faint text-xs">Planificado</p>
-                        <p className="text-eva-black">{task.planned_start ? new Date(task.planned_start).toLocaleDateString() : '—'} a {task.planned_end ? new Date(task.planned_end).toLocaleDateString() : '—'}</p>
+                        <p className="text-[var(--eva-txt-muted)] text-xs opacity-75">Planificado</p>
+                        <p className="text-[var(--eva-txt-primary)]">{task.planned_start ? new Date(task.planned_start).toLocaleDateString() : '—'} a {task.planned_end ? new Date(task.planned_end).toLocaleDateString() : '—'}</p>
                       </div>
                     </div>
                   </div>
-
+                  
                   {(task.estimated_cost || task.actual_cost) && (
                     <div className="flex gap-3 text-sm">
-                      <DollarSign size={16} className="text-eva-txt-muted mt-0.5" />
+                      <DollarSign size={16} className="text-[var(--eva-txt-muted)] mt-0.5" />
                       <div className="grid grid-cols-2 gap-4 w-full">
                         <div>
-                          <p className="text-eva-txt-faint text-xs">Costo Estimado</p>
-                          <p className="text-eva-black font-mono">${task.estimated_cost?.toLocaleString() || 0}</p>
+                          <p className="text-[var(--eva-txt-muted)] text-xs opacity-75">Costo Estimado</p>
+                          <p className="text-[var(--eva-txt-primary)] font-mono">${task.estimated_cost?.toLocaleString() || 0}</p>
                         </div>
                         <div>
-                          <p className="text-eva-txt-faint text-xs">Costo Real</p>
-                          <p className="text-eva-black font-mono">${task.actual_cost?.toLocaleString() || 0}</p>
+                          <p className="text-[var(--eva-txt-muted)] text-xs opacity-75">Costo Real</p>
+                          <p className="text-[var(--eva-txt-primary)] font-mono">${task.actual_cost?.toLocaleString() || 0}</p>
                         </div>
                       </div>
                     </div>
@@ -154,30 +154,30 @@ export default function TaskDetailDrawer({ isOpen, onClose, task, color, onUpdat
 
               {task.description && (
                 <div className="space-y-2">
-                  <h3 className="text-xs uppercase tracking-widest text-eva-txt-muted font-bold">Descripción</h3>
-                  <p className="text-sm text-eva-txt-mid leading-relaxed whitespace-pre-wrap bg-eva-beige/20 p-4 rounded-lg border border-eva-border/50">
+                  <h3 className="text-xs uppercase tracking-widest text-[var(--eva-txt-muted)] font-bold">Descripción</h3>
+                  <p className="text-sm text-[var(--eva-txt-secondary)] leading-relaxed whitespace-pre-wrap bg-[var(--eva-surface-2)] p-4 rounded-lg border border-[var(--eva-border)]">
                     {task.description}
                   </p>
                 </div>
               )}
-
+              
               {task.status === 'bloqueada' && task.blocker_description && (
                 <div className="space-y-2">
-                  <h3 className="text-xs uppercase tracking-widest text-red-500 font-bold flex items-center gap-2">
+                  <h3 className="text-xs uppercase tracking-widest text-red-400 font-bold flex items-center gap-2">
                     <Lock size={14} /> Bloqueo Activo
                   </h3>
-                  <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
-                    <p className="text-sm text-red-700">{task.blocker_description}</p>
+                  <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-lg">
+                    <p className="text-sm text-red-400">{task.blocker_description}</p>
                   </div>
                 </div>
               )}
 
               <div className="space-y-2">
-                <h3 className="text-xs uppercase tracking-widest text-eva-txt-muted font-bold">Estado</h3>
+                <h3 className="text-xs uppercase tracking-widest text-[var(--eva-txt-muted)] font-bold">Estado</h3>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as any)}
-                  className="w-full p-2.5 rounded-lg border border-eva-border bg-white text-sm outline-none focus:border-eva-olive transition-colors"
+                  className="w-full p-2.5 rounded-lg border border-[var(--eva-border)] bg-[var(--eva-surface-2)] text-[var(--eva-txt-primary)] text-sm outline-none focus:border-[var(--eva-olive)] transition-colors select-dark"
                 >
                   <option value="pendiente">Pendiente</option>
                   <option value="en_progreso">En Progreso</option>
@@ -191,10 +191,10 @@ export default function TaskDetailDrawer({ isOpen, onClose, task, color, onUpdat
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-eva-border bg-eva-beige/30 flex gap-3">
+            <div className="p-4 border-t border-[var(--eva-border)] bg-[var(--eva-surface-2)] flex gap-3">
               <Button 
                 variant="outline" 
-                className="flex-1"
+                className="flex-1 border-[var(--eva-border)] text-[var(--eva-txt-primary)] hover:bg-[var(--eva-surface-hover)]"
                 onClick={handleSave}
                 disabled={loading}
               >

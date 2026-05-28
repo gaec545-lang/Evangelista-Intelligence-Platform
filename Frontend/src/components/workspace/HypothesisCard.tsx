@@ -13,11 +13,11 @@ interface HypothesisCardProps {
 }
 
 const statusConfig: Record<HypothesisStatus, { label: string; color: string; bgColor: string }> = {
-  planteada:      { label: 'Planteada',      color: 'text-eva-txt-muted',   bgColor: 'bg-eva-beige-2' },
-  en_validacion:  { label: 'Validación',     color: 'text-eva-gold',        bgColor: 'bg-eva-gold/10' },
-  validada:       { label: 'Validada',       color: 'text-service-sentinel', bgColor: 'bg-service-sentinel/10' },
-  refutada:       { label: 'Refutada',       color: 'text-red-600',         bgColor: 'bg-red-50' },
-  derivada:       { label: 'Derivada',       color: 'text-blue-600',        bgColor: 'bg-blue-50' },
+  planteada:      { label: 'Planteada',      color: 'text-[var(--eva-txt-muted)]',   bgColor: 'bg-[var(--eva-surface-2)] border border-[var(--eva-border)]' },
+  en_validacion:  { label: 'Validación',     color: 'text-[var(--eva-gold)]',        bgColor: 'bg-[var(--eva-gold)]/10 border border-[var(--eva-gold)]/20' },
+  validada:       { label: 'Validada',       color: 'text-[var(--eva-success)]', bgColor: 'bg-[var(--eva-success)]/10 border border-[var(--eva-success)]/20' },
+  refutada:       { label: 'Refutada',       color: 'text-red-400',         bgColor: 'bg-red-500/10 border border-red-500/20' },
+  derivada:       { label: 'Derivada',       color: 'text-blue-400',        bgColor: 'bg-blue-500/10 border border-blue-500/20' },
 };
 
 const typeIcon: Record<string, any> = {
@@ -45,7 +45,7 @@ export default function HypothesisCard({ hypothesis, onStatusChange, onEdit, onD
         </div>
       )}
 
-      <Card className="p-5 bg-white border-eva-border hover:border-eva-olive hover:shadow-md transition-all shadow-sm">
+      <Card className="p-5 bg-[var(--eva-surface)] border-[var(--eva-border)] hover:border-[var(--eva-olive)] hover:shadow-md transition-all shadow-sm">
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-3">
              <div className="px-2 py-1 rounded bg-eva-beige-2 text-[10px] font-mono font-bold text-eva-txt-faint uppercase">
@@ -65,12 +65,12 @@ export default function HypothesisCard({ hypothesis, onStatusChange, onEdit, onD
               {status.label}
             </button>
             
-            <div className="absolute right-0 top-full mt-1 bg-white border border-eva-border rounded-lg shadow-xl py-1 z-10 hidden group-hover:block w-32 animate-in fade-in slide-in-from-top-1">
+            <div className="absolute right-0 top-full mt-1 bg-[var(--eva-surface-2)] border border-[var(--eva-border)] rounded-lg shadow-xl py-1 z-10 hidden group-hover:block w-32 animate-in fade-in slide-in-from-top-1">
                {(['planteada', 'en_validacion', 'validada', 'refutada'] as HypothesisStatus[]).map(s => (
                  <button
                    key={s}
                    onClick={() => onStatusChange(hypothesis.id, s)}
-                   className="w-full px-3 py-1.5 text-left text-[10px] font-bold uppercase tracking-widest text-eva-txt-muted hover:bg-eva-beige-2 hover:text-eva-black transition-colors"
+                   className="w-full px-3 py-1.5 text-left text-[10px] font-bold uppercase tracking-widest text-[var(--eva-txt-secondary)] hover:bg-[var(--eva-surface-hover)] hover:text-[var(--eva-txt-primary)] transition-colors"
                  >
                    {s.replace('_', ' ')}
                  </button>
@@ -79,7 +79,7 @@ export default function HypothesisCard({ hypothesis, onStatusChange, onEdit, onD
           </div>
         </div>
 
-        <h4 className="text-eva-black text-sm font-medium leading-relaxed mb-4 font-serif">
+        <h4 className="text-[var(--eva-txt-primary)] text-sm font-medium leading-relaxed mb-4 font-serif">
           {hypothesis.statement}
         </h4>
 
@@ -98,7 +98,7 @@ export default function HypothesisCard({ hypothesis, onStatusChange, onEdit, onD
           </div>
 
           {hypothesis.evidence && (
-             <div className="p-2.5 rounded bg-eva-beige-2/50 border border-eva-border">
+             <div className="p-2.5 rounded bg-[var(--eva-surface-2)] border border-[var(--eva-border)]">
                 <p className="text-[9px] font-bold uppercase tracking-widest text-eva-txt-faint mb-1">Evidencia / Respaldo</p>
                 <p className="text-[11px] text-eva-txt-muted italic line-clamp-2 leading-snug">{hypothesis.evidence}</p>
              </div>

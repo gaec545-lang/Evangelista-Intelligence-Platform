@@ -24,11 +24,11 @@ interface FindingCardProps {
 }
 
 const severityConfig: Record<string, { label: string; color: string; bgColor: string; icon: string }> = {
-  critico:     { label: 'CRÍTICO',     color: 'text-red-700',    bgColor: 'bg-red-50',         icon: '🔴' },
-  alto:        { label: 'ALTO',        color: 'text-orange-700', bgColor: 'bg-orange-50',      icon: '🟠' },
-  medio:       { label: 'MEDIO',       color: 'text-amber-700',  bgColor: 'bg-amber-50',       icon: '🟡' },
-  bajo:        { label: 'BAJO',        color: 'text-blue-700',   bgColor: 'bg-blue-50',        icon: '🔵' },
-  oportunidad: { label: 'OPORTUNIDAD', color: 'text-service-sentinel', bgColor: 'bg-service-sentinel/10', icon: '🟢' },
+  critico:     { label: 'CRÍTICO',     color: 'text-red-400',    bgColor: 'bg-red-500/10 border border-red-500/20',         icon: '🔴' },
+  alto:        { label: 'ALTO',        color: 'text-orange-400', bgColor: 'bg-orange-500/10 border border-orange-500/20',      icon: '🟠' },
+  medio:       { label: 'MEDIO',       color: 'text-amber-400',  bgColor: 'bg-amber-500/10 border border-amber-500/20',       icon: '🟡' },
+  bajo:        { label: 'BAJO',        color: 'text-blue-400',   bgColor: 'bg-blue-500/10 border border-blue-500/20',        icon: '🔵' },
+  oportunidad: { label: 'OPORTUNIDAD', color: 'text-service-sentinel', bgColor: 'bg-service-sentinel/10 border border-service-sentinel/20', icon: '🟢' },
 };
 
 const statusConfig: Record<string, { label: string; color: string }> = {
@@ -48,13 +48,13 @@ export default function FindingCard({ finding, onStatusChange, onEdit, onDelete 
 
   return (
     <motion.div layout className="group">
-      <Card className="bg-white border-eva-border hover:border-eva-olive hover:shadow-md transition-all overflow-hidden shadow-sm">
+      <Card className="bg-[var(--eva-surface)] border-[var(--eva-border)] hover:border-[var(--eva-olive)] hover:shadow-md transition-all overflow-hidden shadow-sm">
         <div className="p-5">
           <div className="flex justify-between items-start gap-4">
             <div className="flex-1 min-w-0">
                <div className="flex items-center gap-3 mb-2">
                   <span className="text-[10px] font-mono text-eva-txt-faint font-bold uppercase tracking-widest">{finding.folio}</span>
-                  <div className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest shadow-sm ${severity.bgColor} ${severity.color}`}>
+                  <div className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest shadow-sm flex items-center ${severity.bgColor} ${severity.color}`}>
                      {severity.label}
                   </div>
                   <span className="text-eva-txt-faint text-[10px]">•</span>
@@ -62,7 +62,7 @@ export default function FindingCard({ finding, onStatusChange, onEdit, onDelete 
                      {status.label}
                   </span>
                </div>
-               <h4 className="text-eva-black font-serif text-lg leading-snug group-hover:text-eva-olive transition-colors font-bold">
+               <h4 className="text-[var(--eva-txt-primary)] font-serif text-lg leading-snug group-hover:text-[var(--eva-olive)] transition-colors font-bold">
                   {finding.title}
                </h4>
             </div>
@@ -81,12 +81,12 @@ export default function FindingCard({ finding, onStatusChange, onEdit, onDelete 
              </div>
              <button 
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="p-1.5 rounded-full bg-eva-beige-2 hover:bg-eva-beige-3 text-eva-txt-muted transition-all shadow-sm"
+                className="p-1.5 rounded-full bg-[var(--eva-surface-2)] hover:bg-[var(--eva-surface-hover)] text-[var(--eva-txt-muted)] border border-[var(--eva-border)] transition-all shadow-sm"
              >
                 {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
              </button>
           </div>
-
+ 
           <AnimatePresence>
             {isExpanded && (
               <motion.div
@@ -96,17 +96,17 @@ export default function FindingCard({ finding, onStatusChange, onEdit, onDelete 
                 className="overflow-hidden"
               >
                 <div className="pt-6 space-y-6">
-                  <div className="h-px bg-eva-border" />
+                  <div className="h-px bg-[var(--eva-border)]" />
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-4">
                        <div className="space-y-2">
                           <h5 className="text-[10px] font-bold text-eva-txt-faint uppercase tracking-widest">Descripción Ejecutiva</h5>
-                          <p className="text-sm text-eva-txt-mid leading-relaxed font-medium">{finding.description}</p>
+                          <p className="text-sm text-[var(--eva-txt-secondary)] leading-relaxed font-medium">{finding.description}</p>
                        </div>
                        <div className="space-y-2">
                           <h5 className="text-[10px] font-bold text-eva-txt-faint uppercase tracking-widest">Evidencia Cuantificada</h5>
-                          <div className="p-3 rounded-lg bg-eva-beige-2 border border-eva-border space-y-2">
+                          <div className="p-3 rounded-lg bg-[var(--eva-surface-2)] border border-[var(--eva-border)] space-y-2">
                              {finding.evidence ? (
                                <p className="text-xs text-eva-txt-mid italic leading-relaxed font-medium">{finding.evidence}</p>
                              ) : (
@@ -121,7 +121,7 @@ export default function FindingCard({ finding, onStatusChange, onEdit, onDelete 
                           <h5 className="text-[10px] font-bold text-eva-txt-faint uppercase tracking-widest flex items-center gap-2">
                              <Terminal className="w-3 h-3" /> Descripción Técnica (CTO)
                           </h5>
-                          <div className="p-4 rounded-lg bg-eva-black border border-eva-border font-mono text-[11px] text-eva-olive-2 leading-relaxed overflow-x-auto shadow-inner">
+                          <div className="p-4 rounded-lg bg-[var(--eva-black-2)] border border-[var(--eva-border)] font-mono text-[11px] text-[var(--eva-olive)] leading-relaxed overflow-x-auto shadow-inner">
                              {finding.technical_description || '// Sin detalles técnicos registrados.'}
                           </div>
                        </div>
@@ -129,7 +129,7 @@ export default function FindingCard({ finding, onStatusChange, onEdit, onDelete 
                           <h5 className="text-[10px] font-bold text-eva-txt-faint uppercase tracking-widest flex items-center gap-2">
                              <ShieldCheck className="w-3 h-3" /> Trazabilidad ALCOA+
                           </h5>
-                          <div className="text-[10px] space-y-1 font-mono text-eva-txt-muted font-bold">
+                          <div className="text-[10px] space-y-1 font-mono text-[var(--eva-txt-muted)] font-bold">
                              <p><span className="text-eva-txt-faint">MD5:</span> {finding.hash_md5 || '—'}</p>
                              <p><span className="text-eva-txt-faint">GIT:</span> {finding.git_commit || '—'}</p>
                              <p><span className="text-eva-txt-faint">UTC:</span> {finding.captured_at ? new Date(finding.captured_at).toISOString() : '—'}</p>
@@ -158,8 +158,8 @@ export default function FindingCard({ finding, onStatusChange, onEdit, onDelete 
                              onClick={() => onStatusChange(finding.id, s as any)}
                              className={`px-2.5 py-1 rounded text-[8px] font-bold uppercase tracking-widest border transition-all shadow-sm ${
                                finding.status === s 
-                                 ? 'bg-eva-olive text-white border-eva-olive' 
-                                 : 'bg-white border-eva-border text-eva-txt-faint hover:text-eva-txt-muted'
+                                 ? 'bg-[var(--eva-olive)] text-white border-[var(--eva-olive)]' 
+                                 : 'bg-[var(--eva-surface-2)] border-[var(--eva-border)] text-eva-txt-faint hover:text-[var(--eva-txt-muted)]'
                              }`}
                            >
                               {s}

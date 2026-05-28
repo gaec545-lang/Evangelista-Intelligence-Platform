@@ -1,228 +1,206 @@
-import { useState } from 'react';
-import { useAnalysis } from '../hooks/useAnalysis';
-import AnalysisResultV2 from './AnalysisResultV2';
-import Button from './ui/Button';
-import Badge from './ui/Badge';
-import { Sparkles, Send, Cpu, Search, Zap } from 'lucide-react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Play, Sparkles, AlertCircle, ShieldAlert, Cpu, CheckCircle } from 'lucide-react';
+import { api } from '../lib/api';
 
-interface Props {
+interface AnalysisPanelProps {
   clientId?: string;
-  onComplete?: (result: { task: string; response: string; confidence: number }) => void;
+  onComplete?: (r: { task: string; response: string; confidence: number }) => void;
 }
 
-export function AnalysisPanel({ clientId, onComplete }: Props) {
+export const AnalysisPanel: React.FC<AnalysisPanelProps> = ({ clientId, onComplete }) => {
   const [task, setTask] = useState('');
-  const { analyze, loading, result, error, reset } = useAnalysis();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<{
+    response: string;
+    confidence: number;
+    executionTime: number;
+    sources: string[];
+  } | null>(null);
 
-  const handleAnalyze = async () => {
-    if (!task.trim()) return;
-    const ctx = clientId ? { client_id: clientId } : {};
-    const res = await analyze(task, ctx).catch(() => null);
-    if (res && onComplete) onComplete({ task, response: res.response, confidence: res.confidence || 0 });
+  const QUICK_PROMPTS = [
+    'Evaluar factor de riesgo operacional',
+    'Analizar viabilidad de integración ERP',
+    'Auditoría de cumplimiento ALCOA+'
+  ];
+
+  const handleAnalyze = async (selectedTask?: string) => {
+    const finalTask = selectedTask || task;
+    if (!finalTask.trim()) return;
+
+    setLoading(true);
+    setError(null);
+    setResult(null);
+
+    try {
+      const res = await api.analyze({
+        task: finalTask,
+        context: { client_id: clientId }
+      });
+
+      const processedResult = {
+        response: res.response || 'Análisis completado sin respuesta explícita.',
+        confidence: res.confidence ?? 0.85,
+        executionTime: res.execution_time_ms ?? 1200,
+        sources: res.sources || []
+      };
+
+      setResult(processedResult);
+
+      if (onComplete) {
+        onComplete({
+          task: finalTask,
+          response: processedResult.response,
+          confidence: processedResult.confidence
+        });
+      }
+    } catch (err: any) {
+      setError(err.message || 'Error durante la ejecución del análisis de inteligencia.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="space-y-8">
-      {/* Input */}
-      <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Input section with custom focus glow effects */}
+      <div className="space-y-3">
+        <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-[var(--eva-txt-muted)]">
+          Consulta de Inteligencia
+        </label>
         <div className="relative group">
           {/* Olive glow on focus */}
           <div
-            className="absolute -inset-1 rounded-[20px] opacity-0 blur-xl transition-opacity duration-500 group-focus-within:opacity-100 pointer-events-none"
-            style={{ background: 'radial-gradient(ellipse at center, rgba(149,184,119,0.10) 0%, transparent 70%)' }}
+            className="absolute -inset-1 rounded-[12px] opacity-0 blur-md transition-opacity duration-500 group-focus-within:opacity-100 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse at center, rgba(149,184,119,0.15), transparent 70%)'
+            }}
           />
           <textarea
             value={task}
-            onChange={e => setTask(e.target.value)}
-            placeholder={"Describe la tarea para el orquestador...\nEj: 'Realiza el análisis de gap financiero para el cliente X'"}
-            rows={5}
-            className="relative w-full px-6 py-5 text-base rounded-[20px] resize-none transition-all duration-200 placeholder:text-content-secondary/40 leading-relaxed outline-none"
-            style={{
-              background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: '#F5F5F7',
-            }}
-            onFocus={e => {
-              e.currentTarget.style.borderColor = 'rgba(149,184,119,0.40)';
-              e.currentTarget.style.boxShadow = '0 0 0 3px rgba(149,184,119,0.08)';
-            }}
-            onBlur={e => {
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
+            onChange={(e) => setTask(e.target.value)}
+            placeholder="Describa el análisis o la pregunta de negocio que desea realizar a la red de agentes..."
+            className="relative w-full h-24 bg-[var(--eva-surface-2)] border border-[var(--eva-border)] rounded-xl p-4 text-sm text-[var(--eva-txt-primary)] focus:outline-none focus:border-[var(--eva-olive)] transition-all resize-none placeholder-[var(--eva-txt-muted)]"
           />
-          <div className="absolute right-5 bottom-5 flex items-center gap-3">
-            <AnimatePresence>
-              {task.trim() && (
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  onClick={() => setTask('')}
-                  className="h-10 w-10 rounded-button flex items-center justify-center text-content-secondary/60 hover:text-accent-red transition-colors"
-                  style={{ background: 'rgba(255,255,255,0.04)' }}
-                >
-                  <Sparkles size={16} />
-                </motion.button>
-              )}
-            </AnimatePresence>
-            <Button
-              onClick={handleAnalyze}
-              isLoading={loading}
-              disabled={!task.trim()}
-              size="lg"
-              className="rounded-button"
-              icon={<Send size={16} />}
-            >
-              {loading ? 'Orquestando...' : 'Lanzar Análisis'}
-            </Button>
-          </div>
         </div>
+      </div>
 
-        {/* Suggestion chips */}
-        {!loading && !result && (
-          <div className="flex flex-wrap gap-2 px-1">
-            <span className="text-[9px] font-semibold text-content-secondary uppercase tracking-widest mr-1 py-1">
-              Sugerencias:
-            </span>
-            {['Análisis financiero', 'Optimización operativa', 'Cálculo Factor Γ'].map(s => (
+      {/* Action triggers */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        <button
+          onClick={() => handleAnalyze()}
+          disabled={loading || !task.trim()}
+          className="flex-1 bg-[var(--eva-olive)] text-white font-ui font-semibold text-xs py-3 px-4 rounded-xl flex items-center justify-center gap-2 hover:bg-[var(--eva-olive-2)] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? (
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
+            >
+              <Cpu size={14} />
+            </motion.div>
+          ) : (
+            <Play size={12} fill="currentColor" />
+          )}
+          {loading ? 'Ejecutando Orquestador...' : 'Iniciar Análisis Forense'}
+        </button>
+      </div>
+
+      {/* Quick prompts */}
+      {!loading && !result && (
+        <div className="space-y-2">
+          <p className="text-[10px] font-mono text-[var(--eva-txt-muted)] uppercase tracking-wider">
+            Consultas Sugeridas
+          </p>
+          <div className="flex flex-col gap-2">
+            {QUICK_PROMPTS.map((prompt) => (
               <button
-                key={s}
-                onClick={() => setTask(s)}
-                className="text-[11px] font-medium text-primary-600 px-3 py-1 rounded-badge transition-colors"
-                style={{
-                  background: 'rgba(149,184,119,0.08)',
-                  border: '1px solid rgba(149,184,119,0.15)',
+                key={prompt}
+                onClick={() => {
+                  setTask(prompt);
+                  handleAnalyze(prompt);
                 }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = 'rgba(149,184,119,0.14)';
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = 'rgba(149,184,119,0.08)';
-                }}
+                className="text-left text-xs bg-[var(--eva-surface-2)] hover:bg-[var(--eva-surface)] border border-[var(--eva-border)] text-[var(--eva-txt-secondary)] hover:text-[var(--eva-olive)] p-3 rounded-xl transition-all flex items-center gap-2"
               >
-                {s}
+                <Sparkles size={12} className="opacity-75" />
+                {prompt}
               </button>
             ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Loading */}
-      <AnimatePresence mode="wait">
+      {/* Error state */}
+      {error && (
+        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-xs flex items-start gap-2">
+          <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
+
+      {/* Dynamic results rendering */}
+      <AnimatePresence>
         {loading && (
           <motion.div
-            key="loading"
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            className="py-16 md:py-20"
+            exit={{ opacity: 0 }}
+            className="border border-[var(--eva-border)] bg-[var(--eva-surface-2)] rounded-2xl p-6 text-center space-y-4"
           >
-            <div
-              className="max-w-lg mx-auto rounded-card p-8 text-center space-y-6 relative overflow-hidden"
-              style={{
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.06)',
-              }}
-            >
-              {/* Progress bar */}
-              <div
-                className="absolute top-0 left-0 right-0 h-[2px] overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.04)' }}
-              >
-                <motion.div
-                  initial={{ x: '-100%' }}
-                  animate={{ x: '100%' }}
-                  transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
-                  className="w-1/2 h-full"
-                  style={{ background: 'linear-gradient(90deg, transparent, rgba(149,184,119,0.6), transparent)' }}
-                />
-              </div>
-
-              {/* Agent icons */}
-              <div className="flex items-center justify-center gap-1.5 pt-2">
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: 'rgba(149,184,119,0.10)' }}>
-                  <Cpu size={22} className="text-primary-500" />
-                </div>
-                <div className="w-3 h-[2px] rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }} />
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: 'rgba(100,210,255,0.08)' }}>
-                  <Search size={22} className="text-info/70 animate-pulse" />
-                </div>
-                <div className="w-3 h-[2px] rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }} />
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: 'rgba(212,168,67,0.08)' }}>
-                  <Zap size={22} className="text-accent-gold/80" />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-content-primary tracking-tight">
-                  Ejecutando Grafo de Agentes
-                </h3>
-                <p className="text-sm text-content-secondary/80 max-w-sm mx-auto leading-relaxed">
-                  El orquestador consulta Vault y delega tareas a especialistas.
-                </p>
-                <div className="flex items-center justify-center gap-2 pt-2">
-                  <Badge variant="olive" size="sm">CRAG Active</Badge>
-                  <Badge variant="info" size="sm">{clientId ? 'Client' : 'Global'}</Badge>
-                </div>
-              </div>
+            <div className="relative w-12 h-12 mx-auto flex items-center justify-center">
+              <motion.div
+                className="absolute inset-0 rounded-full border-2 border-[var(--eva-olive)]/20"
+                style={{ borderTopColor: 'var(--eva-olive)' }}
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
+              />
+              <Cpu size={18} className="text-[var(--eva-olive)] animate-pulse" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-xs font-semibold text-[var(--eva-txt-primary)]">
+                Procesando con Agentes
+              </h4>
+              <p className="text-[10px] text-[var(--eva-txt-muted)] font-mono">
+                Extrayendo evidencia técnica y evaluando riesgos en base de conocimiento...
+              </p>
             </div>
           </motion.div>
         )}
 
-        {/* Error */}
-        {error && (
+        {result && (
           <motion.div
-            key="error"
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="rounded-card p-6 flex items-start gap-4"
-            style={{
-              background: 'rgba(255,69,58,0.08)',
-              border: '1px solid rgba(255,69,58,0.15)',
-            }}
-          >
-            <div
-              className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-              style={{ background: 'rgba(255,69,58,0.12)' }}
-            >
-              <span className="text-danger font-semibold text-sm">!</span>
-            </div>
-            <div className="space-y-0.5">
-              <p className="text-sm font-semibold text-danger">Error de Orquestación</p>
-              <p className="text-sm text-danger/70 leading-relaxed">{error}</p>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Result */}
-        {result && !loading && (
-          <motion.div
-            key="result"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
+            className="border border-[var(--eva-border)] bg-[var(--eva-surface-2)] rounded-2xl p-5 space-y-4"
           >
-            <div
-              className="flex items-center justify-between py-3 px-2"
-              style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-8 h-8 rounded-lg flex items-center justify-center"
-                  style={{ background: 'rgba(48,209,88,0.10)' }}
-                >
-                  <Zap size={16} className="text-success" />
-                </div>
-                <h3 className="text-sm font-semibold text-content-primary">Resultado del Análisis</h3>
+            <div className="flex items-center justify-between border-b border-[var(--eva-border)] pb-3">
+              <div className="flex items-center gap-2">
+                <CheckCircle size={14} className="text-[var(--eva-olive)]" />
+                <span className="text-[10px] font-mono font-bold text-[var(--eva-olive)] uppercase tracking-wider">
+                  Análisis Generado
+                </span>
               </div>
-              <Button variant="ghost" size="sm" onClick={reset}>Nuevo Análisis</Button>
+              <div className="flex items-center gap-1.5 bg-[var(--eva-surface)] border border-[var(--eva-border)] rounded-full px-2.5 py-0.5">
+                <span className="text-[9px] font-mono font-bold text-[var(--eva-gold)]">
+                  Confianza: {(result.confidence * 100).toFixed(0)}%
+                </span>
+              </div>
             </div>
-            <AnalysisResultV2 data={result as any} />
+
+            <div className="text-xs text-[var(--eva-txt-secondary)] leading-relaxed whitespace-pre-line font-ui">
+              {result.response}
+            </div>
+
+            <div className="pt-2 flex flex-wrap items-center justify-between text-[9px] font-mono text-[var(--eva-txt-muted)]">
+              <span>Tiempo de ejecución: {result.executionTime}ms</span>
+              {result.sources.length > 0 && (
+                <span>Fuentes consultadas: {result.sources.length}</span>
+              )}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </div>
   );
-}
+};

@@ -53,11 +53,11 @@ export default function ClientDataUpload({ clientId }: { clientId: string }) {
   }
 
   return (
-    <div className="rounded-2xl border border-eva-border bg-white p-5 shadow-eva-sm">
+    <div className="rounded-2xl border border-[var(--eva-border)] bg-[var(--eva-surface)] p-5 shadow-eva-sm">
       <div className="flex items-center gap-2 mb-4">
-        <FileSpreadsheet size={16} className="text-eva-olive" />
-        <h3 className="font-brand text-base font-medium text-eva-black">Archivos del Cliente</h3>
-        {files.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-eva-beige-2 text-eva-txt-muted">{files.length}</span>}
+        <FileSpreadsheet size={16} className="text-[var(--eva-olive)]" />
+        <h3 className="font-brand text-base font-medium text-[var(--eva-txt-primary)]">Archivos del Cliente</h3>
+        {files.length > 0 && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[var(--eva-surface-2)] border border-[var(--eva-border)] text-[var(--eva-txt-muted)]">{files.length}</span>}
       </div>
 
       {/* Drop zone */}
@@ -87,7 +87,7 @@ export default function ClientDataUpload({ clientId }: { clientId: string }) {
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 text-xs text-red-600 bg-red-50 rounded-lg p-2 mb-3 border border-red-200">
+        <div className="flex items-center gap-2 text-xs text-red-400 bg-red-500/10 rounded-lg p-2 mb-3 border border-red-500/20">
           <AlertCircle size={13} /> {error}
         </div>
       )}
@@ -96,11 +96,11 @@ export default function ClientDataUpload({ clientId }: { clientId: string }) {
       {files.length > 0 && (
         <div className="space-y-2">
           {files.map(f => (
-            <div key={f.name} className="flex items-center justify-between p-3 rounded-lg border border-eva-border bg-eva-beige-light">
+            <div key={f.name} className="flex items-center justify-between p-3 rounded-lg border border-[var(--eva-border)] bg-[var(--eva-surface-2)]">
               <div className="flex items-center gap-2 min-w-0">
-                <FileSpreadsheet size={14} className="text-eva-olive shrink-0" />
+                <FileSpreadsheet size={14} className="text-[var(--eva-olive)] shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-[12px] font-semibold text-eva-black truncate">{f.name}</p>
+                  <p className="text-[12px] font-semibold text-[var(--eva-txt-primary)] truncate">{f.name}</p>
                   <p className="text-[10px] text-eva-txt-muted">{formatSize(f.size)}</p>
                 </div>
               </div>

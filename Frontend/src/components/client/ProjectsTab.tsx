@@ -26,13 +26,13 @@ const AREA_COLORS: Record<string, string> = {
 };
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
-  scoping: { label: 'Scoping', color: 'bg-eva-border text-eva-txt-muted' },
-  propuesta_enviada: { label: 'Propuesta', color: 'bg-amber-50 text-amber-700 border border-amber-200' },
-  en_ejecucion: { label: 'En Ejecución', color: 'bg-blue-50 text-blue-700 border border-blue-200' },
-  entrega: { label: 'Entrega', color: 'bg-orange-50 text-orange-700 border border-orange-200' },
-  completado: { label: 'Completado', color: 'bg-green-50 text-green-700 border border-green-200' },
-  pausado: { label: 'Pausado', color: 'bg-eva-beige-2 text-eva-txt-muted border border-eva-border' },
-  cancelado: { label: 'Cancelado', color: 'bg-red-50 text-red-700 border border-red-200' },
+  scoping: { label: 'Scoping', color: 'bg-[var(--eva-surface-2)] border border-[var(--eva-border)] text-[var(--eva-txt-muted)]' },
+  propuesta_enviada: { label: 'Propuesta', color: 'bg-amber-500/10 text-amber-400 border border-amber-500/20' },
+  en_ejecucion: { label: 'En Ejecución', color: 'bg-blue-500/10 text-blue-400 border border-blue-500/20' },
+  entrega: { label: 'Entrega', color: 'bg-orange-500/10 text-orange-400 border border-orange-500/20' },
+  completado: { label: 'Completado', color: 'bg-green-500/10 text-green-400 border border-green-500/20' },
+  pausado: { label: 'Pausado', color: 'bg-[var(--eva-surface-2)] text-[var(--eva-txt-muted)] border border-[var(--eva-border)]' },
+  cancelado: { label: 'Cancelado', color: 'bg-red-500/10 text-red-400 border border-red-500/20' },
 };
 
 const ProjectCard: React.FC<{ project: Project; onClick: () => void }> = ({ project, onClick }) => {
@@ -45,7 +45,7 @@ const ProjectCard: React.FC<{ project: Project; onClick: () => void }> = ({ proj
       onClick={onClick}
       className="cursor-pointer group"
     >
-      <Card className="p-5 bg-white border border-eva-border hover:border-eva-olive/50 transition-all h-full flex flex-col shadow-card">
+      <Card className="p-5 bg-[var(--eva-surface)] border border-[var(--eva-border)] hover:border-[var(--eva-olive)]/50 transition-all h-full flex flex-col shadow-card">
         <div className="flex justify-between items-start mb-4">
           <div className="flex flex-col gap-2">
             <div 
@@ -54,11 +54,11 @@ const ProjectCard: React.FC<{ project: Project; onClick: () => void }> = ({ proj
             >
               {project.area.replace('_', ' ')}
             </div>
-            <h4 className="text-lg font-serif text-eva-black leading-tight group-hover:text-eva-olive transition-colors">
+            <h4 className="text-lg font-serif text-[var(--eva-txt-primary)] leading-tight group-hover:text-[var(--eva-olive)] transition-colors">
               {project.name}
             </h4>
           </div>
-          <div className={`px-2 py-0.5 rounded-full text-[9px] uppercase tracking-widest font-bold ${status.color}`}>
+          <div className={`px-2 py-0.5 rounded-full text-[9px] uppercase tracking-widest font-bold flex items-center ${status.color}`}>
             {status.label}
           </div>
         </div>
@@ -67,30 +67,30 @@ const ProjectCard: React.FC<{ project: Project; onClick: () => void }> = ({ proj
           <div className="flex justify-between items-end">
             <div className="space-y-1">
               <p className="text-[10px] uppercase tracking-tighter text-eva-txt-muted">Fase Actual</p>
-              <p className="text-xs text-eva-black font-medium">{project.current_phase}</p>
+              <p className="text-xs text-[var(--eva-txt-primary)] font-medium">{project.current_phase}</p>
             </div>
             {project.total_price && (
                 <div className="text-right">
                    <p className="text-[10px] uppercase tracking-tighter text-eva-txt-muted">Precio Final</p>
-                   <p className="text-xs text-eva-olive font-mono">${project.total_price.toLocaleString()} MXN</p>
+                   <p className="text-xs text-[var(--eva-olive)] font-mono">${project.total_price.toLocaleString()} MXN</p>
                 </div>
             )}
           </div>
           
-          <div className="w-full h-1 bg-eva-beige-2 rounded-full overflow-hidden">
+          <div className="w-full h-1 bg-[var(--eva-surface-2)] rounded-full overflow-hidden border border-[var(--eva-border)]">
              {/* Dynamic progress bar based on status placeholder */}
              <div 
-               className="h-full bg-architecture transition-all duration-1000" 
+               className="h-full bg-[var(--eva-olive)] transition-all duration-1000" 
                style={{ width: project.status === 'completado' ? '100%' : project.status === 'en_ejecucion' ? '40%' : '10%' }}
              />
           </div>
         </div>
 
-        <div className="mt-6 pt-4 border-t border-eva-border flex justify-between items-center">
-          <span className="text-[10px] text-eva-txt-muted font-mono">
+        <div className="mt-6 pt-4 border-t border-[var(--eva-border)] flex justify-between items-center">
+          <span className="text-[10px] text-[var(--eva-txt-muted)] font-mono">
             ID: {project.id.slice(0, 8).toUpperCase()}
           </span>
-          <div className="flex items-center gap-2 text-xs text-eva-olive/80 group-hover:text-eva-olive transition-colors font-medium">
+          <div className="flex items-center gap-2 text-xs text-[var(--eva-olive)] opacity-85 group-hover:opacity-100 transition-colors font-medium">
             Gestionar <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
           </div>
         </div>
@@ -107,7 +107,7 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ clientId, clientName }) => {
   if (loading) return (
     <div className="py-20 flex flex-col items-center justify-center gap-4">
       <Spinner size="md" />
-      <p className="text-xs text-eva-txt-muted uppercase tracking-widest">Cargando portafolio...</p>
+      <p className="text-xs text-[var(--eva-txt-muted)] uppercase tracking-widest">Cargando portafolio...</p>
     </div>
   );
 
@@ -115,13 +115,13 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ clientId, clientName }) => {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h3 className="text-2xl font-serif text-eva-black">Proyectos del Cliente</h3>
-          <p className="text-sm text-eva-txt-muted">Gestiona los diagnósticos y la arquitectura activa de esta cuenta.</p>
+          <h3 className="text-2xl font-serif text-[var(--eva-txt-primary)]">Proyectos del Cliente</h3>
+          <p className="text-sm text-[var(--eva-txt-secondary)]">Gestiona los diagnósticos y la arquitectura activa de esta cuenta.</p>
         </div>
         <Button 
           variant="primary" 
           onClick={() => setShowModal(true)}
-          className="bg-eva-olive hover:bg-eva-olive-2 text-white"
+          className="bg-[var(--eva-olive)] hover:bg-[var(--eva-olive)]/90 text-white"
         >
           <Plus className="w-4 h-4 mr-2" />
           Nuevo Proyecto
@@ -129,13 +129,13 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ clientId, clientName }) => {
       </div>
 
       {projects.length === 0 ? (
-        <div className="py-20 border-2 border-dashed border-eva-border bg-white/50 rounded-2xl flex flex-col items-center justify-center text-center">
+        <div className="py-20 border-2 border-dashed border-[var(--eva-border)] bg-[var(--eva-surface)] rounded-2xl flex flex-col items-center justify-center text-center">
            <Briefcase className="w-12 h-12 text-eva-txt-faint mb-4" />
-           <h4 className="text-lg font-serif text-eva-black mb-2">No hay proyectos activos</h4>
-           <p className="text-xs text-eva-txt-muted max-w-xs mb-8">
+           <h4 className="text-lg font-serif text-[var(--eva-txt-primary)] mb-2">No hay proyectos activos</h4>
+           <p className="text-xs text-[var(--eva-txt-muted)] max-w-xs mb-8">
              Inicia el primer proyecto de consultoría estratégica para transformar este cliente.
            </p>
-           <Button variant="outline" onClick={() => setShowModal(true)} className="border-eva-border text-eva-txt-muted hover:text-eva-black">
+           <Button variant="outline" onClick={() => setShowModal(true)} className="border-[var(--eva-border)] text-[var(--eva-txt-muted)] hover:text-[var(--eva-txt-primary)]">
              Crear Primer Proyecto
            </Button>
         </div>
@@ -145,16 +145,16 @@ const ProjectsTab: React.FC<ProjectsTabProps> = ({ clientId, clientName }) => {
             <ProjectCard 
               key={project.id} 
               project={project} 
-              onClick={() => navigate(`/dashboard/projects/${project.id}`)} 
+              onClick={() => navigate(`/dashboard/proyectos/${project.id}`)} 
             />
           ))}
           {/* Add Project Card Placeholder */}
           <button 
             onClick={() => setShowModal(true)}
-            className="group rounded-2xl border-2 border-dashed border-eva-border bg-white/50 hover:bg-white hover:border-eva-olive/30 transition-all p-8 flex flex-col items-center justify-center text-center opacity-70 hover:opacity-100"
+            className="group rounded-2xl border-2 border-dashed border-[var(--eva-border)] bg-[var(--eva-surface)] hover:bg-[var(--eva-surface-hover)] hover:border-[var(--eva-olive)]/30 transition-all p-8 flex flex-col items-center justify-center text-center opacity-70 hover:opacity-100"
           >
-            <Plus className="w-8 h-8 mb-2 text-eva-txt-muted group-hover:text-eva-olive group-hover:scale-110 transition-transform" />
-            <span className="text-xs font-serif uppercase tracking-widest text-eva-txt-muted group-hover:text-eva-olive font-medium">Añadir Proyecto</span>
+            <Plus className="w-8 h-8 mb-2 text-[var(--eva-txt-muted)] group-hover:text-[var(--eva-olive)] group-hover:scale-110 transition-transform" />
+            <span className="text-xs font-serif uppercase tracking-widest text-[var(--eva-txt-muted)] group-hover:text-[var(--eva-olive)] font-medium">Añadir Proyecto</span>
           </button>
         </div>
       )}

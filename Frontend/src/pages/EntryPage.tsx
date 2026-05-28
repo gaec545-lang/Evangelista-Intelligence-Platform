@@ -24,19 +24,19 @@ export function EntryPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-eva-beige flex flex-col items-center justify-center p-6 sm:p-12 overflow-hidden relative">
+    <div className="min-h-screen w-full bg-[#141410] flex flex-col items-center justify-center p-6 sm:p-12 overflow-hidden relative">
       {/* Decorative Elements */}
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5 }}
-        className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-eva-olive/5 rounded-full blur-[120px]" 
+        className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-eva-olive/10 rounded-full blur-[120px]" 
       />
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.5, delay: 0.5 }}
-        className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-eva-gold/5 rounded-full blur-[120px]" 
+        className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-eva-gold/10 rounded-full blur-[120px]" 
       />
       
       {/* Main Content Container */}
@@ -58,13 +58,13 @@ export function EntryPage() {
                 transition={{ duration: 1, delay: 0.2 }}
                 className="flex justify-center mb-8"
               >
-                <img src={`${import.meta.env.BASE_URL}logoEvangelistaCo.png`} alt="Evangelista & Co" className="h-20 w-auto" />
+                <img src={`${import.meta.env.BASE_URL}logo-white.png`} alt="Evangelista & Co" className="h-20 w-auto filter drop-shadow-[0_4px_12px_rgba(201,168,76,0.15)]" />
               </motion.div>
               <motion.h1 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.4 }}
-                className="font-brand text-4xl sm:text-5xl font-medium text-eva-black leading-tight mb-4"
+                className="font-brand text-4xl sm:text-5xl font-medium text-[var(--eva-txt-primary)] leading-tight mb-4"
               >
                 Intelligence Platform
               </motion.h1>
@@ -72,9 +72,9 @@ export function EntryPage() {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
-                className="font-ui text-lg text-eva-txt-muted max-w-xl mx-auto leading-relaxed"
+                className="font-ui text-lg text-[var(--eva-txt-secondary)] max-w-xl mx-auto leading-relaxed"
               >
-                Bienvenido al centro de inteligencia estratégica de <span className="text-eva-olive-3 font-semibold">Evangelista & Co.</span> Por favor, selecciona tu portal de acceso.
+                Bienvenido al centro de inteligencia estratégica de <span className="text-[var(--eva-gold)] font-semibold">Evangelista & Co.</span> Por favor, selecciona tu portal de acceso.
               </motion.p>
             </div>
 
@@ -86,31 +86,31 @@ export function EntryPage() {
                 whileHover={{ y: -8, transition: { duration: 0.3 } }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleNavigation('/login')}
-                className="group relative bg-white border border-eva-border rounded-[2rem] p-10 text-left transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(62,77,50,0.12)] overflow-hidden"
+                className="group relative bg-[#1e1e1a] border border-[var(--eva-border)] rounded-[2rem] p-10 text-left transition-all duration-500 hover:shadow-[0_20px_50px_rgba(74,92,58,0.15)] hover:border-eva-olive/30 overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-eva-olive/5 rounded-bl-[5rem] -mr-8 -mt-8 transition-all duration-500 group-hover:bg-eva-olive/10 group-hover:scale-110" />
                 
                 <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-eva-black flex items-center justify-center mb-8 shadow-xl shadow-eva-black/10 transition-transform duration-500 group-hover:scale-110">
+                  <div className="w-14 h-14 rounded-2xl bg-[#28281f] flex items-center justify-center mb-8 shadow-xl shadow-black/30 transition-transform duration-500 group-hover:scale-110">
                     <Hexagon size={28} className="text-eva-gold fill-eva-gold/10" />
                   </div>
                   
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-4 h-[1px] bg-eva-olive-3" />
-                    <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-eva-olive-3 font-bold">
+                    <div className="w-4 h-[1px] bg-eva-gold" />
+                    <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-eva-gold font-bold">
                       Acceso Interno
                     </span>
                   </div>
                   
-                  <h2 className="font-brand text-2xl font-medium text-eva-black mb-4">
+                  <h2 className="font-brand text-2xl font-medium text-[var(--eva-txt-primary)] mb-4">
                     Consultoría & Staff
                   </h2>
                   
-                  <p className="font-ui text-[14px] text-eva-txt-mid leading-relaxed mb-8 opacity-80 group-hover:opacity-100 transition-opacity">
+                  <p className="font-ui text-[14px] text-[var(--eva-txt-secondary)] leading-relaxed mb-8 opacity-80 group-hover:opacity-100 transition-opacity">
                     Portal exclusivo para consultores y personal administrativo de la firma. Gestión de proyectos, análisis de inteligencia y herramientas de decisión.
                   </p>
                   
-                  <div className="flex items-center gap-2 text-eva-olive-3 font-ui text-[13px] font-bold group-hover:gap-4 transition-all">
+                  <div className="flex items-center gap-2 text-eva-gold font-ui text-[13px] font-bold group-hover:gap-4 transition-all">
                     <span>Ingresar al sistema</span>
                     <ArrowRight size={16} />
                   </div>
@@ -122,13 +122,13 @@ export function EntryPage() {
                 whileHover={{ y: -8, transition: { duration: 0.3 } }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleNavigation('/client-login')}
-                className="group relative bg-white border border-eva-border rounded-[2rem] p-10 text-left transition-shadow duration-500 hover:shadow-[0_20px_50px_rgba(184,154,66,0.12)] overflow-hidden"
+                className="group relative bg-[#1e1e1a] border border-[var(--eva-border)] rounded-[2rem] p-10 text-left transition-all duration-500 hover:shadow-[0_20px_50px_rgba(201,168,76,0.15)] hover:border-eva-gold/30 overflow-hidden"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-eva-gold/5 rounded-bl-[5rem] -mr-8 -mt-8 transition-all duration-500 group-hover:bg-eva-gold/10 group-hover:scale-110" />
                 
                 <div className="relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-eva-gold flex items-center justify-center mb-8 shadow-xl shadow-eva-gold/10 transition-transform duration-500 group-hover:scale-110">
-                    <Circle size={20} className="text-white fill-white/20" />
+                  <div className="w-14 h-14 rounded-2xl bg-[#28281f] flex items-center justify-center mb-8 shadow-xl shadow-black/30 transition-transform duration-500 group-hover:scale-110">
+                    <Circle size={20} className="text-eva-gold fill-eva-gold/10" />
                   </div>
                   
                   <div className="flex items-center gap-2 mb-2">
@@ -138,11 +138,11 @@ export function EntryPage() {
                     </span>
                   </div>
                   
-                  <h2 className="font-brand text-2xl font-medium text-eva-black mb-4">
+                  <h2 className="font-brand text-2xl font-medium text-[var(--eva-txt-primary)] mb-4">
                     Clientes Sentinel
                   </h2>
                   
-                  <p className="font-ui text-[14px] text-eva-txt-mid leading-relaxed mb-8 opacity-80 group-hover:opacity-100 transition-opacity">
+                  <p className="font-ui text-[14px] text-[var(--eva-txt-secondary)] leading-relaxed mb-8 opacity-80 group-hover:opacity-100 transition-opacity">
                     Acceso para socios y directivos externos. Visualización de dashboards personalizados, monitoreo de riesgos y reportes estratégicos.
                   </p>
                   
@@ -157,7 +157,7 @@ export function EntryPage() {
 
             {/* Footer */}
             <div className="mt-20 text-center">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-eva-txt-faint">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--eva-txt-muted)]">
                 © 2026 Evangelista & Co. — Todos los derechos reservados.
               </p>
             </div>
@@ -171,14 +171,14 @@ export function EntryPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4 }}
-          className="fixed inset-0 bg-white z-[100] flex items-center justify-center"
+          className="fixed inset-0 bg-[#141410] z-[100] flex items-center justify-center"
         >
           <motion.div 
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1.05, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <img src={`${import.meta.env.BASE_URL}logoEvangelistaCo.png`} alt="Loading..." className="h-28 w-auto grayscale opacity-10" />
+            <img src={`${import.meta.env.BASE_URL}logo-white.png`} alt="Loading..." className="h-28 w-auto opacity-20 filter drop-shadow-[0_4px_12px_rgba(201,168,76,0.15)]" />
           </motion.div>
         </motion.div>
       )}

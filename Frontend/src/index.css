@@ -5,57 +5,48 @@
 @layer base {
   /* Evangelista Intelligence Platform - UI Core */
 :root {
-    /* Fondo y estructura */
-    --eva-black:      18 18 15;
-    --eva-black-2:    26 26 22;
-    --eva-black-3:    36 36 31;
- 
-    /* Verde Olivo (color primario de la firma) */
-    --eva-olive:      62 77 50;
-    --eva-olive-2:    45 56 36;
-    --eva-olive-3:    79 97 64;
-    --eva-olive-light: 240 244 236;
- 
-    /* Beige (fondo principal de la app) */
-    --eva-beige:      249 247 242;
-    --eva-beige-2:    242 238 227;
-    --eva-beige-3:    232 226 208;
- 
-    /* Dorado (acento premium) */
-    --eva-gold:       184 154 66;
-    --eva-gold-2:     212 183 98;
-    --eva-gold-light: 254 250 240;
- 
-    /* Texto */
-    --eva-txt-dark:   #12120f;
-    --eva-txt-mid:    #404035;
-    --eva-txt-muted:  #707060;
-    --eva-txt-faint:  #a8a898;
-    --eva-border:     #e1ddd1;
-    --eva-border-2:   #d1cdc0;
+  /* Paleta principal */
+  --eva-black: #141410;
+  --eva-black-2: #1e1e1a;
+  --eva-black-3: #28281f;
+  --eva-olive: #4a5c3a;
+  --eva-olive-2: #3a4a2d;
+  --eva-beige: #f5f0e8;
+  --eva-gold: #c9a84c;
+  --eva-gold-2: #b89040;
 
-    /* Service Colors */
-    --service-foundation: #b04a30;
-    --service-architecture: #4a42a3;
-    --service-sentinel: #0d614d;
+  /* Semánticos */
+  --eva-surface: #1a1a15;
+  --eva-surface-2: #222218;
+  --eva-border: #2e2e24;
+  --eva-border-2: #383830;
+  --eva-txt-primary: #f0ece0;
+  --eva-txt-secondary: #b8b4a0;
+  --eva-txt-muted: #787060;
 
-    /* Spacing rhythm */
-    --space-xs: 4px;
-    --space-sm: 8px;
-    --space-md: 16px;
-    --space-lg: 24px;
-  }
+  /* Estados */
+  --eva-critical: #c05538;
+  --eva-success: #0f6e56;
+  --eva-warning: #b89040;
+  --eva-info: #4a5c8a;
+
+  /* Spacing rhythm */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+}
 
   body {
-    background-color: rgb(var(--eva-beige));
-    color: rgb(var(--eva-txt-dark));
+    background-color: var(--eva-black);
+    color: var(--eva-txt-primary);
     @apply font-ui antialiased;
     letter-spacing: -0.011em; /* Inter optimization */
   }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-brand font-medium tracking-tight;
-    color: var(--eva-txt-dark);
+    color: var(--eva-txt-primary);
   }
 
   /* Consulting style accents (Assembly influence: tight tracking) */
@@ -110,10 +101,10 @@
   .border-service-sentinel { border-left: 3px solid #0f6e56; }
 
   /* Badge Semantic Styles (Assembly Pill Shape) */
-  .badge-success { @apply bg-green-50 text-green-700 border border-green-100 rounded-full; }
-  .badge-warning { @apply bg-yellow-50 text-yellow-700 border border-yellow-100 rounded-full; }
-  .badge-danger { @apply bg-red-50 text-red-700 border border-red-100 rounded-full; }
-  .badge-info { @apply bg-blue-50 text-blue-700 border border-blue-100 rounded-full; }
+  .badge-success { @apply bg-green-500/10 text-green-400 border border-green-500/20 rounded-full; }
+  .badge-warning { @apply bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 rounded-full; }
+  .badge-danger { @apply bg-red-500/10 text-red-400 border border-red-500/20 rounded-full; }
+  .badge-info { @apply bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-full; }
   .badge-neutral { @apply text-eva-txt-muted border border-eva-border rounded-full; background-color: rgb(var(--eva-beige-2)); }
   .badge-olive { @apply text-eva-olive border border-eva-olive/20 rounded-full; background-color: rgb(var(--eva-olive-light)); }
 }

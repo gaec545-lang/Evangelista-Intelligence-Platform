@@ -42,10 +42,10 @@ const sourceTypeConfig: Record<DataSourceType, { icon: any; label: string; color
 };
 
 const statusConfig: Record<string, { label: string; icon: any; color: string; bgColor: string }> = {
-  conectado:   { label: 'Conectado',   icon: CheckCircle2, color: 'text-service-sentinel', bgColor: 'bg-service-sentinel/10' },
-  error:       { label: 'Error',       icon: AlertCircle,  color: 'text-red-600',         bgColor: 'bg-red-50' },
-  pendiente:   { label: 'Pendiente',   icon: Clock,        color: 'text-eva-gold',        bgColor: 'bg-eva-gold/10' },
-  sin_probar:  { label: 'Sin probar',  icon: Clock,        color: 'text-eva-txt-faint',   bgColor: 'bg-eva-beige-2' },
+  conectado:   { label: 'Conectado',   icon: CheckCircle2, color: 'text-[var(--eva-success)]', bgColor: 'bg-[var(--eva-success)]/10 border border-[var(--eva-success)]/20' },
+  error:       { label: 'Error',       icon: AlertCircle,  color: 'text-red-400',         bgColor: 'bg-red-500/10 border border-red-500/20' },
+  pendiente:   { label: 'Pendiente',   icon: Clock,        color: 'text-[var(--eva-gold)]',        bgColor: 'bg-[var(--eva-gold)]/10 border border-[var(--eva-gold)]/20' },
+  sin_probar:  { label: 'Sin probar',  icon: Clock,        color: 'text-eva-txt-faint',   bgColor: 'bg-[var(--eva-surface-2)] border border-[var(--eva-border)]' },
 };
 
 export default function DataSourceCard({ source, onTest, onEdit, onDelete, isTesting }: DataSourceCardProps) {
@@ -83,7 +83,7 @@ export default function DataSourceCard({ source, onTest, onEdit, onDelete, isTes
       animate={{ opacity: 1, scale: 1 }}
       className="group"
     >
-      <Card className="p-6 bg-white border-eva-border hover:border-eva-olive hover:shadow-md transition-all flex flex-col h-full shadow-sm">
+      <Card className="p-6 bg-[var(--eva-surface)] border-[var(--eva-border)] hover:border-[var(--eva-olive)] hover:shadow-md transition-all flex flex-col h-full shadow-sm">
         <div className="flex justify-between items-start mb-6">
           <div className="flex gap-4">
             <div 
@@ -93,8 +93,8 @@ export default function DataSourceCard({ source, onTest, onEdit, onDelete, isTes
               <config.icon className="w-6 h-6 shadow-sm" style={{ color: config.color }} />
             </div>
             <div>
-              <h4 className="text-lg font-serif text-eva-black leading-tight font-bold">{source.name}</h4>
-              <p className="text-[10px] text-eva-txt-muted uppercase tracking-widest font-bold mt-1.5 font-mono">
+              <h4 className="text-lg font-serif text-[var(--eva-txt-primary)] leading-tight font-bold">{source.name}</h4>
+              <p className="text-[10px] text-[var(--eva-txt-muted)] uppercase tracking-widest font-bold mt-1.5 font-mono">
                 {config.label}
               </p>
             </div>
@@ -109,7 +109,7 @@ export default function DataSourceCard({ source, onTest, onEdit, onDelete, isTes
         <div className="flex-1 space-y-4">
           <div className="space-y-1">
             <p className="text-[9px] text-eva-txt-faint uppercase tracking-widest font-bold">Endpoint / Ruta</p>
-            <p className="text-sm text-eva-txt-mid font-mono truncate font-bold bg-eva-beige-2/30 p-2 rounded border border-eva-border/50">{getDisplayPath()}</p>
+            <p className="text-sm text-[var(--eva-txt-secondary)] font-mono truncate font-bold bg-[var(--eva-surface-2)] p-2 rounded border border-[var(--eva-border)]">{getDisplayPath()}</p>
           </div>
           
           {source.authorized_tables && source.authorized_tables.length > 0 && (
@@ -117,7 +117,7 @@ export default function DataSourceCard({ source, onTest, onEdit, onDelete, isTes
               <p className="text-[9px] text-eva-txt-faint uppercase tracking-widest font-bold">Tablas Autorizadas</p>
               <div className="flex flex-wrap gap-1.5">
                 {source.authorized_tables.map(table => (
-                  <span key={table} className="px-2 py-0.5 rounded bg-eva-beige-2 text-[10px] text-eva-txt-muted font-mono font-bold border border-eva-border shadow-sm">
+                  <span key={table} className="px-2 py-0.5 rounded bg-[var(--eva-surface-2)] text-[10px] text-[var(--eva-txt-muted)] font-mono font-bold border border-[var(--eva-border)] shadow-sm">
                     {table}
                   </span>
                 ))}
@@ -126,9 +126,9 @@ export default function DataSourceCard({ source, onTest, onEdit, onDelete, isTes
           )}
           
           {source.last_test_result && source.status === 'error' && (
-            <div className="p-3 rounded-lg bg-red-50 border border-red-100 shadow-sm">
-              <p className="text-[9px] text-red-600/60 uppercase font-bold mb-1">Último Error</p>
-              <p className="text-xs text-red-700 line-clamp-2 italic font-medium leading-tight">{source.last_test_result}</p>
+            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 shadow-sm">
+              <p className="text-[9px] text-red-400/60 uppercase font-bold mb-1">Último Error</p>
+              <p className="text-xs text-red-400 line-clamp-2 italic font-medium leading-tight">{source.last_test_result}</p>
             </div>
           )}
         </div>
@@ -140,7 +140,7 @@ export default function DataSourceCard({ source, onTest, onEdit, onDelete, isTes
               size="sm" 
               onClick={onTest}
               isLoading={isTesting}
-              className="h-8 border-eva-border hover:border-eva-olive/30 bg-white text-eva-txt-mid font-bold shadow-sm"
+              className="h-8 border-[var(--eva-border)] hover:border-[var(--eva-olive)] bg-[var(--eva-surface-2)] text-[var(--eva-txt-secondary)] font-bold shadow-sm"
             >
               <TestTube className="w-3.5 h-3.5 mr-2" />
               Probar

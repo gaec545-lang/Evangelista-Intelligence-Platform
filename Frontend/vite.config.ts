@@ -7,9 +7,14 @@ export default defineConfig({
   server: {
     port: 5174,
     proxy: {
-      '/api': { target: 'http://localhost:8000', changeOrigin: true },
-      '/readiness': { target: 'http://localhost:8000', changeOrigin: true },
-      '/health': { target: 'http://localhost:8000', changeOrigin: true },
+      '/api': { target: 'http://localhost:8001', changeOrigin: true },
+      '/readiness': { target: 'http://localhost:8001', changeOrigin: true },
+      '/health': { target: 'http://localhost:8001', changeOrigin: true },
+      '/supabase-proxy': {
+        target: 'https://ca-kong.lemonfield-5ba69bbc.southcentralus.azurecontainerapps.io',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/supabase-proxy/, ''),
+      },
     },
     headers: {
       // Previene Clickjacking
@@ -23,11 +28,11 @@ export default defineConfig({
       // Content-Security-Policy: permite solo fuentes conocidas
       'Content-Security-Policy': [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://esm.sh",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://esm.sh",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com",
         "img-src 'self' data: https:",
-        "connect-src 'self' https://evangelista-backend.onrender.com https://evangelista-rag-private.azurewebsites.net https://esm.sh",
+        "connect-src 'self' http://localhost:8001 http://localhost:5174 ws://localhost:5174 https://ca-kong.lemonfield-5ba69bbc.southcentralus.azurecontainerapps.io https://ca-backend.lemonfield-5ba69bbc.southcentralus.azurecontainerapps.io https://evangelista-backend.onrender.com https://evangelista-rag-private.azurewebsites.net https://esm.sh",
         "frame-ancestors 'none'",
       ].join('; '),
     },

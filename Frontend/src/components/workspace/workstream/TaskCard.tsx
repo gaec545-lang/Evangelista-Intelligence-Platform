@@ -18,10 +18,10 @@ export default function TaskCard({ task, color, onUpdate }: TaskCardProps) {
     const diffTime = new Date(end).getTime() - new Date().getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays < 0) return { label: `${Math.abs(diffDays)}d retraso`, color: 'text-red-500 bg-red-50' };
-    if (diffDays === 0) return { label: 'Hoy', color: 'text-yellow-600 bg-yellow-50' };
-    if (diffDays <= 3) return { label: `${diffDays}d restantes`, color: 'text-yellow-600 bg-yellow-50' };
-    return { label: `${diffDays}d restantes`, color: 'text-eva-txt-muted bg-eva-beige-2' };
+    if (diffDays < 0) return { label: `${Math.abs(diffDays)}d retraso`, color: 'text-red-400 bg-red-500/10 border border-red-500/20' };
+    if (diffDays === 0) return { label: 'Hoy', color: 'text-yellow-400 bg-yellow-500/10 border border-yellow-500/20' };
+    if (diffDays <= 3) return { label: `${diffDays}d restantes`, color: 'text-yellow-400 bg-yellow-500/10 border border-yellow-500/20' };
+    return { label: `${diffDays}d restantes`, color: 'text-[var(--eva-txt-muted)] bg-[var(--eva-surface-2)] border border-[var(--eva-border)]' };
   };
 
   const days = getDaysRemaining(task.planned_end);
@@ -32,10 +32,10 @@ export default function TaskCard({ task, color, onUpdate }: TaskCardProps) {
     <>
       <div 
         onClick={() => setShowDrawer(true)}
-        className={`bg-white border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer relative group overflow-hidden ${
-          isBlocked ? 'border-red-300 bg-red-50/50' : 
-          isCompleted ? 'border-green-200 bg-green-50/30 opacity-70' : 
-          'border-eva-border'
+        className={`bg-[var(--eva-surface)] border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow cursor-pointer relative group overflow-hidden ${
+          isBlocked ? 'border-red-500/30 bg-red-500/10' : 
+          isCompleted ? 'border-green-500/20 bg-green-500/10 opacity-70' : 
+          'border-[var(--eva-border)]'
         }`}
       >
         {/* Left Color Accent */}
@@ -44,25 +44,25 @@ export default function TaskCard({ task, color, onUpdate }: TaskCardProps) {
         <div className="flex justify-between items-start mb-2 pl-1">
           <div className="flex gap-2 items-center">
             {task.priority === 'critica' && (
-              <span className="bg-red-100 text-red-700 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
+              <span className="bg-red-500/10 text-red-400 border border-red-500/20 text-[9px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">
                 Crítica
               </span>
             )}
-            <span className="text-[10px] text-eva-txt-muted uppercase tracking-wider font-medium">
+            <span className="text-[10px] text-[var(--eva-txt-muted)] uppercase tracking-wider font-medium">
               {task.task_type || 'Tarea'}
             </span>
           </div>
-          <button className="text-eva-txt-faint hover:text-eva-black opacity-0 group-hover:opacity-100 transition-opacity">
+          <button className="text-eva-txt-faint hover:text-[var(--eva-txt-primary)] opacity-0 group-hover:opacity-100 transition-opacity">
             <MoreVertical size={14} />
           </button>
         </div>
 
-        <h4 className={`text-sm font-medium mb-3 pl-1 leading-tight ${isCompleted ? 'line-through text-eva-txt-mid' : 'text-eva-black'}`}>
+        <h4 className={`text-sm font-medium mb-3 pl-1 leading-tight ${isCompleted ? 'line-through text-eva-txt-mid' : 'text-[var(--eva-txt-primary)]'}`}>
           {task.name}
         </h4>
 
         {isBlocked && task.blocker_description && (
-          <div className="mb-3 pl-1 text-xs text-red-600 bg-red-100/50 p-2 rounded flex items-start gap-1.5">
+          <div className="mb-3 pl-1 text-xs text-red-400 bg-red-500/10 border border-red-500/20 p-2 rounded flex items-start gap-1.5">
             <AlertTriangle size={12} className="mt-0.5 shrink-0" />
             <span className="line-clamp-2">{task.blocker_description}</span>
           </div>
@@ -94,7 +94,7 @@ export default function TaskCard({ task, color, onUpdate }: TaskCardProps) {
             </div>
           )}
           {isCompleted && (
-            <div className="flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded text-green-700 bg-green-100">
+            <div className="flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded text-green-400 bg-green-500/10 border border-green-500/20">
               <Check size={10} /> Completada
             </div>
           )}
