@@ -6,20 +6,19 @@ import { motion } from 'framer-motion';
 
 export function ClientLoginPage() {
   const { user, signIn } = useAuthStore();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   if (user) return <Navigate to="/dashboard" replace />;
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setError('');
     setLoading(true);
     try {
-      await signIn(email, password);
+      await signIn();
     } catch (err) {
       setError('Credenciales inválidas.');
     } finally {
@@ -103,40 +102,16 @@ export function ClientLoginPage() {
               <p className="text-[var(--eva-txt-secondary)] text-[15px]">Gestiona tus activos y visualiza tu progreso.</p>
             </header>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-[13px] font-medium text-[var(--eva-txt-secondary)] ml-1">Email Corporativo</label>
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-12 px-4 input-glass text-sm text-white placeholder:text-[var(--eva-txt-muted)] focus:outline-none focus:border-[var(--eva-gold)] focus:ring-1 focus:ring-[var(--eva-gold)] transition-all font-ui"
-                  placeholder="ejemplo@empresa.com"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-[13px] font-medium text-[var(--eva-txt-secondary)] ml-1">Contraseña</label>
-                <input
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-12 px-4 input-glass text-sm text-white placeholder:text-[var(--eva-txt-muted)] focus:outline-none focus:border-[var(--eva-gold)] focus:ring-1 focus:ring-[var(--eva-gold)] transition-all font-ui"
-                  placeholder="••••••••"
-                />
-              </div>
-
+            <div className="space-y-6">
               <button
-                type="submit"
+                onClick={handleSubmit}
                 disabled={loading}
                 className="w-full h-14 bg-[var(--eva-gold)] hover:bg-[var(--eva-gold-2)] text-[#141410] rounded-xl font-bold text-[15px] transition-all flex items-center justify-center gap-2 shadow-xl shadow-[var(--eva-gold)]/10"
               >
-                {loading ? 'Cargando...' : 'Entrar al Portal'}
+                {loading ? 'Cargando...' : 'Iniciar Sesión con Microsoft'}
                 <ArrowRight size={18} />
               </button>
-            </form>
+            </div>
 
             {error && (
               <div className="mt-6 p-4 bg-[var(--eva-critical)]/10 border border-[var(--eva-critical)]/20 rounded-xl text-[var(--eva-critical)] text-[13px] text-center">

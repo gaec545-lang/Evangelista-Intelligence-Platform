@@ -77,3 +77,9 @@ base64_*.txt
 tsc_errors*.txt
 fresh_tsc_errors.txt
 final_tsc_errors.txt
+.env*
+._*
+postgresql_binaries.zip
+postgresql_installer.exe
+.azure/
+.azure_env

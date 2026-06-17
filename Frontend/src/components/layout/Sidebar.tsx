@@ -39,7 +39,7 @@ const NavItem = ({ to, icon: Icon, label, badge }: { to: string; icon: any; labe
 
 const Sidebar = () => {
   const { user, signOut } = useAuthStore();
-  const userInitials = user?.email?.substring(0, 2).toUpperCase() || 'E&';
+  const userInitials = user?.username?.substring(0, 2).toUpperCase() || 'E&';
 
   return (
     <aside className="w-[240px] h-full bg-eva-black flex flex-col border-r border-eva-border select-none">
@@ -100,7 +100,7 @@ const Sidebar = () => {
             </div>
             <div className="flex-1 min-w-0">
               <p className="font-ui text-[12px] font-medium text-[#c8c4b8] truncate">
-                {user?.email?.split('@')[0] || 'Consultor'}
+                {user?.username?.split('@')[0] || 'Consultor'}
               </p>
               <p className="font-mono text-[9px] uppercase tracking-[0.08em] text-[#4a4a38]">Firm Agent</p>
             </div>

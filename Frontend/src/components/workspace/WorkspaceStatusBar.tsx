@@ -12,8 +12,7 @@ import {
   projectsDB, 
   projectActivityLogDB, 
   paymentsDB,
-  phaseTransitionsDB,
-  supabase 
+  phaseTransitionsDB
 } from '../../lib/supabase';
 
 const PHASE_ORDER = ['scoping', 'immersion', 'analysis', 'delivery', 'closure', 'completed'];
@@ -98,8 +97,8 @@ export default function WorkspaceStatusBar({ project, phases, onUpdate }: Worksp
         project_id: project.id,
         from_phase: project.status,
         to_phase: nextStatus,
-        confirmed_by: user?.id,
-        confirmed_by_name: user?.user_metadata?.full_name || user?.email || 'Consultor',
+        confirmed_by: user?.localAccountId,
+        confirmed_by_name: user?.name || user?.username || 'Consultor',
         justification: 'Avance de fase validado por sistema',
         conditions_met: conditions.map(c => ({ label: c.label, met: c.met }))
       } as any);
@@ -108,7 +107,7 @@ export default function WorkspaceStatusBar({ project, phases, onUpdate }: Worksp
         project_id: project.id,
         action_type: 'phase_transition',
         description: `Proyecto avanzado de la fase ${project.status} a ${nextStatus}`,
-        performed_by_name: user?.user_metadata?.full_name || user?.email || 'Consultor',
+        performed_by_name: user?.name || user?.username || 'Consultor',
         metadata: { from: project.status, to: nextStatus, phase_id: phase.id }
       });
 
@@ -117,17 +116,11 @@ export default function WorkspaceStatusBar({ project, phases, onUpdate }: Worksp
         current_phase: nextStatus
       });
 
-      await supabase
-        .from('project_phases')
-        .update({ status: 'completada', completed_at: new Date().toISOString() })
-        .eq('id', phase.id);
+      await projectsDB.updatePhase(phase.id, { status: 'completada', completed_at: new Date().toISOString() });
       
       const nextPhase = phases.find(p => p.phase_name.toLowerCase() === nextStatus.toLowerCase());
       if (nextPhase) {
-        await supabase
-          .from('project_phases')
-          .update({ status: 'en_curso', started_at: new Date().toISOString() })
-          .eq('id', nextPhase.id);
+        await projectsDB.updatePhase(nextPhase.id, { status: 'en_curso', started_at: new Date().toISOString() });
       }
 
       setConfirmingPhase(null);

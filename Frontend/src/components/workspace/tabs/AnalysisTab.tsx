@@ -84,7 +84,7 @@ export default function AnalysisTab({ project }: AnalysisTabProps) {
           findings_count: findings.length,
           total_impact: totalImpact,
           date: new Date().toLocaleDateString('es-MX'),
-          consultant: user?.email?.split('@')[0] || 'Adriel E.'
+          consultant: user?.username?.split('@')[0] || 'Adriel E.'
         }
       };
 
@@ -94,7 +94,7 @@ export default function AnalysisTab({ project }: AnalysisTabProps) {
         project_id: project.id,
         action_type: 'document_generated',
         description: `Dictamen forense generado (${findings.length} hallazgos)`,
-        performed_by_name: user?.email?.split('@')[0] || 'Consultor',
+        performed_by_name: user?.username?.split('@')[0] || 'Consultor',
       });
     } catch (error) {
       console.error('Error generating dictamen:', error);

@@ -88,7 +88,7 @@ export default function ProposalTab({ project }: ProposalTabProps) {
         project_id: project.id,
         action_type: 'price_calculated',
         description: `Inversión total actualizada: ${formatCurrency(breakdown.total_before_tax)}`,
-        performed_by_name: user?.email?.split('@')[0] || 'Consultor',
+        performed_by_name: user?.username?.split('@')[0] || 'Consultor',
       });
       
       // Feedback visual

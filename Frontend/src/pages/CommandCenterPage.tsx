@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Briefcase, Users, DollarSign, AlertTriangle, Clock, ChevronRight, CheckCircle2 } from 'lucide-react';
-import { supabase, clientsDB, projectsDB } from '../lib/supabase';
+import { findingsDB, clientsDB, projectsDB } from '../lib/supabase';
 import { Spinner } from '../components/ui/Spinner';
 
 export const CommandCenterPage: React.FC = () => {
@@ -44,11 +44,9 @@ export const CommandCenterPage: React.FC = () => {
         });
 
         // 3. Fetch Findings pending vetting gate (status = 'identificado')
-        const { data: findings } = await supabase
-          .from('findings')
-          .select('id')
-          .eq('status', 'identificado');
-        const pendingVettingCount = findings?.length || 0;
+        // In a real scenario we'd query by status, but for mock purposes we just filter here
+        const findingsList = await findingsDB.list();
+        const pendingVettingCount = findingsList?.filter((f: any) => f.status === 'identificado').length || 0;
 
         setMetrics({
           totalProjects: active.length,

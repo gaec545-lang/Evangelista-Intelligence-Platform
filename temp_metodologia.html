@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Metodología | Evangelista & Co.</title>
+    <meta name="description" content="Diagnóstico, diseño e implementación, transferencia. El proceso detrás de cada proyecto de Evangelista & Co." />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['DM Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+              serif: ['Fraunces', 'Georgia', 'serif'],
+            },
+            colors: {
+              carbon:  '#1C1C1C',
+              beige:   '#F4F1EA',
+              olive: {
+                DEFAULT: '#5A6352',
+                dark:    '#4A5342',
+                light:   '#8A9A7D',
+              },
+              body:    '#2D3319',
+              muted:   '#707070',
+            }
+          }
+        }
+      }
+    </script>
+</head>
+<body class="bg-[#F4F1EA] text-[#1C1C1C] font-sans antialiased selection:bg-[#5A6352] selection:text-white">
+
+    <header class="header-sticky" id="header">
+    <div class="container">
+        <div class="header-content">
+
+            <a href="index.html" class="logo" aria-label="Inicio Evangelista & Co.">
+                <img src="assets/logoEvangelistaCo.png" alt="Isotipo Evangelista & Co." />
+                <div class="logo-text">
+                    <span class="brand-name">Evangelista &amp; Co.</span>
+                    <span class="brand-tagline">Intelligence Architecture Firm</span>
+                </div>
+            </a>
+
+            <nav class="main-nav" aria-label="Navegación de la Firma">
+                <a href="por-que-nosotros.html">La Firma</a>
+                <a href="metodologia.html">Metodología</a>
+                <a href="sectores.html">Áreas de Práctica</a>
+                <a href="Perspectivas/Perspectivas.html">Perspectivas</a>
+                <a href="https://plataforma.evangelistaco.com/" target="_blank" rel="noopener" style="color: var(--olive); font-weight: 700;">Acceso</a>
+</nav>
+
+            <button type="button" class="mobile-menu-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-nav">
+                <svg class="icon-menu" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+                <svg class="icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+
+        </div>
+    </div>
+    
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Menú móvil">
+        <a href="por-que-nosotros.html">La Firma</a>
+        <a href="metodologia.html">Metodología</a>
+        <a href="sectores.html">Áreas de Práctica</a>
+        <a href="Perspectivas/Perspectivas.html">Perspectivas</a>
+        <a href="https://plataforma.evangelistaco.com/" target="_blank" rel="noopener" style="color: var(--olive); font-weight: 700;">Acceso</a>
+        <a href="#contacto" onclick="window.openDiagnostico && window.openDiagnostico(); return false;" style="font-weight: 700;">Hablar con la firma</a>
+    </nav>
+</header>
+
+    <main class="pt-20">
+
+        <section class="py-24 md:py-32 bg-[#1C1C1C] text-[#F4F1EA] relative overflow-hidden">
+            <div class="absolute inset-0 opacity-5 pointer-events-none">
+                <svg class="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <pattern id="grid-hero" width="30" height="30" patternUnits="userSpaceOnUse">
+                            <path d="M 30 0 L 0 0 0 30" fill="none" stroke="currentColor" stroke-width="1"/>
+                        </pattern>
+                    </defs>
+                    <rect width="100%" height="100%" fill="url(#grid-hero)" />
+                </svg>
+            </div>
+            
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                <span class="text-[#5A6352] text-xs font-bold tracking-[0.2em] uppercase mb-6 block">Cómo trabajamos</span>
+                <h1 class="text-5xl md:text-6xl font-serif leading-tight mb-8 text-white">
+                    Consultoría que diagnostica.<br>Inteligencia que ejecuta.<br>Un solo proceso.
+                </h1>
+                <p class="text-lg md:text-xl text-gray-400 font-sans leading-relaxed max-w-3xl mx-auto border-t border-white/10 pt-8">
+                    Cada proyecto integra dos disciplinas desde el primer día: el criterio consultivo para entender el problema real, y la inteligencia de negocio para resolverlo con precisión. El alcance varía. El proceso, no.
+                </p>
+            </div>
+        </section>
+
+        <section class="py-24 bg-white relative">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="hidden md:block absolute left-1/2 top-32 bottom-24 w-px bg-[#1C1C1C]/10 transform -translate-x-1/2"></div>
+
+                <div class="relative flex flex-col md:flex-row items-center md:items-start justify-between mb-24 group">
+                    <div class="md:w-5/12 text-right md:pr-12 mb-8 md:mb-0">
+                        <h3 class="text-2xl font-serif text-[#1C1C1C] mb-2">01 — Diagnóstico</h3>
+                        <span class="text-xs font-bold font-sans text-[#5A6352] uppercase tracking-widest block mb-4"/span>
+                        <p class="text-sm text-gray-600 font-sans leading-relaxed">Todo proyecto comienza con una conversación. El cliente nos cuenta su objetivo o su problema. Nosotros hacemos las preguntas que nadie más ha hecho.
+
+De ahí surge el diagnóstico: una lectura precisa de la brecha entre dónde está la empresa hoy y dónde necesita estar. El diagnóstico define el alcance. El alcance define el trabajo.</p>
+                    </div>
+                    
+                    <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-12 h-12 bg-[#F4F1EA] border-2 border-[#1C1C1C] rounded-none items-center justify-center z-10 group-hover:bg-[#5A6352] group-hover:border-[#5A6352] group-hover:text-white transition-colors duration-500">
+                        <span class="font-serif italic font-bold">01</span>
+                    </div>
+
+                    <div class="md:w-5/12 md:pl-12 w-full">
+                        <div class="bg-[#F4F1EA] p-6 border-l-2 border-[#5A6352]">
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-[#1C1C1C] mb-3">Lo que implica</h4>
+                            <ul class="text-sm font-sans text-gray-700 space-y-2">
+                                <li>&bull; Identificación de entropía administrativa.</li>
+                                <li>&bull; Mapeo estructural de sistemas críticos.</li>
+                                <li>&bull; Cuantificación del riesgo de capital.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative flex flex-col md:flex-row items-center md:items-start justify-between mb-24 group">
+                    <div class="md:w-5/12 md:text-right order-3 md:order-1 w-full mt-8 md:mt-0 md:pr-12">
+                        <div class="bg-[#1C1C1C] p-6 border-r-2 border-[#5A6352]">
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-[#F4F1EA] mb-3">Lo que implica</h4>
+                            <ul class="text-sm font-sans text-gray-400 space-y-2">
+                                <li>&bull; Consolidación de fuentes de verdad.</li>
+                                <li>&bull; Orquestación de ingeniería de datos.</li>
+                                <li>&bull; Homologación de activos de decisión.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-12 h-12 bg-[#F4F1EA] border-2 border-[#1C1C1C] rounded-none items-center justify-center z-10 group-hover:bg-[#5A6352] group-hover:border-[#5A6352] group-hover:text-white transition-colors duration-500">
+                        <span class="font-serif italic font-bold">02</span>
+                    </div>
+
+                    <div class="md:w-5/12 md:pl-12 order-1 md:order-3">
+                        <h3 class="text-2xl font-serif text-[#1C1C1C] mb-2">02 — Diseño e implementación</h3>
+                        <span class="text-xs font-bold font-sans text-[#5A6352] uppercase tracking-widest block mb-4"/span>
+                        <p class="text-sm text-gray-600 font-sans leading-relaxed">Una vez definido el diagnóstico, diseñamos la solución. Esto puede involucrar arquitectura de datos, desarrollo de herramientas, reestructuración de procesos, o cualquier combinación que el objetivo requiera.
+
+Trabajamos junto al equipo del cliente. Aportamos nuestros consultores y, cuando el proyecto lo exige, incorporamos recursos especializados bajo el mismo esquema de responsabilidad única.</p>
+                    </div>
+                </div>
+
+                <div class="relative flex flex-col md:flex-row items-center md:items-start justify-between group">
+                    <div class="md:w-5/12 text-right md:pr-12 mb-8 md:mb-0">
+                        <h3 class="text-2xl font-serif text-[#1C1C1C] mb-2">03 — Transferencia y control</h3>
+                        <span class="text-xs font-bold font-sans text-[#5A6352] uppercase tracking-widest block mb-4"/span>
+                        <p class="text-sm text-gray-600 font-sans leading-relaxed">El cierre de un proyecto no es la entrega de un reporte. Es el momento en que el cliente tiene el control total de la inteligencia que construimos juntos.
+
+Documentamos, capacitamos y transferimos. El objetivo no es que el cliente nos necesite para siempre. Es que opere mejor desde el primer día después de que nos retiramos.</p>
+                    </div>
+                    
+                    <div class="hidden md:flex absolute left-1/2 transform -translate-x-1/2 w-12 h-12 bg-[#F4F1EA] border-2 border-[#1C1C1C] rounded-none items-center justify-center z-10 group-hover:bg-[#5A6352] group-hover:border-[#5A6352] group-hover:text-white transition-colors duration-500">
+                        <span class="font-serif italic font-bold">03</span>
+                    </div>
+
+                    <div class="md:w-5/12 md:pl-12 w-full">
+                        <div class="bg-[#F4F1EA] p-6 border-l-2 border-[#5A6352]">
+                            <h4 class="text-[10px] font-bold uppercase tracking-widest text-[#1C1C1C] mb-3">Infraestructura Propietaria</h4>
+                            <ul class="text-sm font-sans text-gray-700 space-y-2">
+                                <li>&bull; Control total del ciclo de vida del proyecto.</li>
+                                <li>&bull; Trazabilidad forense automatizada.</li>
+                                <li>&bull; Alertas predictivas de margen neto.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="py-24 bg-[#F4F1EA] border-t border-[#1C1C1C]/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                    
+                    <div class="lg:col-span-5 flex flex-col justify-center">
+                        <span class="text-[#5A6352] text-xs font-bold tracking-[0.2em] uppercase mb-4 block">Control de Calidad</span>
+                        <h2 class="text-4xl font-serif text-[#1C1C1C] leading-tight mb-6">
+                            El estándar que garantiza la integridad de cada proyecto.
+                        </h2>
+                        <p class="text-sm text-gray-700 font-sans leading-relaxed mb-6">
+                            ALCOA+ es el protocolo de integridad de datos desarrollado originalmente por la FDA para garantizar la validez de la información en ensayos clínicos. Lo adoptamos como nuestro estándar de referencia para cualquier proyecto que involucre arquitectura o auditoría de datos.
+                        </p>
+                        <p class="text-sm text-gray-700 font-sans leading-relaxed font-semibold border-l-2 border-[#1C1C1C] pl-4">
+                            La razón es directa: una decisión de negocio es tan buena como la información en que se basa. Si el dato no es íntegro, la inteligencia que construimos sobre él tampoco lo es.
+                        </p>
+                    </div>
+
+                    <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        
+                        <div class="bg-white p-6 shadow-sm border border-[#1C1C1C]/5 hover:border-[#5A6352] transition-colors">
+                            <span class="text-2xl font-serif font-bold text-[#5A6352] mb-2 block">A</span>
+                            <h4 class="text-sm font-bold font-sans uppercase tracking-widest text-[#1C1C1C] mb-2">Attributable</h4>
+                            <p class="text-xs font-sans text-gray-600">Rastreamos el origen exacto del dato. Quién lo generó, en qué sistema y bajo qué transacción comercial.</p>
+                        </div>
+
+                        <div class="bg-white p-6 shadow-sm border border-[#1C1C1C]/5 hover:border-[#5A6352] transition-colors">
+                            <span class="text-2xl font-serif font-bold text-[#5A6352] mb-2 block">L</span>
+                            <h4 class="text-sm font-bold font-sans uppercase tracking-widest text-[#1C1C1C] mb-2">Legible</h4>
+                            <p class="text-xs font-sans text-gray-600">Información estructurada, libre de errores de captura, homologada y disponible para lectura a largo plazo.</p>
+                        </div>
+
+                        <div class="bg-white p-6 shadow-sm border border-[#1C1C1C]/5 hover:border-[#5A6352] transition-colors">
+                            <span class="text-2xl font-serif font-bold text-[#5A6352] mb-2 block">C</span>
+                            <h4 class="text-sm font-bold font-sans uppercase tracking-widest text-[#1C1C1C] mb-2">Contemporaneous</h4>
+                            <p class="text-xs font-sans text-gray-600">Los datos deben registrarse y actualizarse en el momento de la ejecución, garantizando latencia cero.</p>
+                        </div>
+
+                        <div class="bg-white p-6 shadow-sm border border-[#1C1C1C]/5 hover:border-[#5A6352] transition-colors">
+                            <span class="text-2xl font-serif font-bold text-[#5A6352] mb-2 block">O</span>
+                            <h4 class="text-sm font-bold font-sans uppercase tracking-widest text-[#1C1C1C] mb-2">Original</h4>
+                            <p class="text-xs font-sans text-gray-600">Conexión directa con la base de datos primaria (ERP), eliminando las copias frágiles en Excel.</p>
+                        </div>
+
+                        <div class="bg-white p-6 shadow-sm border border-[#1C1C1C]/5 hover:border-[#5A6352] transition-colors sm:col-span-2">
+                            <span class="text-2xl font-serif font-bold text-[#5A6352] mb-2 block">A+</span>
+                            <h4 class="text-sm font-bold font-sans uppercase tracking-widest text-[#1C1C1C] mb-2">Accurate &amp; Complete</h4>
+                            <p class="text-xs font-sans text-gray-600">Matemáticamente correctos. Sin omisiones, sin estimaciones vacías y respaldados por evidencia estadística rigurosa.</p>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 bg-[#1C1C1C] text-white text-center">
+            <div class="max-w-3xl mx-auto px-4">
+                <span class="text-[#5A6352] text-xs font-bold tracking-[0.2em] uppercase mb-4 block">Ejecución</span>
+                <h2 class="text-3xl md:text-4xl font-serif leading-tight mb-8">Someter su operación a escrutinio.</h2>
+                <button onclick="window.openDiagnostico && window.openDiagnostico()" class="inline-flex items-center bg-[#F4F1EA] text-[#1C1C1C] font-sans text-xs font-bold tracking-widest uppercase py-4 px-8 hover:bg-[#5A6352] hover:text-white transition-colors duration-300">
+                    Hablar con la firma
+                    <svg class="w-4 h-4 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="square" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    
+
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <img src="assets/logoEvangelistaCo.png" alt="Evangelista &amp; Co." class="footer-logo" />
+                <span class="brand-name">Evangelista &amp; Co.</span>
+                <p class="footer-tagline !text-white/70">
+                    Evangelista & Co. es una firma de consultoría e inteligencia de negocio organizada por áreas de práctica. Ayudamos a empresas privadas mexicanas a alcanzar sus objetivos más rápido mediante criterio consultivo e inteligencia diseñada para su operación específica.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h4>Áreas de Práctica</h4>
+                <a href="sectores.html">Supply Chain & Operations</a>
+                <a href="sectores.html">Industrial & Manufacturing</a>
+                <a href="sectores.html">Growth & Commercial Analytics</a>
+                <a href="sectores.html">Risk & Financial Integrity</a>
+            </div>
+            <div class="footer-col">
+                <h4>Compañía</h4>
+                <a href="por-que-nosotros.html">La Firma</a>
+                <a href="metodologia.html">Metodología</a>
+                <a href="sectores.html">Áreas de Práctica</a>
+                <a href="Perspectivas/Perspectivas.html">Perspectivas</a>
+                <a href="https://plataforma.evangelistaco.com/" target="_blank" rel="noopener">Acceso</a>
+                <a href="index.html#contacto">Contacto</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Evangelista &amp; Co. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</footer>
+
+
+
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/diagnostico.js"></script>
+</body>
+</html>

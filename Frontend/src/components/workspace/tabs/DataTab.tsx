@@ -67,7 +67,7 @@ export default function DataTab({ project }: DataTabProps) {
             entity_type: 'data_sources',
             entity_id: data.id,
             description: `Fuente de datos "${data.name}" registrada`,
-            performed_by_name: user?.email?.split('@')[0] || 'Consultor',
+            performed_by_name: user?.username?.split('@')[0] || 'Consultor',
           });
         }
       }
@@ -102,7 +102,7 @@ export default function DataTab({ project }: DataTabProps) {
         entity_type: 'data_sources',
         entity_id: source.id,
         description: `Prueba de conexión "${source.name}": ${res.success ? 'Exitosa' : 'Fallida'}`,
-        performed_by_name: user?.email?.split('@')[0] || 'Consultor',
+        performed_by_name: user?.username?.split('@')[0] || 'Consultor',
         metadata: { result: res.message }
       });
 
@@ -133,7 +133,7 @@ export default function DataTab({ project }: DataTabProps) {
         entity_type: 'data_sources',
         entity_id: source.id,
         description: `Fuente de datos "${source.name}" eliminada`,
-        performed_by_name: user?.email?.split('@')[0] || 'Consultor',
+        performed_by_name: user?.username?.split('@')[0] || 'Consultor',
       });
 
       await loadSources();

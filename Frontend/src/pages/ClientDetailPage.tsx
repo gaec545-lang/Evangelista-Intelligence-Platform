@@ -13,15 +13,19 @@ import Badge from '../components/ui/Badge'
 import { Input } from '../components/ui/Input'
 import { AnalysisPanel } from '../components/AnalysisPanel'
 import { Spinner } from '../components/ui/Spinner'
+import { AuditBitacora } from '../components/client/AuditBitacora'
+import { Boveda } from '../components/client/Boveda'
 import type { Client } from '../lib/types'
 
-type ClientTab = 'resumen' | 'contactos' | 'proyectos' | 'cuenta'
+type ClientTab = 'resumen' | 'contactos' | 'proyectos' | 'cuenta' | 'bitacora' | 'boveda'
 
 const TABS: { key: ClientTab; label: string; icon: React.ComponentType<any> }[] = [
   { key: 'resumen',    label: 'Resumen',    icon: Activity },
   { key: 'contactos',  label: 'Contactos',  icon: UserCircle2 },
   { key: 'proyectos',  label: 'Proyectos',  icon: Layers },
   { key: 'cuenta',     label: 'Cuenta',     icon: History },
+  { key: 'bitacora',   label: 'Audit / Bitácora', icon: ShieldAlert },
+  { key: 'boveda',     label: 'Bóveda',     icon: AlertCircle },
 ]
 
 export function ClientDetailPage() {
@@ -313,6 +317,20 @@ export function ClientDetailPage() {
                   ))}
                 </div>
              </div>
+          </div>
+        )}
+
+        {/* ── BITÁCORA ── */}
+        {activeTab === 'bitacora' && (
+          <div className="animate-fade-in">
+            <AuditBitacora clientId={client.id} />
+          </div>
+        )}
+
+        {/* ── BÓVEDA ── */}
+        {activeTab === 'boveda' && (
+          <div className="animate-fade-in">
+            <Boveda clientId={client.id} />
           </div>
         )}
 

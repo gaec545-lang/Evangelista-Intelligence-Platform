@@ -78,7 +78,7 @@ export default function VettingGatePanel({ project, findings, onComplete }: Vett
         action_type: 'vetting_gate_evaluated',
         entity_type: 'projects',
         description: `Evaluación Vetting Gate completada: ${result} (Score: ${score}/100)`,
-        performed_by_name: user?.email?.split('@')[0] || 'Consultor',
+        performed_by_name: user?.username?.split('@')[0] || 'Consultor',
         metadata: { score, result, criteria, justification }
       });
 
@@ -182,7 +182,7 @@ export default function VettingGatePanel({ project, findings, onComplete }: Vett
                       <div className="flex gap-4">
                         <div className="flex-1 p-3 rounded-lg bg-white/5 border border-white/5 text-center">
                            <p className="text-[9px] uppercase text-white/20 mb-1">Firma CEO</p>
-                           <p className="text-xs text-green-400 font-bold uppercase tracking-widest">✓ {user?.email?.split('@')[0] || 'Adriel E.'}</p>
+                           <p className="text-xs text-green-400 font-bold uppercase tracking-widest">✓ {user?.username?.split('@')[0] || 'Adriel E.'}</p>
                         </div>
                         <div className="flex-1 p-3 rounded-lg bg-white/5 border border-white/5 text-center">
                            <p className="text-[9px] uppercase text-white/20 mb-1">Firma CTO</p>

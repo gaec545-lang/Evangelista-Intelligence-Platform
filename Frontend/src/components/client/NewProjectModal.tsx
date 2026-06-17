@@ -63,7 +63,7 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ open, onClose,
         complexity_beta: 0,
         gamma_sources: 1.0,
         travel_expenses: 0,
-        created_by: user?.id,
+        created_by: user?.localAccountId,
       });
       
       if (!project) {
@@ -80,7 +80,7 @@ export const NewProjectModal: React.FC<NewProjectModalProps> = ({ open, onClose,
           entity_type: 'projects',
           entity_id: project.id,
           description: `Proyecto "${project.name}" creado`,
-          performed_by_name: user?.email?.split('@')[0] || 'Consultor',
+          performed_by_name: user?.username?.split('@')[0] || 'Consultor',
         });
       } catch (logErr) {
         console.warn('⚠️ No se pudo registrar el log de actividad, pero el proyecto fue creado.', logErr);
