@@ -1,17 +1,18 @@
-name: Deploy Backend to Azure App Service
+name: Deploy Backend to Azure Container Apps
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
     paths:
       - 'Backend/**'
       - '.github/workflows/deploy-backend.yml'
-
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: app-evangelista-backend-19863
-  PYTHON_VERSION: '3.11'
+  ACR_LOGIN_SERVER: acrevangelista7990.azurecr.io
+  CONTAINER_APP_NAME: app-evangelista-backend
+  RESOURCE_GROUP: rg-evangelista-platform
 
 jobs:
   build-and-deploy:
@@ -24,27 +25,33 @@ jobs:
           submodules: recursive
           token: ${{ secrets.GH_PAT }}
 
-      - name: Copy Vault into Backend Build Directory
-        run: cp -r Evangelista-Obsidian/evangelista-vault Backend/vault
-
-      - name: Set up Python version
-        uses: actions/setup-python@v5
+      - name: Log in to Azure
+        uses: azure/login@v2
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Install dependencies
+      - name: Log in to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build and push backend image
         working-directory: Backend
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          docker build -t ${{ env.ACR_LOGIN_SERVER }}/${{ env.CONTAINER_APP_NAME }}:${{ github.sha }} -t ${{ env.ACR_LOGIN_SERVER }}/${{ env.CONTAINER_APP_NAME }}:latest .
+          docker push ${{ env.ACR_LOGIN_SERVER }}/${{ env.CONTAINER_APP_NAME }}:${{ github.sha }}
+          docker push ${{ env.ACR_LOGIN_SERVER }}/${{ env.CONTAINER_APP_NAME }}:latest
 
-      - name: Zip artifact for deployment
-        working-directory: Backend
-        run: zip -r ../release.zip ./* -x ".git/*" -x ".venv/*" -x "__pycache__/*"
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
+      - name: Deploy to Azure Container App
+        uses: azure/container-apps-deploy-action@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./release.zip
+          containerAppName: ${{ env.CONTAINER_APP_NAME }}
+          resourceGroup: ${{ env.RESOURCE_GROUP }}
+          imageToDeploy: ${{ env.ACR_LOGIN_SERVER }}/${{ env.CONTAINER_APP_NAME }}:${{ github.sha }}
+          containerAppEnvironment: cae-evangelista
+          ingress: external
+          targetPort: 8000
+          arguments: |
+            --env-vars LLM_PROVIDER=openai_generic LLM_MODEL=gemma-local LOCAL_LLM_URL=http://app-evangelista-llm.internal.jollyflower-774ba306.eastus2.azurecontainerapps.io/v1 DATABASE_URL="postgresql://evangelista_admin:Evangelista.Pass7990*@pg-evangelista-7990.postgres.database.azure.com:5432/db_evangelista?sslmode=require" ASYNC_DATABASE_URL="postgresql+asyncpg://evangelista_admin:Evangelista.Pass7990*@pg-evangelista-7990.postgres.database.azure.com:5432/db_evangelista?sslmode=require" QDRANT_MODE=server QDRANT_HOST=app-evangelista-qdrant.internal.jollyflower-774ba306.eastus2.azurecontainerapps.io QDRANT_PORT=80
