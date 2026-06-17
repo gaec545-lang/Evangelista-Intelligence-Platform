@@ -7,24 +7,18 @@ import loginImage from '../assets/image-login.jpg';
 
 export function LoginPage() {
   const { user, signIn } = useAuthStore();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [lockedUntil, setLockedUntil] = useState<number | null>(null);
   const navigate = useNavigate();
 
   if (user) return <Navigate to="/dashboard" replace />;
 
-  const isLocked = lockedUntil != null && Date.now() < lockedUntil;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isLocked) return;
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setError('');
     setLoading(true);
     try {
-      await signIn(email, password);
+      await signIn();
     } catch (err) {
       setError('Credenciales inválidas o error de conexión.');
     } finally {
@@ -73,58 +67,16 @@ export function LoginPage() {
             </p>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block font-ui text-[12px] font-medium text-white mb-1.5 ml-1">
-                Email Corporativo
-              </label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 input-glass text-sm text-white placeholder:text-[var(--eva-txt-muted)] focus:outline-none focus:border-[var(--eva-olive)] font-ui transition-all duration-200"
-                placeholder="usuario@evangelista.co"
-              />
-            </div>
-
-            <div>
-              <label className="block font-ui text-[12px] font-medium text-white mb-1.5 ml-1">
-                Contraseña
-              </label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3.5 py-2.5 input-glass text-sm text-white placeholder:text-[var(--eva-txt-muted)] focus:outline-none focus:border-[var(--eva-olive)] font-ui transition-all duration-200"
-                placeholder="••••••••"
-              />
-            </div>
-
-            <div className="flex items-center justify-between pb-2">
-              <label className="flex items-center gap-2 cursor-pointer group">
-                <input type="checkbox" className="hidden" />
-                <div className="w-3.5 h-3.5 rounded-sm border border-[var(--eva-border-2)] flex items-center justify-center group-hover:border-[var(--eva-gold)] transition-colors">
-                  <div className="w-1.5 h-1.5 bg-[var(--eva-gold)] rounded-sm opacity-0 group-active:opacity-100" />
-                </div>
-                <span className="font-ui text-[12px] text-[var(--eva-txt-primary)]">Mantener sesión</span>
-              </label>
-              <button type="button" className="font-ui text-[12px] text-[var(--eva-gold)] font-semibold hover:underline">
-                ¿Olvidaste tu contraseña?
-              </button>
-            </div>
-
+          <div className="space-y-4">
             <button
-              type="submit"
-              disabled={loading || isLocked}
+              onClick={handleSubmit}
+              disabled={loading}
               className="group relative w-full py-3 px-4 bg-[var(--eva-gold)] hover:bg-[var(--eva-gold-2)] text-[#141410] rounded-lg text-[13px] font-bold tracking-wide transition-all duration-200 font-ui flex items-center justify-center shadow-lg shadow-[var(--eva-gold)]/20"
             >
-              {loading ? 'Validando…' : 'Ingresar'}
+              {loading ? 'Validando…' : 'Iniciar Sesión con Microsoft'}
               <ArrowRight size={16} className="absolute right-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
             </button>
-          </form>
+          </div>
 
           {/* Error Message */}
           {error && (

@@ -97,7 +97,7 @@ export function NewHypothesisModal({ open, onClose, projectId, projectArea, onSa
           action_type: 'hypothesis_created',
           entity_type: 'hypotheses',
           description: `Nueva hipótesis registrada: "${form.statement.slice(0, 40)}..."`,
-          performed_by_name: user?.email?.split('@')[0] || 'Consultor'
+          performed_by_name: user?.username?.split('@')[0] || 'Consultor'
         });
       }
 

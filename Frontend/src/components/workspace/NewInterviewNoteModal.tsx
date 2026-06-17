@@ -52,7 +52,7 @@ export function NewInterviewNoteModal({ open, onClose, projectId, onSave }: NewI
         action_type: 'interview_note_created',
         entity_type: 'interview_notes',
         description: `Nota de entrevista "${form.session_title}" registrada (Protocolo ALCOA+)`,
-        performed_by_name: user?.email?.split('@')[0] || 'Consultor'
+        performed_by_name: user?.username?.split('@')[0] || 'Consultor'
       });
 
       onSave();

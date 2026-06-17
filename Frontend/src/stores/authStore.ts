@@ -1,114 +1,140 @@
 import { create } from 'zustand'
-import { supabase, teamDB } from '../lib/supabase'
-import type { User, Session } from '@supabase/supabase-js'
-import type { TeamMember } from '../lib/types'
+import { PublicClientApplication, InteractionRequiredAuthError, AccountInfo } from '@azure/msal-browser'
 
-const SUPABASE_CONFIGURED = Boolean(
-  import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY
-)
+// Define minimum roles
+export type AppRole = 'socio' | 'cqa' | 'consultor' | string
 
-/**
- * Permisos predeterminados por rol:
- * — ceo: todo
- * — cto: operations + architecture_rag + erp_connections
- * — cfo_cqa: operations (lectura + análisis, sin architecture_rag)
- * — consultant: operations (lectura + análisis, sin config)
- * — viewer: operations (solo lectura)
- */
-const ROLE_PERMISSIONS: Record<string, TeamMember['permissions']> = {
-  ceo:         { operations: true,  architecture_rag: true,  erp_connections: true,  team_management: true  },
-  cto:         { operations: true,  architecture_rag: true,  erp_connections: true,  team_management: false },
-  cfo_cqa:     { operations: true,  architecture_rag: false, erp_connections: false, team_management: false },
-  consultant:  { operations: true,  architecture_rag: false, erp_connections: false, team_management: false },
-  viewer:      { operations: true,  architecture_rag: false, erp_connections: false, team_management: false },
+// Standard MSAL configs expecting Entra ID details from env
+const msalConfig = {
+  auth: {
+    clientId: import.meta.env.VITE_ENTRA_CLIENT_ID || 'dummy-client-id',
+    authority: `https://login.microsoftonline.com/${import.meta.env.VITE_ENTRA_TENANT_ID || 'dummy-tenant-id'}`,
+    redirectUri: import.meta.env.VITE_ENTRA_REDIRECT_URI || window.location.origin,
+  },
+  cache: {
+    cacheLocation: 'sessionStorage',
+    storeAuthStateInCookie: false,
+  }
+}
+
+export const msalInstance = new PublicClientApplication(msalConfig)
+
+const loginRequest = {
+  // Scopes for accessing the backend API (ensure API is exposed in Entra ID)
+  scopes: ['User.Read', `api://${msalConfig.auth.clientId}/access_as_user`]
 }
 
 interface AuthState {
-  user: User | null
-  session: Session | null
-  teamMember: TeamMember | null
+  user: AccountInfo | null
+  token: string | null
+  roles: AppRole[]
   loading: boolean
   initialized: boolean
-  signIn: (email: string, password: string) => Promise<void>
+  signIn: () => Promise<void>
   signOut: () => Promise<void>
   initialize: () => Promise<void>
-  hasPermission: (permission: keyof TeamMember['permissions']) => boolean
-  isRole: (...roles: TeamMember['role'][]) => boolean
+  acquireToken: () => Promise<string | null>
+  hasRole: (role: AppRole) => boolean
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
-  session: null,
-  teamMember: null,
+  token: null,
+  roles: [],
   loading: true,
   initialized: false,
 
-  signIn: async (email: string, password: string) => {
-    if (!SUPABASE_CONFIGURED) throw new Error('Supabase no está configurado.')
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) throw error
-
-    // Cargar perfil de equipo
-    let member = await teamDB.getByUserId(data.user.id)
-
-    // Normalizar permisos según el rol si no existen en la BD
-    if (member) {
-      if (!member.permissions) {
-        member.permissions = ROLE_PERMISSIONS[member.role] || ROLE_PERMISSIONS.viewer
-        // Actualizar en DB para persistir
-        await teamDB.update(member.id, { permissions: member.permissions })
-      }
+  signIn: async () => {
+    try {
+      // Usamos loginPopup (o loginRedirect según preferencia del usuario final)
+      const result = await msalInstance.loginPopup(loginRequest)
+      const roles = ((result.idTokenClaims as any)?.roles as AppRole[]) || []
+      
+      set({ 
+        user: result.account, 
+        token: result.accessToken, 
+        roles, 
+        loading: false 
+      })
+    } catch (e) {
+      console.error("Login failed:", e)
+      throw e
     }
-
-    set({ user: data.user, session: data.session, teamMember: member as TeamMember | null, loading: false })
   },
 
   signOut: async () => {
-    if (SUPABASE_CONFIGURED) await supabase.auth.signOut()
-    set({ user: null, session: null, teamMember: null })
+    try {
+      const account = get().user
+      if (account) {
+        await msalInstance.logoutPopup({ account })
+      }
+      set({ user: null, token: null, roles: [] })
+    } catch (e) {
+      console.error("Logout failed:", e)
+    }
   },
 
   initialize: async () => {
-    if (!SUPABASE_CONFIGURED) {
-      set({ user: null, session: null, loading: false, initialized: true })
-      return
-    }
-    const { data: { session } } = await supabase.auth.getSession()
-    if (session?.user) {
-      let member = await teamDB.getByUserId(session.user.id)
-
-      // Normalizar permisos según el rol si no existen en la BD
-      if (member && !member.permissions) {
-        member.permissions = ROLE_PERMISSIONS[member.role] || ROLE_PERMISSIONS.viewer
-        await teamDB.update(member.id, { permissions: member.permissions })
+    await msalInstance.initialize()
+    
+    // Check if there are any accounts logged in
+    const currentAccounts = msalInstance.getAllAccounts()
+    if (currentAccounts.length > 0) {
+      const account = currentAccounts[0]
+      msalInstance.setActiveAccount(account)
+      
+      try {
+        const result = await msalInstance.acquireTokenSilent({
+          ...loginRequest,
+          account
+        })
+        const roles = ((result.idTokenClaims as any)?.roles as AppRole[]) || ((result.account?.idTokenClaims as any)?.roles as AppRole[]) || []
+        
+        set({ 
+          user: result.account, 
+          token: result.accessToken, 
+          roles, 
+          initialized: true, 
+          loading: false 
+        })
+      } catch (e) {
+        if (e instanceof InteractionRequiredAuthError) {
+           console.warn("Interaction required for silent token acquisition")
+        }
+        set({ initialized: true, loading: false })
       }
-
-      set({ user: session.user, session, teamMember: member as any, initialized: true, loading: false })
     } else {
       set({ initialized: true, loading: false })
     }
+  },
 
-    supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user) {
-        const member = await teamDB.getByUserId(session.user.id)
-        set({ user: session.user, session, teamMember: member as any })
-      } else {
-        set({ user: null, session: null, teamMember: null })
+  acquireToken: async () => {
+    const account = get().user || msalInstance.getActiveAccount()
+    if (!account) return null
+
+    try {
+      const response = await msalInstance.acquireTokenSilent({
+        ...loginRequest,
+        account
+      })
+      set({ token: response.accessToken })
+      return response.accessToken
+    } catch (e) {
+      if (e instanceof InteractionRequiredAuthError) {
+        try {
+            const response = await msalInstance.acquireTokenPopup(loginRequest)
+            set({ token: response.accessToken })
+            return response.accessToken
+        } catch (popupErr) {
+            console.error("Popup token acquisition failed:", popupErr)
+            return null
+        }
       }
-    })
+      return null
+    }
   },
 
-  hasPermission: (permission: keyof TeamMember['permissions']) => {
-    const member = get().teamMember
-    if (!member) return false
-    // CEO siempre ve todo
-    if (member.role === 'ceo') return true
-    return member.permissions?.[permission] ?? false
-  },
-
-  isRole: (...roles: TeamMember['role'][]) => {
-    const member = get().teamMember
-    if (!member) return false
-    return roles.includes(member.role)
+  hasRole: (role: AppRole) => {
+    return get().roles.includes(role)
   }
 }))

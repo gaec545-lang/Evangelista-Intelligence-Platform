@@ -110,7 +110,7 @@ export function NewFindingModal({ open, onClose, projectId, onSave, initialData,
           action_type: 'finding_created',
           entity_type: 'findings',
           description: `Hallazgo ${folio} registrado: "${form.title}"`,
-          performed_by_name: user?.email?.split('@')[0] || 'Consultor'
+          performed_by_name: user?.username?.split('@')[0] || 'Consultor'
         });
       }
 

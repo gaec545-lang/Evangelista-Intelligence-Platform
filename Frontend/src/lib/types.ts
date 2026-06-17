@@ -580,3 +580,46 @@ export interface TimeEntry {
   // Joined
   team_members?: { full_name: string };
 }
+
+export interface AuditLog {
+  id: string;
+  action: string;
+  entity: string;
+  entity_id: string;
+  user_id: string;
+  details: any;
+  hash: string;
+  created_at: string;
+}
+
+export interface Documento {
+  id: string;
+  client_id: string;
+  project_id?: string;
+  name: string;
+  path: string;
+  created_at: string;
+}
+
+export interface Credencial {
+  id: string;
+  client_id: string;
+  service_name: string;
+  created_at: string;
+}
+
+export interface Snapshot {
+  id: string;
+  client_id: string;
+  name: string;
+  data: any;
+  created_at: string;
+}
+
+export interface CoiCalculo {
+  id: string;
+  client_id: string;
+  parameters: any;
+  results: any;
+  created_at: string;
+}

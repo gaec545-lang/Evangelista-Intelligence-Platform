@@ -1,6 +1,8 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 const REQUEST_TIMEOUT_MS = 90_000 // 90s — necesario para reintentos de IA en saturación
 
+import { useAuthStore } from '../stores/authStore'
+
 export interface AnalyzeRequest {
   task: string
   context?: Record<string, unknown>
@@ -21,8 +23,7 @@ async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T> {
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS)
 
   try {
-    const session = JSON.parse(localStorage.getItem('auth-storage') || '{}')?.state?.session;
-    const token = session?.access_token;
+    const token = useAuthStore.getState().token;
 
     const res = await fetch(`${API_BASE}${path}`, {
       headers: { 
@@ -96,9 +97,13 @@ export const api = {
     })
   },
   async downloadDocument(template: string, data: Record<string, any>): Promise<void> {
+    const token = useAuthStore.getState().token;
     const response = await fetch(`${API_BASE}/api/v1/documents/generate`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
       body: JSON.stringify({ template, data }),
     });
     

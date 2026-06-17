@@ -17,7 +17,7 @@ import {
   Database
 } from 'lucide-react';
 import { Project, Hypothesis, Finding, InterviewNote } from '../../../lib/types';
-import { hypothesesDB, findingsDB, interviewNotesDB, supabase } from '../../../lib/supabase';
+import { hypothesesDB, findingsDB, interviewNotesDB, clientsDB } from '../../../lib/supabase';
 import { buildSystemPrompt, buildWelcomeMessage } from '../../../lib/buildProjectContext';
 import { api } from '../../../lib/api';
 import { useAuthStore } from '../../../stores/authStore';
@@ -82,11 +82,7 @@ export default function AITab({ project }: AITabProps) {
         interviewNotesDB.getByProject(project.id),
       ]);
 
-      const { data: client } = await supabase
-        .from('clients')
-        .select('company_name, sector')
-        .eq('id', project.client_id)
-        .single();
+      const client = await clientsDB.get(project.client_id);
 
       const ctx = {
         project,
