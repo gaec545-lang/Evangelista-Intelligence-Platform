@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+import { API_BASE } from './config'
 const REQUEST_TIMEOUT_MS = 90_000 // 90s — necesario para reintentos de IA en saturación
 
 import { useAuthStore } from '../stores/authStore'
