@@ -35,6 +35,8 @@ function decodeJwt(token: string) {
   }
 }
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: localStorage.getItem('access_token') || null,
@@ -44,7 +46,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   signIn: async (email, password) => {
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
