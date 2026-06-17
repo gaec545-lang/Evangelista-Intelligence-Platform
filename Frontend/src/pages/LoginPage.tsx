@@ -1,26 +1,32 @@
 import React, { useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
-import { Hexagon, ArrowRight } from 'lucide-react';
+import { ArrowRight, Mail, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
 import loginImage from '../assets/image-login.jpg';
 
 export function LoginPage() {
   const { user, signIn } = useAuthStore();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   if (user) return <Navigate to="/dashboard" replace />;
 
-  const handleSubmit = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      setError('Por favor, ingresa correo y contraseña.');
+      return;
+    }
     setError('');
     setLoading(true);
     try {
-      await signIn();
-    } catch (err) {
-      setError('Credenciales inválidas o error de conexión.');
+      await signIn(email, password);
+    } catch (err: any) {
+      setError(err.message || 'Credenciales inválidas o error de conexión.');
     } finally {
       setLoading(false);
     }
@@ -67,20 +73,50 @@ export function LoginPage() {
             </p>
           </div>
 
-          <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-1">
+              <label className="text-[11px] font-medium text-[var(--eva-txt-muted)] uppercase tracking-wider ml-1">Correo Electrónico</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--eva-txt-muted)]" size={16} />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-[var(--eva-black)] border border-[var(--eva-border)] rounded-xl py-2.5 pl-10 pr-4 text-[13px] text-[var(--eva-txt-primary)] focus:outline-none focus:border-[var(--eva-gold)] transition-colors"
+                  placeholder="usuario@evangelista.com"
+                  autoComplete="email"
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-1">
+              <label className="text-[11px] font-medium text-[var(--eva-txt-muted)] uppercase tracking-wider ml-1">Contraseña</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--eva-txt-muted)]" size={16} />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-[var(--eva-black)] border border-[var(--eva-border)] rounded-xl py-2.5 pl-10 pr-4 text-[13px] text-[var(--eva-txt-primary)] focus:outline-none focus:border-[var(--eva-gold)] transition-colors"
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                />
+              </div>
+            </div>
+
             <button
-              onClick={handleSubmit}
+              type="submit"
               disabled={loading}
-              className="group relative w-full py-3 px-4 bg-[var(--eva-gold)] hover:bg-[var(--eva-gold-2)] text-[#141410] rounded-lg text-[13px] font-bold tracking-wide transition-all duration-200 font-ui flex items-center justify-center shadow-lg shadow-[var(--eva-gold)]/20"
+              className="group relative w-full py-3 px-4 mt-2 bg-[var(--eva-gold)] hover:bg-[var(--eva-gold-2)] text-[#141410] rounded-xl text-[13px] font-bold tracking-wide transition-all duration-200 font-ui flex items-center justify-center shadow-lg shadow-[var(--eva-gold)]/20"
             >
-              {loading ? 'Validando…' : 'Iniciar Sesión con Microsoft'}
+              {loading ? 'Validando…' : 'Iniciar Sesión'}
               <ArrowRight size={16} className="absolute right-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
             </button>
-          </div>
+          </form>
 
           {/* Error Message */}
           {error && (
-            <div className="mt-4 p-3 bg-[var(--eva-critical)]/10 border border-[var(--eva-critical)]/20 rounded-lg">
+            <div className="mt-4 p-3 bg-[var(--eva-critical)]/10 border border-[var(--eva-critical)]/20 rounded-xl">
               <p className="text-[12px] text-[var(--eva-critical)] font-medium text-center">{error}</p>
             </div>
           )}

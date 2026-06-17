@@ -1,58 +1,86 @@
 import { create } from 'zustand'
-import { PublicClientApplication, InteractionRequiredAuthError, AccountInfo } from '@azure/msal-browser'
 
-// Define minimum roles
 export type AppRole = 'socio' | 'cqa' | 'consultor' | string
 
-// Standard MSAL configs expecting Entra ID details from env
-const msalConfig = {
-  auth: {
-    clientId: import.meta.env.VITE_ENTRA_CLIENT_ID || 'dummy-client-id',
-    authority: `https://login.microsoftonline.com/${import.meta.env.VITE_ENTRA_TENANT_ID || 'dummy-tenant-id'}`,
-    redirectUri: import.meta.env.VITE_ENTRA_REDIRECT_URI || window.location.origin,
-  },
-  cache: {
-    cacheLocation: 'sessionStorage',
-    storeAuthStateInCookie: false,
-  }
-}
-
-export const msalInstance = new PublicClientApplication(msalConfig)
-
-const loginRequest = {
-  // Scopes for accessing the backend API (ensure API is exposed in Entra ID)
-  scopes: ['User.Read', `api://${msalConfig.auth.clientId}/access_as_user`]
+export interface User {
+  id?: string;
+  email: string;
+  name?: string;
+  roles: AppRole[];
+  [key: string]: any;
 }
 
 interface AuthState {
-  user: AccountInfo | null
+  user: User | null
   token: string | null
   roles: AppRole[]
   loading: boolean
   initialized: boolean
-  signIn: () => Promise<void>
+  signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
   initialize: () => Promise<void>
-  acquireToken: () => Promise<string | null>
   hasRole: (role: AppRole) => boolean
+}
+
+function decodeJwt(token: string) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    return null;
+  }
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
-  token: null,
+  token: localStorage.getItem('access_token') || null,
   roles: [],
   loading: true,
   initialized: false,
 
-  signIn: async () => {
+  signIn: async (email, password) => {
     try {
-      // Usamos loginPopup (o loginRedirect según preferencia del usuario final)
-      const result = await msalInstance.loginPopup(loginRequest)
-      const roles = ((result.idTokenClaims as any)?.roles as AppRole[]) || []
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      if (!res.ok) {
+        throw new Error('Credenciales inválidas o error de conexión.');
+      }
+      const data = await res.json();
+      
+      const token = data.access_token || data.token;
+      let user = data.user;
+      let roles: AppRole[] = [];
+      
+      if (!user && token) {
+         const payload = decodeJwt(token);
+         if (payload) {
+           user = {
+             email: payload.email || payload.sub || email,
+             name: payload.name,
+             roles: payload.roles || []
+           };
+           roles = user.roles;
+         } else {
+           user = { email, roles: [] };
+         }
+      } else if (user) {
+         roles = user.roles || [];
+      }
+      
+      if (token) {
+        localStorage.setItem('access_token', token);
+      }
       
       set({ 
-        user: result.account, 
-        token: result.accessToken, 
+        user, 
+        token, 
         roles, 
         loading: false 
       })
@@ -63,74 +91,27 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   signOut: async () => {
-    try {
-      const account = get().user
-      if (account) {
-        await msalInstance.logoutPopup({ account })
-      }
-      set({ user: null, token: null, roles: [] })
-    } catch (e) {
-      console.error("Logout failed:", e)
-    }
+    localStorage.removeItem('access_token');
+    set({ user: null, token: null, roles: [] })
   },
 
   initialize: async () => {
-    await msalInstance.initialize()
-    
-    // Check if there are any accounts logged in
-    const currentAccounts = msalInstance.getAllAccounts()
-    if (currentAccounts.length > 0) {
-      const account = currentAccounts[0]
-      msalInstance.setActiveAccount(account)
-      
-      try {
-        const result = await msalInstance.acquireTokenSilent({
-          ...loginRequest,
-          account
-        })
-        const roles = ((result.idTokenClaims as any)?.roles as AppRole[]) || ((result.account?.idTokenClaims as any)?.roles as AppRole[]) || []
-        
-        set({ 
-          user: result.account, 
-          token: result.accessToken, 
-          roles, 
-          initialized: true, 
-          loading: false 
-        })
-      } catch (e) {
-        if (e instanceof InteractionRequiredAuthError) {
-           console.warn("Interaction required for silent token acquisition")
-        }
-        set({ initialized: true, loading: false })
-      }
+    const token = localStorage.getItem('access_token');
+    if (token) {
+         const payload = decodeJwt(token);
+         if (payload) {
+           const user = {
+             email: payload.email || payload.sub,
+             name: payload.name,
+             roles: payload.roles || []
+           };
+           set({ user, token, roles: user.roles, initialized: true, loading: false })
+         } else {
+           localStorage.removeItem('access_token');
+           set({ initialized: true, loading: false, token: null })
+         }
     } else {
-      set({ initialized: true, loading: false })
-    }
-  },
-
-  acquireToken: async () => {
-    const account = get().user || msalInstance.getActiveAccount()
-    if (!account) return null
-
-    try {
-      const response = await msalInstance.acquireTokenSilent({
-        ...loginRequest,
-        account
-      })
-      set({ token: response.accessToken })
-      return response.accessToken
-    } catch (e) {
-      if (e instanceof InteractionRequiredAuthError) {
-        try {
-            const response = await msalInstance.acquireTokenPopup(loginRequest)
-            set({ token: response.accessToken })
-            return response.accessToken
-        } catch (popupErr) {
-            console.error("Popup token acquisition failed:", popupErr)
-            return null
-        }
-      }
-      return null
+        set({ initialized: true, loading: false })
     }
   },
 
