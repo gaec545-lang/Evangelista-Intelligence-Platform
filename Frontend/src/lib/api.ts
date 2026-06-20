@@ -1,5 +1,5 @@
 import { API_BASE } from './config'
-const REQUEST_TIMEOUT_MS = 90_000 // 90s — necesario para reintentos de IA en saturación
+const REQUEST_TIMEOUT_MS = 240_000 // 240s — necesario para reintentos de IA en saturación y tiempos de inferencia en CPU
 
 import { useAuthStore } from '../stores/authStore'
 

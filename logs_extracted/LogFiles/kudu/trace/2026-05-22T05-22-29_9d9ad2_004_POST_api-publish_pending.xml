@@ -1,0 +1,17 @@
+<step title="Incoming Request" date="2026-05-22T05:22:29.697" instance="9d9ad2" url="/api/publish?async=true&amp;deployer=GITHUB_ONE_DEPLOY&amp;type=zip&amp;message=%7B%22type%22%3A%22deployment%22%2C%22sha%22%3A%22d4e11d985d65e2ff89c6b9222c99d909b84e35d5%22%2C%22repoName%22%3A%22gaec545-lang%2Fevangelista-rag-private%22%2C%22actor%22%3A%22gaec545-lang%22%2C%22slotName%22%3A%22production%22%2C%22commitMessage%22%3A%22Refactor%20documents%20engine%20to%20use%20Azure%20SQL%20database%2C%20remove%20Supabase%20client%20and%20cleanup%20dependencies%22%7D" method="POST" type="request" pid="833,1,15" Host="app-evangelista-backend-19863.scm.azurewebsites.net" User-Agent="GITHUBACTIONS_DeployWebAppToAzure_e6956ed605c1e0b49b6e00466eca1000d423eca5647a900f2f4b74f0cc5cce7f_v3.0.8" Authorization="Bas..." Content-Type="application/octet-stream" Cookie="ARRAffinity=9d9ad26f55314832f40453d107bc280606f9336225ee3827727ea25821b4efdd;Path=/;HttpOnly;Secure;Domain=app-evangelista-backend-19863.scm.azurewebsites.net; ARRAffinitySameSite=9d9ad26f55314832f40453d107bc280606f9336225ee3827727ea25821b4efdd;Path=/;HttpOnly;SameSite=None;Secure;Domain=app-evangelista-backend-19863.scm.azurewebsites.net" Transfer-Encoding="chunked" X-ARR-LOG-ID="152024af-e9af-4db6-93c1-dbfdf41fd212" CLIENT-IP="172.203.212.192:54272" X-SITE-DEPLOYMENT-ID="app-evangelista-backend-19863" WAS-DEFAULT-HOSTNAME="app-evangelista-backend-19863.scm.azurewebsites.net" X-Forwarded-Proto="https" X-AppService-Proto="https" X-Forwarded-TlsVersion="1.3" X-WAWS-Unencoded-URL="/api/publish?async=true&amp;deployer=GITHUB_ONE_DEPLOY&amp;type=zip&amp;message=%7B%22type%22%3A%22deployment%22%2C%22sha%22%3A%22d4e11d985d65e2ff89c6b9222c99d909b84e35d5%22%2C%22repoName%22%3A%22gaec545-lang%2Fevangelista-rag-private%22%2C%22actor%22%3A%22gaec545-lang%22%2C%22slotName%22%3A%22production%22%2C%22commitMessage%22%3A%22Refactor%20documents%20engine%20to%20use%20Azure%20SQL%20database%2C%20remove%20Supabase%20client%20and%20cleanup%20dependencies%22%7D" X-Client-IP="172.203.212.192" X-Client-Port="54272" >
+  <step title="OneDeploy" date="2026-05-22T05:22:30.512" >
+    <step title="None repository commit" date="2026-05-22T05:22:30.761" >
+      <step title="Commit id: 83be9b56-b106-4c23-8421-b573f1a8a32b" date="2026-05-22T05:22:30.774" Message="N/A" AuthorName="N/A" AuthorEmail="N/A" /><!-- duration: 38ms -->
+    </step><!-- duration: 61ms -->
+    <step title="Starting PushDeployAsync" date="2026-05-22T05:22:30.831" /><!-- duration: 9ms -->
+    <step title="Writing artifact to /tmp/zipdeploy/e1a0c4c2-d88b-4ef0-a258-15c05e737f9c.zip" date="2026-05-22T05:22:30.922" >
+      <step title="Writing multipart request body to /tmp/zipdeploy/e1a0c4c2-d88b-4ef0-a258-15c05e737f9c.zip" date="2026-05-22T05:22:30.969" /><!-- duration: 10ms -->
+    </step><!-- duration: 954ms -->
+    <step title="Removing previous build artifact&apos;s manifest file" date="2026-05-22T05:22:31.898" >
+      <step title="Start deployment in the background" date="2026-05-22T05:22:31.987" >
+        <step title="Acquiring Deployment Lock" date="2026-05-22T05:22:32.099" /><!-- duration: 21ms -->
+        <step title="Acquired Deployment Lock" date="2026-05-22T05:22:32.249" /><!-- duration: 3ms -->
+      </step><!-- duration: 386ms -->
+    </step><!-- duration: 485ms -->
+    <step title="Outgoing response" date="2026-05-22T05:22:32.400" type="response" statusCode="202" statusText="Accepted" /><!-- duration: 3ms -->
+  </step><!-- duration: 1893ms -->
