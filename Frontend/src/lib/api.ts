@@ -128,4 +128,25 @@ export const api = {
   async delete<T>(path: string): Promise<T> {
     return fetchAPI<T>(path, { method: 'DELETE' });
   },
+  async chat(data: {
+    message: string;
+    client_id: string;
+    agent_name: string;
+    project_phase?: string;
+    project_context?: any;
+    eva_mode?: 'global' | 'client' | 'project';
+    tab_context?: any;
+    client_context?: any;
+    project_context_full?: any;
+  }): Promise<{
+    message: string;
+    client_id?: string;
+    agent_used: string;
+    rag_status: string;
+    avg_relevance: number;
+    retriever_used: string;
+    hypothesis_used: boolean;
+  }> {
+    return fetchAPI('/api/v1/chat', { method: 'POST', body: JSON.stringify(data) });
+  },
 }

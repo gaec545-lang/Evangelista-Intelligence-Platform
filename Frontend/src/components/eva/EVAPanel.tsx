@@ -34,16 +34,20 @@ export const EVAPanel: React.FC<EVAPanelProps> = ({ inline = false, onClose }) =
     setLoading(true);
 
     try {
-      // Usamos el searchKnowledge para simular la IA. 
-      // O si hay una API de chat, la usamos.
-      const res = await api.searchKnowledge(userMsg, 'eva');
-      let responseText = "No encontré resultados específicos.";
-      if (res && res.results && res.results.length > 0) {
-        const firstResult = res.results[0] as any;
-        responseText = `Basado en mis datos: ${firstResult.content?.substring(0, 150)}...`;
-      }
+      const modeMap: Record<string, 'global' | 'client' | 'project'> = {
+        'Global': 'global',
+        'Cliente': 'client',
+        'Proyecto': 'project'
+      };
       
-      setMessages(prev => [...prev, { role: 'eva', content: responseText }]);
+      const res = await api.chat({
+        message: userMsg,
+        client_id: context.entityId || 'global',
+        agent_name: 'eva',
+        eva_mode: modeMap[context.mode] || 'global'
+      });
+      
+      setMessages(prev => [...prev, { role: 'eva', content: res.message }]);
     } catch (e) {
       setMessages(prev => [...prev, { role: 'eva', content: 'Hubo un error de conexión.' }]);
     } finally {

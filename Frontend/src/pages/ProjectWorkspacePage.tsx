@@ -5,8 +5,8 @@ import { Spinner } from '../components/ui/Spinner';
 import { ArrowLeft, Lock } from 'lucide-react';
 
 import { ScopingTab } from '../components/workspace/tabs/ScopingTab';
-import { PropuestaTab } from '../components/workspace/tabs/PropuestaTab';
-import { ContratoTab } from '../components/workspace/tabs/ContratoTab';
+import ProposalTab from '../components/workspace/tabs/ProposalTab';
+import ContractTab from '../components/workspace/tabs/ContractTab';
 import { DisenoTab } from '../components/workspace/tabs/DisenoTab';
 import { WorkstreamsTab } from '../components/workspace/tabs/WorkstreamsTab';
 import { DatosTab } from '../components/workspace/tabs/DatosTab';
@@ -64,8 +64,8 @@ export const ProjectWorkspacePage: React.FC = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case 0: return <ScopingTab />;
-      case 1: return <PropuestaTab />;
-      case 2: return <ContratoTab />;
+      case 1: return <ProposalTab project={project} />;
+      case 2: return <ContractTab project={project} />;
       case 3: return <DisenoTab />;
       case 4: return <WorkstreamsTab />;
       case 5: return <DatosTab />;
@@ -101,7 +101,7 @@ export const ProjectWorkspacePage: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-mono text-[var(--eva-txt-muted)] uppercase">Status:</span>
           <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
-            {project.status.replace('_', ' ')}
+            {project.status ? project.status.replace('_', ' ') : 'ACTIVO'}
           </span>
         </div>
       </div>
