@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Send, Bot, User, Globe, Briefcase, Building2, Terminal } from 'lucide-react';
+import { X, Send, Bot, User, Globe, Briefcase, Building2, Terminal, CheckCircle2, CircleDashed, Loader2 } from 'lucide-react';
 import { buildEVAContext } from '../../lib/buildEVAContext';
-import { api } from '../../lib/api';
+
+// ponytail: mock lazi para el swarm en lugar de fetch manual. Agrega fetch real cuando SSE backend esté listo.
+const mockAnalyzeAPI = async (message: string) => {
+  return new Promise<string>(resolve => setTimeout(() => resolve("Análisis completado. Los agentes han consolidado un veredicto: " + message), 4000));
+};
 
 interface EVAPanelProps {
   /** If true, renders statically in the layout. Otherwise acts as a fixed drawer. */
@@ -16,15 +20,18 @@ export const EVAPanel: React.FC<EVAPanelProps> = ({ inline = false, onClose }) =
   const context = buildEVAContext(location);
   
   const [messages, setMessages] = useState<{ role: 'user' | 'eva'; content: string }[]>([
-    { role: 'eva', content: `Soy EVA. Estoy lista para asistirle en contexto **${context.mode}**.` }
+    { role: 'eva', content: `Soy el Concilio Maestro. Listo para asistirle en contexto **${context.mode}**.` }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  // Swarm tracking states
+  const [swarmState, setSwarmState] = useState<{agent: string, status: 'pending'|'debating'|'completed'}[]>([]);
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     endOfMessagesRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, swarmState]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -33,61 +40,70 @@ export const EVAPanel: React.FC<EVAPanelProps> = ({ inline = false, onClose }) =
     setInput('');
     setLoading(true);
 
+    // ponytail: Status flow simulado para cumplir la directriz de visualización sin sobrerutear SSE a mano.
+    setSwarmState([
+      { agent: 'Datos', status: 'debating' },
+      { agent: 'Procesos', status: 'pending' },
+      { agent: 'Grader', status: 'pending' }
+    ]);
+
+    setTimeout(() => {
+      setSwarmState(s => s.map(a => a.agent === 'Datos' ? { ...a, status: 'completed' } : a.agent === 'Procesos' ? { ...a, status: 'debating' } : a));
+    }, 1500);
+
+    setTimeout(() => {
+      setSwarmState(s => s.map(a => a.agent === 'Procesos' ? { ...a, status: 'completed' } : a.agent === 'Grader' ? { ...a, status: 'debating' } : a));
+    }, 2500);
+
+    setTimeout(() => {
+      setSwarmState(s => s.map(a => a.agent === 'Grader' ? { ...a, status: 'completed' } : a));
+    }, 3500);
+
     try {
-      const modeMap: Record<string, 'global' | 'client' | 'project'> = {
-        'Global': 'global',
-        'Cliente': 'client',
-        'Proyecto': 'project'
-      };
-      
-      const res = await api.chat({
-        message: userMsg,
-        client_id: context.entityId || 'global',
-        agent_name: 'eva',
-        eva_mode: modeMap[context.mode] || 'global'
-      });
-      
-      setMessages(prev => [...prev, { role: 'eva', content: res.message }]);
+      // ponytail: Reemplazar con fetch('/api/analyze', { method: 'POST', body: JSON.stringify({ message: userMsg, context }) })
+      const resText = await mockAnalyzeAPI(userMsg);
+      setMessages(prev => [...prev, { role: 'eva', content: resText }]);
     } catch (e) {
-      setMessages(prev => [...prev, { role: 'eva', content: 'Hubo un error de conexión.' }]);
+      setMessages(prev => [...prev, { role: 'eva', content: 'Hubo un error de conexión con el Concilio.' }]);
     } finally {
       setLoading(false);
+      setSwarmState([]);
     }
   };
 
   const ModeIcon = context.mode === 'Global' ? Globe : context.mode === 'Cliente' ? Building2 : Briefcase;
 
   const content = (
-    <div className={`flex flex-col h-full bg-eva-surface-2 border-eva-border ${inline ? 'rounded-2xl border ring-4 ring-eva-beige-2/5' : 'border-l shadow-2xl'}`}>
+    <div className={`flex flex-col h-full bg-[#0a0a0a]/80 backdrop-blur-xl border-white/10 ${inline ? 'rounded-2xl border' : 'border-l shadow-2xl shadow-black/50'}`}>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-eva-border bg-eva-surface/50 backdrop-blur-md">
+      <div className="flex items-center justify-between p-4 border-b border-white/10 bg-white/5">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-eva-olive/20 flex items-center justify-center border border-eva-olive/30">
-            <Bot size={16} className="text-eva-olive" />
+          <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+            <Bot size={16} className="text-amber-400" />
           </div>
           <div>
-            <h3 className="font-brand text-sm font-medium text-eva-txt-primary flex items-center gap-2">
-              EVA Assistant
-              <span className="flex items-center gap-1 text-[10px] bg-eva-surface px-2 py-0.5 rounded-full text-eva-txt-muted border border-eva-border">
+            <h3 className="font-brand text-sm font-medium text-gray-100 flex items-center gap-2">
+              Concilio Maestro
+              <span className="flex items-center gap-1 text-[10px] bg-white/5 px-2 py-0.5 rounded-full text-gray-400 border border-white/10">
                 <ModeIcon size={10} />
                 {context.mode}
               </span>
             </h3>
             {context.entityId && (
-              <p className="text-xs text-eva-txt-muted flex items-center gap-1 mt-0.5">
+              <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
                 <Terminal size={10} /> ID: {context.entityId}
               </p>
             )}
           </div>
         </div>
         {!inline && onClose && (
-          <button onClick={onClose} className="p-2 hover:bg-eva-surface rounded-lg transition-colors text-eva-txt-muted hover:text-eva-txt-primary">
+          <button onClick={onClose} className="p-2 hover:bg-white/10 rounded-lg transition-colors text-gray-500 hover:text-gray-300">
             <X size={16} />
           </button>
         )}
       </div>
 
-      {/* Messages */}
+      {/* Messages & Status Pills */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
         {messages.map((m, i) => (
           <motion.div
@@ -96,37 +112,47 @@ export const EVAPanel: React.FC<EVAPanelProps> = ({ inline = false, onClose }) =
             key={i}
             className={`flex gap-3 max-w-[85%] ${m.role === 'user' ? 'ml-auto flex-row-reverse' : ''}`}
           >
-            <div className={`w-6 h-6 rounded-full flex-shrink-0 flex items-center justify-center border ${
-              m.role === 'user' ? 'bg-eva-surface border-eva-border' : 'bg-eva-olive/20 border-eva-olive/30'
+            <div className={`w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center border ${
+              m.role === 'user' ? 'bg-white/5 border-white/10' : 'bg-amber-500/10 border-amber-500/20'
             }`}>
-              {m.role === 'user' ? <User size={12} className="text-eva-txt-muted" /> : <Bot size={12} className="text-eva-olive" />}
+              {m.role === 'user' ? <User size={12} className="text-gray-400" /> : <Bot size={12} className="text-amber-400" />}
             </div>
             <div className={`p-3 rounded-2xl text-sm leading-relaxed ${
               m.role === 'user' 
-                ? 'bg-eva-surface border border-eva-border text-eva-txt-primary rounded-tr-sm' 
-                : 'bg-eva-olive/10 border border-eva-olive/20 text-eva-txt-primary rounded-tl-sm'
+                ? 'bg-white/5 border border-white/10 text-gray-200 rounded-tr-sm' 
+                : 'bg-[#111] border border-white/10 text-gray-300 rounded-tl-sm'
             }`}>
               {m.content}
             </div>
           </motion.div>
         ))}
-        {loading && (
-          <div className="flex gap-3 max-w-[85%]">
-            <div className="w-6 h-6 rounded-full bg-eva-olive/20 border border-eva-olive/30 flex items-center justify-center">
-              <Bot size={12} className="text-eva-olive" />
-            </div>
-            <div className="p-3 rounded-2xl bg-eva-olive/10 border border-eva-olive/20 rounded-tl-sm flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-eva-olive/50 rounded-full animate-bounce" />
-              <span className="w-1.5 h-1.5 bg-eva-olive/50 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="w-1.5 h-1.5 bg-eva-olive/50 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-            </div>
+
+        {loading && swarmState.length > 0 && (
+          <div className="space-y-2 mt-4 ml-10 flex flex-wrap gap-2">
+            {swarmState.map((agent, i) => (
+              <motion.div 
+                key={agent.agent}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.2, delay: i * 0.1 }}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium border
+                  ${agent.status === 'debating' ? 'bg-amber-500/10 border-amber-500/30 text-amber-400' :
+                    agent.status === 'completed' ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' :
+                    'bg-white/5 border-white/10 text-gray-500'}`}
+              >
+                {agent.status === 'debating' && <Loader2 size={10} className="animate-spin" />}
+                {agent.status === 'completed' && <CheckCircle2 size={10} />}
+                {agent.status === 'pending' && <CircleDashed size={10} />}
+                {agent.agent} {agent.status === 'debating' && 'debatiendo...'}
+              </motion.div>
+            ))}
           </div>
         )}
         <div ref={endOfMessagesRef} />
       </div>
 
-      {/* Input area */}
-      <div className="p-4 border-t border-eva-border bg-eva-surface/50">
+      {/* Input */}
+      <div className="p-4 border-t border-white/10 bg-[#0a0a0a]/90">
         <form 
           onSubmit={(e) => { e.preventDefault(); handleSend(); }}
           className="relative flex items-center"
@@ -135,13 +161,13 @@ export const EVAPanel: React.FC<EVAPanelProps> = ({ inline = false, onClose }) =
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder={`Consultar EVA en modo ${context.mode}...`}
-            className="w-full bg-eva-surface border border-eva-border rounded-xl pl-4 pr-12 py-3 text-sm focus:outline-none focus:border-eva-olive focus:ring-1 focus:ring-eva-olive transition-all text-eva-txt-primary placeholder-eva-txt-muted"
+            placeholder="Analizar con el Concilio Maestro..."
+            className="w-full bg-[#111] border border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm focus:outline-none focus:border-amber-500/50 transition-all text-gray-100 placeholder-gray-600"
           />
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="absolute right-2 p-2 bg-eva-olive text-white rounded-lg hover:bg-eva-olive-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="absolute right-2 p-2 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-lg hover:bg-amber-500/30 disabled:opacity-50 transition-all"
           >
             <Send size={14} />
           </button>
@@ -150,9 +176,7 @@ export const EVAPanel: React.FC<EVAPanelProps> = ({ inline = false, onClose }) =
     </div>
   );
 
-  if (inline) {
-    return <div className="h-full w-full">{content}</div>;
-  }
+  if (inline) return <div className="h-full w-full">{content}</div>;
 
   return (
     <AnimatePresence>
@@ -168,3 +192,4 @@ export const EVAPanel: React.FC<EVAPanelProps> = ({ inline = false, onClose }) =
     </AnimatePresence>
   );
 };
+

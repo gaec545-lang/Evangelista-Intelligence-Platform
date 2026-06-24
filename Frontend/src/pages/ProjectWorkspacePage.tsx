@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProject } from '../hooks/useProjects';
 import { Spinner } from '../components/ui/Spinner';
-import { ArrowLeft, Lock } from 'lucide-react';
+import { ArrowLeft, Lock, Bot } from 'lucide-react';
+import { EVAPanel } from '../components/eva/EVAPanel';
 
 import { ScopingTab } from '../components/workspace/tabs/ScopingTab';
 import ProposalTab from '../components/workspace/tabs/ProposalTab';
@@ -24,6 +25,7 @@ export const ProjectWorkspacePage: React.FC = () => {
   const navigate = useNavigate();
   const { project, phases, loading, error } = useProject(id);
   const [activeTab, setActiveTab] = useState(0);
+  const [showEVA, setShowEVA] = useState(false);
 
   // Default unlocked phases logic (Scoping, Propuesta, Contrato are unlocked by default)
   // Design and beyond can unlock dynamically or we allow active progression
@@ -136,6 +138,15 @@ export const ProjectWorkspacePage: React.FC = () => {
       <div className="flex-1 p-6 max-w-7xl mx-auto w-full">
         {renderTabContent()}
       </div>
+
+      {/* EVA Toggle Button & Panel */}
+      <button 
+        onClick={() => setShowEVA(true)}
+        className="fixed bottom-6 right-6 p-4 bg-amber-500/10 border border-amber-500/20 text-amber-400 rounded-full shadow-lg hover:bg-amber-500/20 transition-all z-40"
+      >
+        <Bot size={24} />
+      </button>
+      {showEVA && <EVAPanel onClose={() => setShowEVA(false)} />}
     </div>
   );
 };
