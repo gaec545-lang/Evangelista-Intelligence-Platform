@@ -3,11 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Send, Bot, User, Globe, Briefcase, Building2, Terminal, CheckCircle2, CircleDashed, Loader2 } from 'lucide-react';
 import { buildEVAContext } from '../../lib/buildEVAContext';
-
-// ponytail: mock lazi para el swarm en lugar de fetch manual. Agrega fetch real cuando SSE backend esté listo.
-const mockAnalyzeAPI = async (message: string) => {
-  return new Promise<string>(resolve => setTimeout(() => resolve("Análisis completado. Los agentes han consolidado un veredicto: " + message), 4000));
-};
+import { apiClient } from '../../lib/apiClient';
 
 interface EVAPanelProps {
   /** If true, renders statically in the layout. Otherwise acts as a fixed drawer. */
@@ -60,10 +56,14 @@ export const EVAPanel: React.FC<EVAPanelProps> = ({ inline = false, onClose }) =
     }, 3500);
 
     try {
-      // ponytail: Reemplazar con fetch('/api/analyze', { method: 'POST', body: JSON.stringify({ message: userMsg, context }) })
-      const resText = await mockAnalyzeAPI(userMsg);
+      const res = await apiClient.post<any>('/api/v1/analyze', {
+        task: userMsg,
+        context: JSON.stringify(context)
+      });
+      const resText = res.response || "Análisis completado sin respuesta explícita.";
       setMessages(prev => [...prev, { role: 'eva', content: resText }]);
     } catch (e) {
+      console.error("Error from /api/v1/analyze:", e);
       setMessages(prev => [...prev, { role: 'eva', content: 'Hubo un error de conexión con el Concilio.' }]);
     } finally {
       setLoading(false);
