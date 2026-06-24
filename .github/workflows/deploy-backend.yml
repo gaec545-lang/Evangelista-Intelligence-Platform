@@ -53,4 +53,4 @@ jobs:
           ingress: external
           targetPort: 8000
           arguments: |
-            --env-vars LLM_PROVIDER=groq LLM_MODEL=groq-llama-70b GROQ_API_KEY="${{ secrets.GROQ_API_KEY }}" DATABASE_URL="postgresql://evangelista_admin:Evangelista.Pass7990*@pg-evangelista-7990.postgres.database.azure.com:5432/db_evangelista?sslmode=require" ASYNC_DATABASE_URL="postgresql+asyncpg://evangelista_admin:Evangelista.Pass7990*@pg-evangelista-7990.postgres.database.azure.com:5432/db_evangelista?sslmode=require" QDRANT_MODE=server QDRANT_HOST=app-evangelista-qdrant.internal.jollyflower-774ba306.eastus2.azurecontainerapps.io QDRANT_PORT=443
+            --env-vars LLM_PROVIDER=groq LLM_MODEL=groq-llama-70b GROQ_API_KEY="${{ secrets.GROQ_API_KEY }}" DATABASE_URL="${{ secrets.DATABASE_URL }}" ASYNC_DATABASE_URL="${{ secrets.ASYNC_DATABASE_URL }}" QDRANT_MODE=server QDRANT_HOST=app-evangelista-qdrant.internal.jollyflower-774ba306.eastus2.azurecontainerapps.io QDRANT_PORT=443
