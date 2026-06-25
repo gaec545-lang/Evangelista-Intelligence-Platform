@@ -58,7 +58,7 @@ export const EVAPanel: React.FC<EVAPanelProps> = ({ inline = false, onClose }) =
     try {
       const res = await apiClient.post<any>('/api/v1/analyze', {
         task: userMsg,
-        context: JSON.stringify(context)
+        context: context
       });
       const resText = res.response || "Análisis completado sin respuesta explícita.";
       setMessages(prev => [...prev, { role: 'eva', content: resText }]);
