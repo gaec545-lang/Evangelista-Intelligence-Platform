@@ -8,6 +8,16 @@ API_URL_CHAT = "http://127.0.0.1:8000/api/v1/chat"
 
 QUERY = "¿Qué frameworks tenemos para mejora y eficiencia de un almacén industrial textil?"
 
+from jose import jwt
+
+JWT_SECRET_KEY = "a_very_secret_key_for_local_dev"
+
+def get_test_token():
+    payload = {"roles": ["consultor"], "sub": "test-script", "email": "test@evangelistaco.com"}
+    return jwt.encode(payload, JWT_SECRET_KEY, algorithm="HS256")
+
+headers = {"Authorization": f"Bearer {get_test_token()}"}
+
 async def validate_analyze_graph():
     print("="*50)
     print("🚀 FASE 1: Enviando petición al Grafo (Analyze Endpoint)")
@@ -23,7 +33,7 @@ async def validate_analyze_graph():
     
     try:
         async with httpx.AsyncClient(timeout=60.0) as client:
-            response = await client.post(API_URL_ANALYZE, json=payload)
+            response = await client.post(API_URL_ANALYZE, json=payload, headers=headers)
             elapsed = time.time() - start_time
             
             if response.status_code == 200:
@@ -65,13 +75,14 @@ async def validate_chat_rag():
     
     payload = {
         "message": QUERY,
+        "client_id": "test_client",
         "agent_name": "consultant",
         "eva_mode": "client"
     }
     
     try:
         async with httpx.AsyncClient(timeout=60.0) as client:
-            response = await client.post(API_URL_CHAT, json=payload)
+            response = await client.post(API_URL_CHAT, json=payload, headers=headers)
             elapsed = time.time() - start_time
             
             if response.status_code == 200:
